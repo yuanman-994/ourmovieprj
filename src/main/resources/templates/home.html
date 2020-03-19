@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<link rel="stylesheet"
 		  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -44,8 +44,8 @@
 					<div class="col-1-2">
 						<div class="wrap-col">
 							<ul>
-								<li class="mail"><p>ContacUst@Gmail.com</p></li>
-								<li class="phone"><p>80 88888 7</p></li>
+								<li class="mail"><p>movieUESTC@Gmail.com</p></li>
+								<li class="phone"><p>80 08888 8</p></li>
 							</ul>
 						</div>
 					</div>
@@ -53,8 +53,8 @@
 						<div class="wrap-col f-right">
 							<ul>
 								<li><select>
-									<option value="en" selected>English</option>
-									<option value="fe">France</option>
+									<option value="zh" selected>Chines</option>
+									<option value="en">English</option>
 									<option value="ge">Germany</option>
 								</select></li>
 								<li><p>Language</p></li>
@@ -68,7 +68,7 @@
 			<div class="row">
 				<div class="col-1-2">
 					<div class="wrap-col">
-						<div class="logo"><a href="#"><img src="images/logo.png"/></a></div>
+						<div class="logo"><a th:href="@{/home}"><img src="images/logo.png"/></a></div>
 					</div>
 				</div>
 				<div class="col-1-2">
@@ -85,14 +85,14 @@
 					<nav>
 						<div class="wrap-nav">
 							<ul>
-								<li class="active"><a href="index.html">Home</a></li>
-								<li><a href="single.html">GREATEST FILMS</a></li>
-								<li><a href="single.html">THE BEST</a></li>
-								<li><a href="single.html">OSCARS</a></li>
-								<li><a href="single.html">GENRES</a></li>
-								<li><a href="single.html">QUOTES</a></li>
-								<li><a href="single.html">POSTERS</a></li>
-								<li><a href="contact.html">CONTACT</a></li>
+								<li class="active"><a th:href="@{/home}" >首页</a></li>
+								<li><a href="single.html">影城动态</a></li>
+								<li><a href="single.html">看电影</a></li>
+								<li><a href="single.html">团购</a></li>
+								<li><a href="single.html">商城</a></li>
+								<li><a href="single.html">商务合作信息</a></li>
+								<li><a href="single.html">关于企业信息</a></li>
+								<li><a th:href="@{/contact}">CONTACT</a></li>
 							</ul>
 						</div>
 					</nav>
@@ -100,6 +100,7 @@
 			</div>
 		</div>
 	</header>
+
 	<div class="copyrights">Collect from <a href="http://www.cssmoban.com/" >企业网站模板</a></div>
 
 	<!--////////////////////////////////////Container-->

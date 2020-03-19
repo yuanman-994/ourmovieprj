@@ -16,6 +16,11 @@ public class HelloControllers {
         return "home";
     }
 
+    @RequestMapping("/contact")
+    public String contact() {
+        return "contact";
+    }
+
     @ResponseBody
     @RequestMapping("/hello")
     public String hello(){

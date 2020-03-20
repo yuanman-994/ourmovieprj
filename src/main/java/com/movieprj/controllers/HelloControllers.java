@@ -21,6 +21,16 @@ public class HelloControllers {
         return "contact";
     }
 
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
+    }
+
+    @RequestMapping("/dynamic")
+    public String dynamic() {
+        return "dynamic";
+    }
+
     @ResponseBody
     @RequestMapping("/hello")
     public String hello(){

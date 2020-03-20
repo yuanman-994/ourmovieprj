@@ -21,11 +21,19 @@ public class HelloControllers {
         return "contact";
     }
 
+    @RequestMapping("/see_movie")
+    public String see_movie() {
+        return "see_movie";
+    }
+
+    @RequestMapping("/group_buy")
+    public String group_buy() {
+        return "group_buy";
+    }
+
     @ResponseBody
     @RequestMapping("/hello")
     public String hello(){
-        return "Hello World";
+        return "Hello World !!!";
     }
-
-
 }

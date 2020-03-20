@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<link rel="stylesheet"
+		  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8">
+	<title>zMovie</title>
+	<meta name="description" content="Free Responsive Html5 Css3 Templates | zerotheme.com">
+	<meta name="author" content="www.zerotheme.com">
+
+	<!-- Mobile Specific Metas
+  ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<!-- CSS
+  ================================================== -->
+	<link rel="stylesheet" th:href="@{/css/zerogrid.css}">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" th:href="@{/css/responsive.css}">
+
+	<!--[if lt IE 8]>
+	<div style=' clear: both; text-align:center; position: relative;'>
+		<a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+			<img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+		</a>
+	</div>
+	<![endif]-->
+	<!--[if lt IE 9]>
+	<script th:src="@{js/html5.js}"></script>
+	<script th:src="@{js/css3-mediaqueries.js}"></script>
+	<![endif]-->
+
+</head>
+<body>
+<div class="wrap-body">
+
+	<!--////////////////////////////////////Header-->
+	<header>
+		<div th:replace="commons/part::#top"></div>
+	</header>
+
+
+	<!--////////////////////////////////////Container-->
+	<section id="container">
+
+	</section>
+
+	<!--////////////////////////////////////Footer-->
+	<footer>
+		<div th:replace="commons/part::#bottom"></div>
+	</footer>
+
+</div>
+<script th:src="@{js/css3-mediaqueries.js}"></script>
+<script th:src="@{js/jquery.min.js}"></script>
+</body></html>

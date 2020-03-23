@@ -21,6 +21,11 @@ public class HelloControllers {
         return "contact";
     }
 
+    @RequestMapping("/dynamic")
+    public String dynamic() {
+        return "dynamic";
+    }
+
     @RequestMapping("/see_movie")
     public String see_movie() {
         return "see_movie";

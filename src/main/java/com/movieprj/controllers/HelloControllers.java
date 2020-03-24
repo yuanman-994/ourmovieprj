@@ -18,9 +18,7 @@ public class HelloControllers {
     }
 
     @RequestMapping("/contact")
-    public String contact() {
-        return "contact";
-    }
+    public String contact() { return "contact"; }
 
     @RequestMapping("/dynamic")
     public String dynamic() {
@@ -30,6 +28,11 @@ public class HelloControllers {
     @RequestMapping("/see_movie")
     public String see_movie() {
         return "see_movie";
+    }
+
+    @RequestMapping("/movie_single")
+    public String movie_single() {
+        return "movie_single";
     }
 
     @RequestMapping("/group_buy")

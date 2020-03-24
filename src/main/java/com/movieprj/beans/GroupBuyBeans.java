@@ -1,6 +1,6 @@
-package com.movieprj.dao;
+package com.movieprj.beans;
 
-public class GroupBuyDao {
+public class GroupBuyBeans {
     private int group_buy_id;
     private int cinema_id;
     private String start_time;

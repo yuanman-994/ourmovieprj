@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 public class GropuBuyTest {
     @Resource
     private GroupyBuyMapper groupyBuyMapper;
-
     @Test
     public void SelectGroupBuy(){
         GroupBuyDao groupBuy = groupyBuyMapper.findById(1);

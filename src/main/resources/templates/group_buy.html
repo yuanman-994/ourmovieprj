@@ -28,6 +28,7 @@
     <!-- //pop-up -->
     <!-- font-awesome icons -->
     <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/add/group-buy.css}"/>
     <!-- //font-awesome icons -->
     <!-- js -->
     <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
@@ -62,10 +63,25 @@
             });
         });
     </script>
+<!--    <script>-->
+<!--        function loaddata(){-->
+<!--            var s = "hello"-->
+<!--            // $.ajax({-->
+<!--            //     url: "/group_buy/test_post",-->
+<!--            //     type: "post",-->
+<!--            //     // data表示发送的数据-->
+<!--            //     data: JSON.stringify({data: s}),-->
+<!--            //     contentType: "application/json;charset=UTF-8",-->
+<!--            // });-->
+<!--            $.get("/group_buy/test_get",function(data,status){-->
+<!--                $("#load-group-buy").append(data);-->
+<!--            });-->
+<!--        };-->
+<!--    </script>-->
     <!-- start-smoth-scrolling -->
 </head>
 
-<body>
+<body onload="loaddata()">
 <!--首部-->
 <div class="header">
     <div class="container">
@@ -105,10 +121,10 @@
                 <nav>
                     <ul class="nav navbar-nav">
                         <li class="active"><a th:href="@{/group_buy}">看电影</a></li>
-                        <li ><a th:href="@{/dynamic}" >影城动态</a></li>
+                        <li><a th:href="@{/dynamic}">影城动态</a></li>
                         <li><a th:href="@{/see_movie}">看电影</a></li>
                         <li><a th:href="@{/group_buy}">团购</a></li>
-                        <li ><a href="#" >商城 </a></li>
+                        <li><a href="#">商城 </a></li>
                         <li><a href="short-codes.html">商务合作信息</a></li>
                         <li><a href="list.html">关于企业信息</a></li>
                     </ul>
@@ -121,19 +137,52 @@
 <div class="general-agileits-w3l">
     <div class="w3l-medile-movies-grids">
         <div class="general">
-            <h4 class="latest-text w3_latest_text">标题</h4>
+            <h4 class="latest-text w3_latest_text">团购</h4>
             <div class="container">
                 <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
                     <ul id="myTab" class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">默认栏</a></li>
-                        <li role="presentation" class=""><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">其它栏</a></li>
+                        <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab"
+                                                                  data-toggle="tab" aria-controls="home"
+                                                                  aria-expanded="true">今日团购</a></li>
+                        <li role="presentation" class=""><a href="#profile" role="tab" id="profile-tab"
+                                                            data-toggle="tab" aria-controls="profile"
+                                                            aria-expanded="false">查看往期团购</a></li>
                     </ul>
                     <div id="myTabContent" class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
                             <!--默认栏内容-->
+                            <div class="container">
+                                <div class="container" id = "load-group-buy">
+                                </div>
+                            </div>
+                            <div class="blog-pagenat-wthree">
+                                <ul>
+                                    <li><a class="frist" href="#">Prev</a></li>
+                                    <li><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a class="last" href="#">Next</a></li>
+                                </ul>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
                             <!--其它栏内容-->
+                            <div class="container">
+
+                            </div>
+                            <div class="blog-pagenat-wthree">
+                                <ul>
+                                    <li><a class="frist" href="#">Prev</a></li>
+                                    <li><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a class="last" href="#">Next</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

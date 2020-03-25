@@ -5,6 +5,15 @@ public class Comment {
     private String content; //评论内容
     private Integer movie_id;  //评论电影id
     private Integer user_id;//发表用户id
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
 
     public String getComment_time() {
@@ -39,6 +48,7 @@ public class Comment {
         this.user_id = user_id;
     }
 
+
     @Override
     public String toString() {
         return "Comment{" +
@@ -46,6 +56,7 @@ public class Comment {
                 ", content='" + content + '\'' +
                 ", movie_id=" + movie_id +
                 ", user_id=" + user_id +
+                ", user=" + user +
                 '}';
     }
 }

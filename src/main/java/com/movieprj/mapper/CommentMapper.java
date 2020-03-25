@@ -1,4 +1,4 @@
-package com.movieprj.dao;
+package com.movieprj.mapper;
 import com.movieprj.beans.Comment;
 import org.apache.ibatis.annotations.*;
 

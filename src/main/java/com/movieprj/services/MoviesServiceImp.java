@@ -1,10 +1,7 @@
 package com.movieprj.services;
 
-import com.movieprj.beans.Comment;
 import com.movieprj.beans.Movies;
-import com.movieprj.dao.CommentMapper;
-import com.movieprj.dao.MoviesMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.movieprj.mapper.MoviesMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

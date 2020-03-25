@@ -51,7 +51,6 @@
     </script>
     <!-- //banner-bottom-plugin -->
     <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
-    <!-- start-smoth-scrolling -->
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
     <script type="text/javascript" th:src="@{js/easing.js}"></script>
     <script type="text/javascript">
@@ -62,25 +61,53 @@
             });
         });
     </script>
-    <!--    <script>-->
-    <!--        function loaddata(){-->
-    <!--            var s = "hello"-->
-    <!--            // $.ajax({-->
-    <!--            //     url: "/group_buy/test_post",-->
-    <!--            //     type: "post",-->
-    <!--            //     // data表示发送的数据-->
-    <!--            //     data: JSON.stringify({data: s}),-->
-    <!--            //     contentType: "application/json;charset=UTF-8",-->
-    <!--            // });-->
-    <!--            $.get("/group_buy/test_get",function(data,status){-->
-    <!--                $("#load-group-buy").append(data);-->
-    <!--            });-->
-    <!--        };-->
-    <!--    </script>-->
-    <!-- start-smoth-scrolling -->
+    <script>
+        function load_group_buy_data_now() {//请求当期团购数据,并动态创建页面对象。
+            $.get("/group_buy/get_group_buy_data_now", function (data, status) {
+                var dataObj = JSON.parse(data)
+                update_row_group_buy_data_now(dataObj)
+            });
+        };
+        function load_group_buy_data_past() {//请求当期团购数据,并动态创建页面对象。
+            $.get("/group_buy/get_group_buy_data_past", function (data, status) {
+                var dataObj = JSON.parse(data)
+                update_row_group_buy_data_past(dataObj)
+            });
+        };
+        function update_row_group_buy_data_now(dataObj) {
+            $("#group-buy-data-now").empty();
+            var i
+            for (i = 0; i < dataObj.length; i++){
+                var rowObj = dataObj[i]
+                var row =  $("<tr></tr>");
+                row.append($("<td></td>").text(rowObj.cinema_name))
+                row.append($("<td></td>").text(rowObj.start_time + "至" + rowObj.end_time))
+                row.append($("<td></td>").text(rowObj.start_sell + "至" + rowObj.end_sell))
+                row.append($("<td></td>").text(rowObj.price))
+                row.append($("<td></td>").text(rowObj.now_sales+"/"+rowObj.max_sales))
+                row.append($("<td></td>").text("立即订票"))
+                $("#group-buy-data-now").append(row);
+            }
+        }
+        function update_row_group_buy_data_past(dataObj) {
+            $("#group-buy-data-past").empty();
+            var i
+            for (i = 0; i < dataObj.length; i++){
+                var rowObj = dataObj[i]
+                var row =  $("<tr></tr>");
+                row.append($("<td></td>").text(rowObj.cinema_name))
+                row.append($("<td></td>").text(rowObj.start_time + "至" + rowObj.end_time))
+                row.append($("<td></td>").text(rowObj.start_sell + "至" + rowObj.end_sell))
+                row.append($("<td></td>").text(rowObj.price))
+                row.append($("<td></td>").text(rowObj.now_sales+"/"+rowObj.max_sales))
+                $("#group-buy-data-past").append(row);
+            }
+        }
+
+    </script>
 </head>
 
-<body>
+<body onload="load_group_buy_data_now()">
 <!--首部-->
 <div class="header">
     <div class="container">
@@ -152,201 +179,29 @@
                     <ul id="myTab" class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab"
                                                                   data-toggle="tab" aria-controls="home"
-                                                                  aria-expanded="true">今日团购</a></li>
+                                                                  aria-expanded="true" onclick="load_group_buy_data_now()">今日团购</a></li>
                         <li role="presentation" class=""><a href="#profile" role="tab" id="profile-tab"
                                                             data-toggle="tab" aria-controls="profile"
-                                                            aria-expanded="false">查看往期团购</a></li>
+                                                            aria-expanded="false" onclick="load_group_buy_data_past()">查看往期团购</a></li>
                     </ul>
                     <div id="myTabContent" class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
                             <!--默认栏内容-->
-                            <div class="container" id="load-group-buy">
-                                <div class="col-md-2 w3l-movie-gride-agile">
-                                    <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img
-                                            src="images/m7.jpg" title="album-name" alt=" ">
-                                        <div class="w3l-action-icon"><i class="fa fa-play-circle"
-                                                                        aria-hidden="true"></i></div>
-                                    </a>
-                                    <div class="mid-1">
-                                        <div class="w3l-movie-text">
-                                            <h6><a th:href="@{/movie_detail_page}">Light B/t Oceans</a></h6>
-                                        </div>
-                                        <div class="mid-2">
-
-                                            <p>2016</p>
-                                            <div class="block-stars">
-                                                <ul class="w3l-ratings">
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-half-o"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-                                                    </li>
-
-
-                                                </ul>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                        <table align="center">
-                                            <tbody>
-                                            <tr align>
-                                                <td>$200</td>
-                                                <td>已售</td>
-                                                <td>80</td>
-                                                <td>/</td>
-                                                <td>100</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 16 10:00 开售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 18 10:00 结售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 9:00 至</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 19:00 有效</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">XX影院</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="ribben two">
-                                        <p>NEW</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 w3l-movie-gride-agile">
-                                    <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img
-                                            src="images/m7.jpg" title="album-name" alt=" ">
-                                        <div class="w3l-action-icon"><i class="fa fa-play-circle"
-                                                                        aria-hidden="true"></i></div>
-                                    </a>
-                                    <div class="mid-1">
-                                        <div class="w3l-movie-text">
-                                            <h6><a th:href="@{/movie_detail_page}">Light B/t Oceans</a></h6>
-                                        </div>
-                                        <div class="mid-2">
-
-                                            <p>2016</p>
-                                            <div class="block-stars">
-                                                <ul class="w3l-ratings">
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-half-o"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-                                                    </li>
-
-
-                                                </ul>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                        <table align="center">
-                                            <tbody>
-                                            <tr align>
-                                                <td>$200</td>
-                                                <td>已售</td>
-                                                <td>80</td>
-                                                <td>/</td>
-                                                <td>100</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 16 10:00 开售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 18 10:00 结售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 9:00 至</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 19:00 有效</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">XX影院</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="ribben two">
-                                        <p>NEW</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 w3l-movie-gride-agile">
-                                    <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img
-                                            src="images/m7.jpg" title="album-name" alt=" ">
-                                        <div class="w3l-action-icon"><i class="fa fa-play-circle"
-                                                                        aria-hidden="true"></i></div>
-                                    </a>
-                                    <div class="mid-1">
-                                        <div class="w3l-movie-text">
-                                            <h6><a th:href="@{/movie_detail_page}">Light B/t Oceans</a></h6>
-                                        </div>
-                                        <div class="mid-2">
-
-                                            <p>2016</p>
-                                            <div class="block-stars">
-                                                <ul class="w3l-ratings">
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-half-o"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-                                                    </li>
-
-
-                                                </ul>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                        <table align="center">
-                                            <tbody>
-                                            <tr align>
-                                                <td>$200</td>
-                                                <td>已售</td>
-                                                <td>80</td>
-                                                <td>/</td>
-                                                <td>100</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 16 10:00 开售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 18 10:00 结售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 9:00 至</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 19:00 有效</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">XX影院</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="ribben two">
-                                        <p>NEW</p>
-                                    </div>
-                                </div>
+                            <div class="container">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>影城</th>
+                                        <th>有效时间</th>
+                                        <th>售票时间</th>
+                                        <th>价格</th>
+                                        <th>已售/最大</th>
+                                        <th>预订链接</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="group-buy-data-now">
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="blog-pagenat-wthree">
                                 <ul>
@@ -363,192 +218,19 @@
                         <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
                             <!--其它栏内容-->
                             <div class="container">
-                                <div class="col-md-2 w3l-movie-gride-agile">
-                                    <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img
-                                            src="images/m7.jpg" title="album-name" alt=" ">
-                                        <div class="w3l-action-icon"><i class="fa fa-play-circle"
-                                                                        aria-hidden="true"></i></div>
-                                    </a>
-                                    <div class="mid-1">
-                                        <div class="w3l-movie-text">
-                                            <h6><a th:href="@{/movie_detail_page}">Light B/t Oceans</a></h6>
-                                        </div>
-                                        <div class="mid-2">
-
-                                            <p>2016</p>
-                                            <div class="block-stars">
-                                                <ul class="w3l-ratings">
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-half-o"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-                                                    </li>
-
-
-                                                </ul>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                        <table align="center">
-                                            <tbody>
-                                            <tr align>
-                                                <td>$200</td>
-                                                <td>已售</td>
-                                                <td>80</td>
-                                                <td>/</td>
-                                                <td>100</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 16 10:00 开售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 18 10:00 结售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 9:00 至</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 19:00 有效</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">XX影院</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="ribben two">
-                                        <p>NEW</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 w3l-movie-gride-agile">
-                                    <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img
-                                            src="images/m7.jpg" title="album-name" alt=" ">
-                                        <div class="w3l-action-icon"><i class="fa fa-play-circle"
-                                                                        aria-hidden="true"></i></div>
-                                    </a>
-                                    <div class="mid-1">
-                                        <div class="w3l-movie-text">
-                                            <h6><a th:href="@{/movie_detail_page}">Light B/t Oceans</a></h6>
-                                        </div>
-                                        <div class="mid-2">
-
-                                            <p>2016</p>
-                                            <div class="block-stars">
-                                                <ul class="w3l-ratings">
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-half-o"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-                                                    </li>
-
-
-                                                </ul>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                        <table align="center">
-                                            <tbody>
-                                            <tr align>
-                                                <td>$200</td>
-                                                <td>已售</td>
-                                                <td>80</td>
-                                                <td>/</td>
-                                                <td>100</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 16 10:00 开售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 18 10:00 结售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 9:00 至</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 19:00 有效</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">XX影院</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="ribben two">
-                                        <p>NEW</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 w3l-movie-gride-agile">
-                                    <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img
-                                            src="images/m7.jpg" title="album-name" alt=" ">
-                                        <div class="w3l-action-icon"><i class="fa fa-play-circle"
-                                                                        aria-hidden="true"></i></div>
-                                    </a>
-                                    <div class="mid-1">
-                                        <div class="w3l-movie-text">
-                                            <h6><a th:href="@{/movie_detail_page}">Light B/t Oceans</a></h6>
-                                        </div>
-                                        <div class="mid-2">
-
-                                            <p>2016</p>
-                                            <div class="block-stars">
-                                                <ul class="w3l-ratings">
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-half-o"
-                                                                       aria-hidden="true"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-                                                    </li>
-
-
-                                                </ul>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                        <table align="center">
-                                            <tbody>
-                                            <tr align>
-                                                <td>$200</td>
-                                                <td>已售</td>
-                                                <td>80</td>
-                                                <td>/</td>
-                                                <td>100</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 16 10:00 开售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 18 10:00 结售</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 9:00 至</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">2020 3 19 19:00 有效</td>
-                                            </tr>
-                                            <tr>
-                                                <td th:colspan="5">XX影院</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="ribben two">
-                                        <p>NEW</p>
-                                    </div>
-                                </div>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>影城</th>
+                                        <th>有效时间</th>
+                                        <th>售票时间</th>
+                                        <th>价格</th>
+                                        <th>已售/最大</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="group-buy-data-past">
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="blog-pagenat-wthree">
                                 <ul>

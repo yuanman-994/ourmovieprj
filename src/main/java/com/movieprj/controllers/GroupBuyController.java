@@ -1,20 +1,32 @@
 package com.movieprj.controllers;
 
+import com.movieprj.services.groupbuy.GroupBuyServiceImp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/group_buy")
 public class GroupBuyController {
+    @Autowired
+    private GroupBuyServiceImp groupBuyServiceImp;
+
 //    @PostMapping("/test_post")
 //    @ResponseBody
 //    public void test_post(@RequestBody String data){
 //        System.out.println(data);
 //    }
 //
-//    @GetMapping("/test_get")
-//    @ResponseBody
-//    public String test_get(){
-//        return "hello";
-//    }
+    @GetMapping("/get_group_buy_data_now")
+    @ResponseBody
+//    响应加载团购数据请求，返回json式字符串，当期团购
+    public String get_group_buy_data_now(){
+        return groupBuyServiceImp.getGroupBuyDataNow();
+    }
+    @GetMapping("/get_group_buy_data_past")
+    @ResponseBody
+//    响应加载团购数据请求，返回json式字符串,往期团购
+    public String get_group_buy_data_past(){
+        return groupBuyServiceImp.getGroupBuyDataPast();
+    }
 }

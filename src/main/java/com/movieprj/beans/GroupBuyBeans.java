@@ -1,15 +1,15 @@
 package com.movieprj.beans;
 
 public class GroupBuyBeans {
-    private int group_buy_id;
-    private int cinema_id;
-    private String start_time;
-    private String end_time;
-    private float price;
-    private int now_sales;
-    private int max_sales;
-    private String start_sell;
-    private String end_sell;
+    private int group_buy_id;//团购id
+    private int cinema_id;//对应影院id
+    private String start_time;//团购票开始有效期
+    private String end_time;//团购票结束有效期
+    private float price;//价格
+    private int now_sales;//销量
+    private int max_sales;//最大销量
+    private String start_sell;//开售时间
+    private String end_sell;//结束售票时间
 
     public void setGroup_buy_id(int group_buy_id) {
         this.group_buy_id = group_buy_id;

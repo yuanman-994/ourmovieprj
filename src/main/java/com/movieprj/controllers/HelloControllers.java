@@ -35,10 +35,10 @@ public class HelloControllers {
         return "see_movie";
     }
 
-    @RequestMapping("/movie_single")
+    /*@RequestMapping("/movie_single")
     public String movie_single() {
         return "movie_single";
-    }
+    }*/
 
     @RequestMapping("/group_buy")
     public String group_buy() {

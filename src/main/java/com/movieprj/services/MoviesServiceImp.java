@@ -16,6 +16,13 @@ public class MoviesServiceImp implements MoviesService {
     public List<Movies> findAll() {
         return moviesMapper.findAll();
     }
+
+    @Override
+    public Movies selectMoviesById(Integer movie_id) {
+        Movies movie = moviesMapper.selectMoviesById(movie_id);
+        return movie;
+    }
+
     @Override
     public  List<Movies> selectMoviesByOnshow(boolean onshow){
         return moviesMapper.selectMoviesByOnshow(onshow);

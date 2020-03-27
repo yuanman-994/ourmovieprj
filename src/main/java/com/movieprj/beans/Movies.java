@@ -6,14 +6,14 @@ public class Movies {
     private Integer movie_id;  //id
     private String movie_name; //电影名
     private MoviesTypes type= new MoviesTypes();//电影类型（一对多）
-    private String introduction;//电影介绍
+    private String intro;//电影介绍
     private  String cover;  //封面照片
     private  String photo; //剧照
     private  String director;  //导演
-    private String actors; //主演
+    private String main_actor; //主演
     private String sellpoint; //卖点
     private String rank; //星级/评分
-    private String time; //上映时间
+    private String release_date; //上映时间
     private boolean top; //置顶状态
     private String duration; //时长
     private String countryAndreligion; //国家和地区
@@ -45,12 +45,12 @@ public class Movies {
         this.type = type;
     }
 
-    public String getIntroduction() {
-        return introduction;
+    public String getIntro() {
+        return intro;
     }
 
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 
     public String getCover() {
@@ -77,12 +77,12 @@ public class Movies {
         this.director = director;
     }
 
-    public String getActors() {
-        return actors;
+    public String getMain_actor() {
+        return main_actor;
     }
 
-    public void setActors(String actors) {
-        this.actors = actors;
+    public void setMain_actor(String main_actor) {
+        this.main_actor = main_actor;
     }
 
     public String getSellpoint() {
@@ -101,12 +101,12 @@ public class Movies {
         this.rank = rank;
     }
 
-    public String getTime() {
-        return time;
+    public String getRelease_date() {
+        return release_date;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setRelease_date(String release_date) {
+        this.release_date = release_date;
     }
 
     public boolean isTop() {
@@ -155,14 +155,14 @@ public class Movies {
                 "movie_id=" + movie_id +
                 ", movie_name='" + movie_name + '\'' +
                 ", type=" + type +
-                ", introduction='" + introduction + '\'' +
+                ", intro='" + intro + '\'' +
                 ", cover='" + cover + '\'' +
                 ", photo='" + photo + '\'' +
                 ", director='" + director + '\'' +
-                ", actors='" + actors + '\'' +
+                ", main_actor='" + main_actor + '\'' +
                 ", sellpoint='" + sellpoint + '\'' +
                 ", rank='" + rank + '\'' +
-                ", time='" + time + '\'' +
+                ", release_date='" + release_date + '\'' +
                 ", top=" + top +
                 ", duration='" + duration + '\'' +
                 ", countryAndreligion='" + countryAndreligion + '\'' +

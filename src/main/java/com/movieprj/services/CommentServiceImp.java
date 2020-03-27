@@ -21,9 +21,14 @@ public class CommentServiceImp implements CommentService{
     }
 
     @Override
+    public List<Comment> findCommentWithUserByMovieId(Integer id) {
+        List<Comment> commentList = commentMapper.findCommentWithUserByMovieId(id);
+        return commentList;
+    }
+
+    @Override
     public int insertComment(Comment comment) {
         commentMapper.insertComment(comment);
-        //comment.setUser(userMapper.getUserById(comment.getUser_id()));//设置comment对象的User属性
         return 0;
     }
 

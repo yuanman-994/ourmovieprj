@@ -8,6 +8,8 @@ import java.util.List;
 public interface MoviesService {
     public List<Movies> findAll();
 
+    public Movies selectMoviesById(Integer movie_id);
+
     public  List<Movies> selectMoviesByOnshow(boolean onshow);
 
     public void addMovies(Movies movies);

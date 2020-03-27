@@ -1,9 +1,8 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Title</title>
-    <script type="text/javascript"
-            src="../static/js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
 </head>
 <body>
 <form>
@@ -11,17 +10,13 @@
 </form>
 <div id="datatable"></div>
 <script>
-    $(function () {
-        // User.testJson();
-    });
-
     var Movies = {
         testJson: function () {
             //url:表示后台的url，就是 RequestMapping配置的内容
             // type：http请求的类型
             var id;
             $.ajax({
-                url: "${pageContext.request.contextPath }/movies/test",
+                url: "/moviesComment",
                 data:{id:id},
                 type: "post",
                 async:false,
@@ -31,16 +26,18 @@
                 dataType: "json",
                 //成功响应的结果
                 success: function (data) {
-                    var arr = data.list;
-                    for(var i=0;i<data.list.length;i++){
-                        var movieid=arr[i].id;
-                        var name=arr[i].name;
+                    var arr = data.commentList;
+                    for(var i=0;i<data.commentList.length;i++){
+                        var movieid=arr[i].movie_id;
+                        var content=arr[i].content;
+                        var username=arr[i].user.user_name;
                         console.log(movieid);
-                        console.log(name);
+                        console.log(content);
                         var m= [];
                         m[i]="<ul>";
                         m[i]+="<li>"+"电影id："+movieid+"</li>";
-                        m[i]+="<li>"+"电影名："+name+"</li>";
+                        m[i]+="<li>"+"评论内容："+content+"</li>";
+                        m[i]+="<li>"+"评论用户名："+username+"</li>";
                         m[i]+="</ul>";
                         $('#datatable').append(m[i]);
                     }

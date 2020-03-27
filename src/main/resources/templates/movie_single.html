@@ -24,6 +24,9 @@
     <!-- font-awesome icons -->
     <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
     <!-- //font-awesome icons -->
+    <link rel="stylesheet" th:href="@{/css/zerogrid.css}" >
+    <link rel="stylesheet" th:href="@{/css/style1.css}">
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
     <!-- js -->
     <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
     <!-- //js -->
@@ -184,6 +187,130 @@
     </nav>
 </div>
 <!-- single -->
+<script th:src="@{js/getParam.js}"></script>
+<link rel="stylesheet" th:href="@{/css/amazeui.min.css}" />
+<script th:src="@{js/amazeui.min.js}"></script>
+<script>
+    function showPage(page){               //评论分页
+        var url = document.location.href;
+        var movie_id = getParam(url,'movie_id');
+        var id;
+        var perpage=1;
+        $.ajax({
+            url: "/moviesComment?movie_id="+movie_id,
+            data:{id:id},
+            type: "post",
+            async:false,
+            // 定义发送请求的数据格式为JSON字符串
+            contentType: "application/json;charset=UTF-8",
+            //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+            dataType: "json",
+            //成功响应的结果
+            success: function (data) {
+                var commentsTotalNum = data.commentList.length; //新闻记录的总条数
+                var comment = data.commentList;
+                var pageNum = Math.ceil(commentsTotalNum/perpage); //分页的总页数
+                var html ='';
+                for(var i=((page-1)*perpage);i<(page*perpage)&&i<commentsTotalNum;i++){
+                    var movieid=comment[i].movie_id;
+                    var content=comment[i].content;
+                    var username=comment[i].user.user_name;
+                    console.log(movieid);
+                    html +='<div class="media">';
+                    html+="<h5>"+username+"</h5>";
+                    html+='<div class="media-left">';
+                    html+='<a href="#">';
+                    html+='<img src="images/user.jpg" title="One movies" alt=" " />';
+                    html+='</a>';
+                    html+='</div>';
+                    html+='<div class="media-body">';
+                    html+='<p>'+content+'</p>';
+                    html+='<span>View all posts by :<a href="#"> Admin </a></span>'
+                    html+='</div>';
+                    html+='</div>';
+                }
+                html += '<div class="am-cf">' +
+                    '共'+commentsTotalNum+'条评论 /'+pageNum+'页' +
+                    '<div class="am-fr">' +
+                    '<ul class="am-pagination" id="page">';
+                //判断前面是否还有页面
+                if(page == 1){
+                    html += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >«</a></li>';
+                }else{
+                    html += '<li><a href="javascript:showPage('+(page-1)+')" rel="external nofollow" >«</a></li>';
+                }
+                for(var i=1;i<=pageNum;i++){
+                    if(i == page){
+                        html += '<li class="am-active"><a href="javascript:showPage('+i+')" rel="external nofollow" rel="external nofollow" >'+i+'</a></li>';
+                    }else{
+                        html += '<li><a href="javascript:showPage('+i+')" rel="external nofollow" rel="external nofollow" >'+i+'</a></li>';
+                    }
+                }
+                //判断后面是否还有页面
+                if(page == pageNum){
+                    html += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >»</a></li>';
+                }else{
+                    html += '<li><a href="javascript:showPage('+(page+1)+')" rel="external nofollow" >»</a></li>';
+                }
+                html += '</ul>' +
+                    '</div>' +
+                    '</div><hr>'
+                    ;
+                $('#listTag').empty();
+                $('#listTag').append(html);
+
+            }
+        });
+    }
+
+</script>
+<script>
+    var Movies = {
+        getInfo: function () {
+            //url:表示后台的url，就是 RequestMapping配置的内容
+            // type：http请求的类型
+            var url = document.location.href;
+            var movie_id = getParam(url,'movie_id');
+            var id;
+            $.ajax({
+                url: "/moviesInfo?movie_id="+movie_id,
+                data:{id:id},
+                type: "post",
+                async:false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var movie = data.movie;
+                        console.log(movie.movieid);
+                        //拼接html语句
+                        var m= '' +
+                            '<ul>' +
+                            '<li><p>电影名: <a href="#">'+movie.movie_name+'</a></p></li>' +
+                            '<li><p>简介: <a href="#">'+movie.intro+'</a></p></li>' +
+                            '<li><p>主演: <a href="#">'+movie.main_actor+'</a></p></li>' +
+                            '<li><p>导演: <a href="#">'+movie.director+'</a></p></li>' +
+                            '<li><p>评分: <a href="#">'+movie.rank+'</a></p></li>' +
+                            '<li><p>上映日期: <a href="#">'+movie.release_date+'</a></p></li>' +
+                            '<li><a class="button bt1" href="#">立即购票</a><a class="button bt1" href="#">Trailer</a></li>' +
+                            '<li class="star"><a href="#"><img src="images/star.png" /></a></li>' +
+                            '</ul>';
+                        $('#moviesInfo').html(m);
+
+                }});
+
+        }
+    };
+</script>
+<script>
+    $(function () {
+        showPage(1);
+        Movies.getInfo();
+    });
+</script>
+
 <div class="single-page-agile-main">
     <div class="container">
         <!-- /w3l-medile-movies-grids -->
@@ -197,14 +324,60 @@
             <!-- /movie-browse-agile -->
             <div class="show-top-grids-w3lagile">
                 <div class="col-sm-8 single-left">
-                    <div class="song">
+                    <div class="art-header">
+                        <div class="col-1-3">
+                            <div class="wrap-col">
+                                <img src="images/boy7.png" />
+                            </div>
+                        </div>
+                        <div class="col-2-3">
+                            <div class="wrap-col">
+                            <!--<div class="wrap-col">
+                                <ul>
+                                    <li><p>Name: <a href="#">${movie.movie_name}</a></p></li>
+                                    <li><p>Production: <a href="#">Action</a></p></li>
+                                    <li><p>Actor: <a href="#">Action</a></p></li>
+                                    <li><p>Director: <a href="#">Action</a></p></li>
+                                    <li><p>Nation: <a href="#">Action</a></p></li>
+                                    <li><p>Tags: <a href="#">Action</a></p></li>
+                                    <li><p>Upload: <a href="#">Action</a></p></li>
+                                    <li><a class="button bt1" href="#">Play</a><a class="button bt1" href="#">Trailer</a></li>
+                                    <li class="star"><a href="#"><img src="images/star.png" /></a></li>
+                                </ul>
+                            </div>-->
+                            <div id="moviesInfo"></div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--<div class="art-content">
+                        <p>电影介绍1</p>
+                        <img src="images/0.jpg" />
+                        <p>电影介绍2</p>
+                        <blockquote><p>电影介绍3</p></blockquote>
+                        <img src="images/17.jpg" />
+                        <p>电影介绍4</p>
+                        <div class="note">
+                            <ol>
+                                <li>Lorem ipsum</li>
+                                <li>Sit amet vultatup nonumy</li>
+                                <li>Duista sed diam</li>
+                            </ol>
+                            <div class="clear"></div>
+                        </div>
+                        <img src="images/16.jpg" />
+                        <p>电影介绍5</p>
+                        <p>电影介绍6</p>
+                        <div class="clear"></div>
+                    </div>-->
+                  <!--  <div class="song">
                         <div class="song-info">
-                            <h3>THE LEGEND OF TARZAN - Official Trailer 2</h3>
+                            <h3>电影名</h3>
                         </div>
                         <div class="video-grid-single-page-agileits">
                             <div data-video="dLmKio67pVQ" id="video"> <img src="images/5.jpg" alt="" class="img-responsive" /> </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="song-grid-right">
                         <div class="share">
                             <h5>Share this</h5>
@@ -247,7 +420,45 @@
                         </div>
                     </div>
                     <div class="clearfix"> </div>
+                    <div class="media-grids" id="listTag">
+                        <!--<div class="media">
+                            <h5>TOM BROWN</h5>
+                            <div class="media-left">
+                                <a href="#">
+                                    <img src="images/user.jpg" title="One movies" alt=" " />
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <p>Maecenas ultricies rhoncus tincidunt maecenas imperdiet ipsum id ex pretium hendrerit maecenas imperdiet ipsum id ex pretium hendrerit</p>
+                                <span>View all posts by :<a href="#"> Admin </a></span>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <h5>MARK JOHNSON</h5>
+                            <div class="media-left">
+                                <a href="#">
+                                    <img src="images/user.jpg" title="One movies" alt=" " />
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <p>Maecenas ultricies rhoncus tincidunt maecenas imperdiet ipsum id ex pretium hendrerit maecenas imperdiet ipsum id ex pretium hendrerit</p>
+                                <span>View all posts by :<a href="#"> Admin </a></span>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <h5>STEVEN SMITH</h5>
+                            <div class="media-left">
+                                <a href="#">
+                                    <img src="images/user.jpg" title="One movies" alt=" " />
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <p>Maecenas ultricies rhoncus tincidunt maecenas imperdiet ipsum id ex pretium hendrerit maecenas imperdiet ipsum id ex pretium hendrerit</p>
+                                <span>View all posts by :<a href="#"> Admin </a></span>
+                            </div>
+                        </div>-->
 
+                    </div>
                     <div class="all-comments">
                         <div class="all-comments-info">
                             <a href="#">Comments</a>
@@ -261,45 +472,6 @@
                                     <div class="clearfix"> </div>
                                 </form>
                             </div>
-                        </div>
-                        <div class="media-grids">
-                            <div class="media">
-                                <h5>TOM BROWN</h5>
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img src="images/user.jpg" title="One movies" alt=" " />
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <p>Maecenas ultricies rhoncus tincidunt maecenas imperdiet ipsum id ex pretium hendrerit maecenas imperdiet ipsum id ex pretium hendrerit</p>
-                                    <span>View all posts by :<a href="#"> Admin </a></span>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <h5>MARK JOHNSON</h5>
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img src="images/user.jpg" title="One movies" alt=" " />
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <p>Maecenas ultricies rhoncus tincidunt maecenas imperdiet ipsum id ex pretium hendrerit maecenas imperdiet ipsum id ex pretium hendrerit</p>
-                                    <span>View all posts by :<a href="#"> Admin </a></span>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <h5>STEVEN SMITH</h5>
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img src="images/user.jpg" title="One movies" alt=" " />
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <p>Maecenas ultricies rhoncus tincidunt maecenas imperdiet ipsum id ex pretium hendrerit maecenas imperdiet ipsum id ex pretium hendrerit</p>
-                                    <span>View all posts by :<a href="#"> Admin </a></span>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>

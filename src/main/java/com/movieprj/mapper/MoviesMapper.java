@@ -2,6 +2,7 @@ package com.movieprj.mapper;
 
 import com.movieprj.beans.Movies;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 
@@ -11,6 +12,9 @@ import java.util.List;
 @Mapper
 public interface MoviesMapper {
     public List<Movies> findAll();
+
+    @Select("SELECT * FROM movie WHERE movie_id =#{movie_id}")
+    public Movies selectMoviesById(Integer movie_id);
 
     public  List<Movies> selectMoviesByOnshow(boolean onshow);
 

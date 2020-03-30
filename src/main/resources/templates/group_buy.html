@@ -1,73 +1,47 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>看电影</title>
+    <title>Dynamic</title>
     <!-- for-mobile-apps -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="keywords" content=""/>
-    <script type="application/x-javascript"> addEventListener("load", function () {
-        setTimeout(hideURLbar, 0);
-    }, false);
-
-    function hideURLbar() {
-        window.scrollTo(0, 1);
-    } </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+    function hideURLbar(){ window.scrollTo(0,1); } </script>
     <!-- //for-mobile-apps -->
-    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
-    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
-    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all"/>
-    <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all"/>
-    <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css'/>
-    <link th:href="@{/css/medile.css}" rel='stylesheet' type='text/css'/>
-    <!-- banner-slider -->
-    <link th:href="@{/css/jquery.slidey.min.css}" rel="stylesheet">
-    <!-- //banner-slider -->
-    <!-- pop-up -->
-    <link th:href="@{/css/popuo-box.css}" rel="stylesheet" type="text/css" media="all"/>
-    <!-- //pop-up -->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all" />
+    <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all" />
+    <!-- news-css -->
+    <link rel="stylesheet" th:href="@{/css/news-css/news.css}" type="text/css" media="all" />
+    <!-- //news-css -->
+    <!-- list-css -->
+    <link rel="stylesheet" th:href="@{/css/list-css/list.css}" type="text/css" media="all" />
+    <!-- //list-css -->
     <!-- font-awesome icons -->
-    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
     <!-- //font-awesome icons -->
     <!-- js -->
     <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
     <!-- //js -->
-    <!-- banner-bottom-plugin -->
-    <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
-    <script th:src="@{js/owl.carousel.js}"></script>
-    <script>
-        $(document).ready(function () {
-            $("#owl-demo").owlCarousel({
-
-                autoPlay: 3000, //Set AutoPlay to 3 seconds
-
-                items: 5,
-                itemsDesktop: [640, 4],
-                itemsDesktopSmall: [414, 3]
-
-            });
-
-        });
-    </script>
-    <!-- //banner-bottom-plugin -->
     <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
     <!-- start-smoth-scrolling -->
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
     <script type="text/javascript" th:src="@{js/easing.js}"></script>
-
-    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
-<!--    <script type="text/javascript" th:src="@{js/bootstrap.min.js}"></script>-->
-    <script type="text/javascript" th:src="@{js/bootstrap-table.min.js}"></script>
-    <script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.min.js}"></script>
-
     <script type="text/javascript">
-        jQuery(document).ready(function ($) {
-            $(".scroll").click(function (event) {
+        jQuery(document).ready(function($) {
+            $(".scroll").click(function(event){
                 event.preventDefault();
-                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+                $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
             });
         });
     </script>
+
+    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
+    <script type="text/javascript" th:src="@{js/bootstrap-table.min.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.min.js}"></script>
     <script>
         function load_group_buy_data_now() {//请求当期团购数据,并动态创建页面对象。
             $("#group-buy-data-now-table").bootstrapTable({
@@ -168,6 +142,7 @@
 </head>
 
 <body onload="load_group_buy_data_now()">
+<!-- header -->
 <div class="header">
     <div class="container">
         <div class="w3layouts_logo">
@@ -185,9 +160,10 @@
                 <li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
             </ul>
         </div>
-        <div class="clearfix"></div>
+        <div class="clearfix"> </div>
     </div>
 </div>
+<!-- //header -->
 <!-- bootstrap-pop-up -->
 <div class="modal video-modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
     <div class="modal-dialog" role="document">
@@ -248,8 +224,7 @@
     <div class="container">
         <nav class="navbar navbar-default">
             <div class="navbar-header navbar-left">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -265,16 +240,28 @@
                         <li><a th:href="@{/see_movie}">看电影</a></li>
                         <li><a th:href="@{/group_buy}">团购</a></li>
                         <li ><a href="#" >商城 </a></li>
-                        <li><a href="short-codes.html">商务合作信息</a></li>
-                        <li><a href="list.html">关于企业信息</a></li>
+                        <li><a th:href="@{/cooperation}">商务合作信息</a></li>
+                        <li><a th:href="@{/about_us}">关于企业信息</a></li>
                     </ul>
                 </nav>
             </div>
         </nav>
     </div>
 </div>
-<div class="general-agileits-w3l">
-    <div class="w3l-medile-movies-grids">
+<!-- //nav -->
+<div class="general_social_icons">
+    <nav class="social">
+        <ul>
+            <li class="w3_twitter"><a href="#">Twitter <i class="fa fa-twitter"></i></a></li>
+            <li class="w3_facebook"><a href="#">Facebook <i class="fa fa-facebook"></i></a></li>
+            <li class="w3_dribbble"><a href="#">Dribbble <i class="fa fa-dribbble"></i></a></li>
+            <li class="w3_g_plus"><a href="#">Google+ <i class="fa fa-google-plus"></i></a></li>
+        </ul>
+    </nav>
+</div>
+<!-- faq-banner -->
+<div class="faq">
+    <div class="container">
         <div class="tittle-head">
             <div class="container">
                 <div class="agileits-single-top">
@@ -286,7 +273,6 @@
             </div>
         </div>
         <div class="general">
-            <h4 class="latest-text w3_latest_text">团购</h4>
             <div class="container">
                 <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
                     <ul id="myTab" class="nav nav-tabs" role="tablist">
@@ -320,6 +306,8 @@
         </div>
     </div>
 </div>
+<!-- //faq-banner -->
+<!-- footer -->
 <div class="footer">
     <div class="container">
         <div class="w3ls_footer_grid">
@@ -337,12 +325,10 @@
             <div class="col-md-6 w3ls_footer_grid_right">
                 <a href="index.html"><h2>One<span>Movies</span></h2></a>
             </div>
-            <div class="clearfix"></div>
+            <div class="clearfix"> </div>
         </div>
         <div class="col-md-5 w3ls_footer_grid1_left">
-            <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/"
-                                                                                        target="_blank" title="模板之家">模板之家</a>
-                - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+            <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
         </div>
         <div class="col-md-7 w3ls_footer_grid1_right">
             <ul>
@@ -369,9 +355,43 @@
                 </li>
             </ul>
         </div>
-        <div class="clearfix"></div>
+        <div class="clearfix"> </div>
     </div>
 </div>
+<!-- //footer -->
+<!-- Bootstrap Core JavaScript -->
 <script th:src="@{js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function(){
+        $(".dropdown").hover(
+            function() {
+                $('.dropdown-menu', this).stop( true, true ).slideDown("fast");
+                $(this).toggleClass('open');
+            },
+            function() {
+                $('.dropdown-menu', this).stop( true, true ).slideUp("fast");
+                $(this).toggleClass('open');
+            }
+        );
+    });
+</script>
+<!-- //Bootstrap Core JavaScript -->
+<!-- here stars scrolling icon -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        /*
+            var defaults = {
+            containerID: 'toTop', // fading element id
+            containerHoverID: 'toTopHover', // fading element hover id
+            scrollSpeed: 1200,
+            easingType: 'linear'
+            };
+        */
+
+        $().UItoTop({ easingType: 'easeOutQuart' });
+
+    });
+</script>
+<!-- //here ends scrolling icon -->
 </body>
 </html>

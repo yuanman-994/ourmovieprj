@@ -41,7 +41,7 @@ public class HelloControllers {
 
     @RequestMapping("/group_buy")
     public String group_buy() {
-        return "group_buy";
+        return "group_buy_old";
     }
 
     @ResponseBody

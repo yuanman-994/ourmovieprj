@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>团购</title>
+    <title>看电影</title>
     <!-- for-mobile-apps -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -35,13 +35,6 @@
     <!-- banner-bottom-plugin -->
     <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
     <script th:src="@{js/owl.carousel.js}"></script>
-
-
-    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
-    <script type="text/javascript" th:src="@{js/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{js/bootstrap-table.min.js}"></script>
-    <script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.min.js}"></script>
-
     <script>
         $(document).ready(function () {
             $("#owl-demo").owlCarousel({
@@ -58,8 +51,15 @@
     </script>
     <!-- //banner-bottom-plugin -->
     <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
+    <!-- start-smoth-scrolling -->
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
     <script type="text/javascript" th:src="@{js/easing.js}"></script>
+
+    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
+<!--    <script type="text/javascript" th:src="@{js/bootstrap.min.js}"></script>-->
+    <script type="text/javascript" th:src="@{js/bootstrap-table.min.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.min.js}"></script>
+
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $(".scroll").click(function (event) {
@@ -72,16 +72,15 @@
         function load_group_buy_data_now() {//请求当期团购数据,并动态创建页面对象。
             $("#group-buy-data-now-table").bootstrapTable({
                 url: '/group_buy/get_group_buy_data_now',
-                class : 'table table-bordered table-hover table-striped',
+                class: 'table table-bordered table-hover table-striped',
                 striped: true,                      //是否显示行间隔色
-                pagination : true,
+                pagination: true,
                 sortable: true,                     //是否启用排序
                 toolbar: '#toolbar',              //工具按钮用哪个容器
                 pageSize: 15,                     //每页的记录行数（*）
                 pageList: [15, 30, 50],        //可供选择的每页的行数（*）
                 search: true,                      //是否显示表格搜索
-                showRefresh: true,                  //是否显示刷新按钮
-                onClickRow : function(){
+                onClickRow: function () {
                     //团购购票
                 },
                 columns: [{
@@ -92,25 +91,25 @@
                     field: 'start_time',
                     title: '开始时间',
                     sortable: true
-                },{
+                }, {
                     field: 'end_time',
                     title: '结束时间',
                     sortable: true
-                },{
+                }, {
                     field: 'start_sell',
                     title: '开售时间',
                     sortable: true
-                },{
+                }, {
                     field: 'end_sell',
                     title: '结售时间',
                     sortable: true
-                },{
+                }, {
                     field: 'now_sales',
                     title: '已售'
-                },{
+                }, {
                     field: 'max_sales',
                     title: '最大'
-                },{
+                }, {
                     field: 'price',
                     title: '价格',
                     sortable: true
@@ -118,18 +117,18 @@
                 ],
             })
         };
+
         function load_group_buy_data_past() {//请求当期团购数据,并动态创建页面对象。
             $("#group-buy-data-past-table").bootstrapTable({
                 url: '/group_buy/get_group_buy_data_past',
-                class : 'table table-bordered table-hover table-striped',
+                class: 'table table-bordered table-hover table-striped',
                 striped: true,                      //是否显示行间隔色
-                pagination : true,
+                pagination: true,
                 sortable: true,                     //是否启用排序
                 toolbar: '#toolbar',              //工具按钮用哪个容器
                 pageSize: 15,                     //每页的记录行数（*）
                 pageList: [15, 30, 50],        //可供选择的每页的行数（*）
                 search: true,                      //是否显示表格搜索
-                showRefresh: true,                  //是否显示刷新按钮
                 columns: [{
                     field: 'cinema_name',
                     title: '影院名',
@@ -138,25 +137,25 @@
                     field: 'start_time',
                     title: '开始时间',
                     sortable: true
-                },{
+                }, {
                     field: 'end_time',
                     title: '结束时间',
                     sortable: true
-                },{
+                }, {
                     field: 'start_sell',
                     title: '开售时间',
                     sortable: true
-                },{
+                }, {
                     field: 'end_sell',
                     title: '结售时间',
                     sortable: true
-                },{
+                }, {
                     field: 'now_sales',
                     title: '已售'
-                },{
+                }, {
                     field: 'max_sales',
                     title: '最大'
-                },{
+                }, {
                     field: 'price',
                     title: '价格',
                     sortable: true
@@ -165,10 +164,10 @@
             })
         };
     </script>
+    <!-- start-smoth-scrolling -->
 </head>
 
 <body onload="load_group_buy_data_now()">
-<!--首部-->
 <div class="header">
     <div class="container">
         <div class="w3layouts_logo">
@@ -245,7 +244,6 @@
 </script>
 <!-- //bootstrap-pop-up -->
 <!-- nav -->
-<!--顶部菜单-->
 <div class="movies_nav">
     <div class="container">
         <nav class="navbar navbar-default">
@@ -263,10 +261,10 @@
                 <nav>
                     <ul class="nav navbar-nav">
                         <li class="active"><a th:href="@{/index}">首页</a></li>
-                        <li><a th:href="@{/dynamic}">影城动态</a></li>
+                        <li ><a th:href="@{/dynamic}" >影城动态</a></li>
                         <li><a th:href="@{/see_movie}">看电影</a></li>
                         <li><a th:href="@{/group_buy}">团购</a></li>
-                        <li><a href="#">商城 </a></li>
+                        <li ><a href="#" >商城 </a></li>
                         <li><a href="short-codes.html">商务合作信息</a></li>
                         <li><a href="list.html">关于企业信息</a></li>
                     </ul>
@@ -275,20 +273,19 @@
         </nav>
     </div>
 </div>
-<!--页面内容-->
 <div class="general-agileits-w3l">
     <div class="w3l-medile-movies-grids">
-        <div class="general">
-            <div class="tittle-head">
-                <div class="container">
-                    <div class="agileits-single-top">
-                        <ol class="breadcrumb">
-                            <li><a th:href="@{/index}">首页</a></li>
-                            <li class="active">团购</li>
-                        </ol>
-                    </div>
+        <div class="tittle-head">
+            <div class="container">
+                <div class="agileits-single-top">
+                    <ol class="breadcrumb">
+                        <li><a th:href="@{/index}">首页</a></li>
+                        <li class="active">团购</li>
+                    </ol>
                 </div>
             </div>
+        </div>
+        <div class="general">
             <h4 class="latest-text w3_latest_text">团购</h4>
             <div class="container">
                 <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
@@ -313,7 +310,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
                             <!--其它栏内容-->
                             <div class="container">
-                                <table id = "group-buy-data-past-table">
+                                <table id="group-buy-data-past-table">
                                 </table>
                             </div>
                         </div>
@@ -322,7 +319,6 @@
             </div>
         </div>
     </div>
-    <!-- //w3l-medile-movies-grids -->
 </div>
 <div class="footer">
     <div class="container">

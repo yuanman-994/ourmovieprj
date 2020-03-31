@@ -14,6 +14,7 @@ import java.util.List;
 public class GroupBuyTest {
     @Resource
     private GroupBuyMapper groupBuyMapper;
+
     @Test
     public void SelectGroupBuy(){
         List<GroupBuyBeans> groupBuy = groupBuyMapper.getAllGroupBuyData();

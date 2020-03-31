@@ -68,9 +68,6 @@ public class MoviesController {
         List<Movies> list = moviesService.selectMoviesByOnshow(onshow);
         return list;
     }
-
-
-
     @RequestMapping("/getComment")
     public String moviesTest() {
         return "movies_test";

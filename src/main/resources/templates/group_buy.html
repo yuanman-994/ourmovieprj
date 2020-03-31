@@ -1,87 +1,60 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>团购</title>
+    <title>Dynamic</title>
     <!-- for-mobile-apps -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="keywords" content=""/>
-    <script type="application/x-javascript"> addEventListener("load", function () {
-        setTimeout(hideURLbar, 0);
-    }, false);
-
-    function hideURLbar() {
-        window.scrollTo(0, 1);
-    } </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+    function hideURLbar(){ window.scrollTo(0,1); } </script>
     <!-- //for-mobile-apps -->
-    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
-    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
-    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all"/>
-    <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all"/>
-    <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css'/>
-    <link th:href="@{/css/medile.css}" rel='stylesheet' type='text/css'/>
-    <!-- banner-slider -->
-    <link th:href="@{/css/jquery.slidey.min.css}" rel="stylesheet">
-    <!-- //banner-slider -->
-    <!-- pop-up -->
-    <link th:href="@{/css/popuo-box.css}" rel="stylesheet" type="text/css" media="all"/>
-    <!-- //pop-up -->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all" />
+    <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all" />
+    <!-- news-css -->
+    <link rel="stylesheet" th:href="@{/css/news-css/news.css}" type="text/css" media="all" />
+    <!-- //news-css -->
+    <!-- list-css -->
+    <link rel="stylesheet" th:href="@{/css/list-css/list.css}" type="text/css" media="all" />
+    <!-- //list-css -->
     <!-- font-awesome icons -->
-    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
     <!-- //font-awesome icons -->
     <!-- js -->
     <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
     <!-- //js -->
-    <!-- banner-bottom-plugin -->
-    <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
-    <script th:src="@{js/owl.carousel.js}"></script>
-
-
-    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
-    <script type="text/javascript" th:src="@{js/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{js/bootstrap-table.min.js}"></script>
-    <script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.min.js}"></script>
-
-    <script>
-        $(document).ready(function () {
-            $("#owl-demo").owlCarousel({
-
-                autoPlay: 3000, //Set AutoPlay to 3 seconds
-
-                items: 5,
-                itemsDesktop: [640, 4],
-                itemsDesktopSmall: [414, 3]
-
-            });
-
-        });
-    </script>
-    <!-- //banner-bottom-plugin -->
     <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
+    <!-- start-smoth-scrolling -->
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
     <script type="text/javascript" th:src="@{js/easing.js}"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function ($) {
-            $(".scroll").click(function (event) {
+        jQuery(document).ready(function($) {
+            $(".scroll").click(function(event){
                 event.preventDefault();
-                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+                $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
             });
         });
     </script>
+
+    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
+    <script type="text/javascript" th:src="@{js/bootstrap-table.min.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.min.js}"></script>
     <script>
         function load_group_buy_data_now() {//请求当期团购数据,并动态创建页面对象。
             $("#group-buy-data-now-table").bootstrapTable({
                 url: '/group_buy/get_group_buy_data_now',
-                class : 'table table-bordered table-hover table-striped',
+                class: 'table table-bordered table-hover table-striped',
                 striped: true,                      //是否显示行间隔色
-                pagination : true,
+                pagination: true,
                 sortable: true,                     //是否启用排序
                 toolbar: '#toolbar',              //工具按钮用哪个容器
                 pageSize: 15,                     //每页的记录行数（*）
                 pageList: [15, 30, 50],        //可供选择的每页的行数（*）
                 search: true,                      //是否显示表格搜索
-                showRefresh: true,                  //是否显示刷新按钮
-                onClickRow : function(){
+                onClickRow: function () {
                     //团购购票
                 },
                 columns: [{
@@ -92,25 +65,25 @@
                     field: 'start_time',
                     title: '开始时间',
                     sortable: true
-                },{
+                }, {
                     field: 'end_time',
                     title: '结束时间',
                     sortable: true
-                },{
+                }, {
                     field: 'start_sell',
                     title: '开售时间',
                     sortable: true
-                },{
+                }, {
                     field: 'end_sell',
                     title: '结售时间',
                     sortable: true
-                },{
+                }, {
                     field: 'now_sales',
                     title: '已售'
-                },{
+                }, {
                     field: 'max_sales',
                     title: '最大'
-                },{
+                }, {
                     field: 'price',
                     title: '价格',
                     sortable: true
@@ -118,18 +91,18 @@
                 ],
             })
         };
+
         function load_group_buy_data_past() {//请求当期团购数据,并动态创建页面对象。
             $("#group-buy-data-past-table").bootstrapTable({
                 url: '/group_buy/get_group_buy_data_past',
-                class : 'table table-bordered table-hover table-striped',
+                class: 'table table-bordered table-hover table-striped',
                 striped: true,                      //是否显示行间隔色
-                pagination : true,
+                pagination: true,
                 sortable: true,                     //是否启用排序
                 toolbar: '#toolbar',              //工具按钮用哪个容器
                 pageSize: 15,                     //每页的记录行数（*）
                 pageList: [15, 30, 50],        //可供选择的每页的行数（*）
                 search: true,                      //是否显示表格搜索
-                showRefresh: true,                  //是否显示刷新按钮
                 columns: [{
                     field: 'cinema_name',
                     title: '影院名',
@@ -138,25 +111,25 @@
                     field: 'start_time',
                     title: '开始时间',
                     sortable: true
-                },{
+                }, {
                     field: 'end_time',
                     title: '结束时间',
                     sortable: true
-                },{
+                }, {
                     field: 'start_sell',
                     title: '开售时间',
                     sortable: true
-                },{
+                }, {
                     field: 'end_sell',
                     title: '结售时间',
                     sortable: true
-                },{
+                }, {
                     field: 'now_sales',
                     title: '已售'
-                },{
+                }, {
                     field: 'max_sales',
                     title: '最大'
-                },{
+                }, {
                     field: 'price',
                     title: '价格',
                     sortable: true
@@ -165,10 +138,11 @@
             })
         };
     </script>
+    <!-- start-smoth-scrolling -->
 </head>
 
 <body onload="load_group_buy_data_now()">
-<!--首部-->
+<!-- header -->
 <div class="header">
     <div class="container">
         <div class="w3layouts_logo">
@@ -186,9 +160,10 @@
                 <li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
             </ul>
         </div>
-        <div class="clearfix"></div>
+        <div class="clearfix"> </div>
     </div>
 </div>
+<!-- //header -->
 <!-- bootstrap-pop-up -->
 <div class="modal video-modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
     <div class="modal-dialog" role="document">
@@ -245,13 +220,11 @@
 </script>
 <!-- //bootstrap-pop-up -->
 <!-- nav -->
-<!--顶部菜单-->
 <div class="movies_nav">
     <div class="container">
         <nav class="navbar navbar-default">
             <div class="navbar-header navbar-left">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -275,21 +248,31 @@
         </nav>
     </div>
 </div>
-<!--页面内容-->
-<div class="general-agileits-w3l">
-    <div class="w3l-medile-movies-grids">
-        <div class="general">
-            <div class="tittle-head">
-                <div class="container">
-                    <div class="agileits-single-top">
-                        <ol class="breadcrumb">
-                            <li><a th:href="@{/index}">首页</a></li>
-                            <li class="active">团购</li>
-                        </ol>
-                    </div>
+<!-- //nav -->
+<div class="general_social_icons">
+    <nav class="social">
+        <ul>
+            <li class="w3_twitter"><a href="#">Twitter <i class="fa fa-twitter"></i></a></li>
+            <li class="w3_facebook"><a href="#">Facebook <i class="fa fa-facebook"></i></a></li>
+            <li class="w3_dribbble"><a href="#">Dribbble <i class="fa fa-dribbble"></i></a></li>
+            <li class="w3_g_plus"><a href="#">Google+ <i class="fa fa-google-plus"></i></a></li>
+        </ul>
+    </nav>
+</div>
+<!-- faq-banner -->
+<div class="faq">
+    <div class="container">
+        <div class="tittle-head">
+            <div class="container">
+                <div class="agileits-single-top">
+                    <ol class="breadcrumb">
+                        <li><a th:href="@{/index}">首页</a></li>
+                        <li class="active">团购</li>
+                    </ol>
                 </div>
             </div>
-            <h4 class="latest-text w3_latest_text">团购</h4>
+        </div>
+        <div class="general">
             <div class="container">
                 <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
                     <ul id="myTab" class="nav nav-tabs" role="tablist">
@@ -313,7 +296,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
                             <!--其它栏内容-->
                             <div class="container">
-                                <table id = "group-buy-data-past-table">
+                                <table id="group-buy-data-past-table">
                                 </table>
                             </div>
                         </div>
@@ -322,8 +305,9 @@
             </div>
         </div>
     </div>
-    <!-- //w3l-medile-movies-grids -->
 </div>
+<!-- //faq-banner -->
+<!-- footer -->
 <div class="footer">
     <div class="container">
         <div class="w3ls_footer_grid">
@@ -341,12 +325,10 @@
             <div class="col-md-6 w3ls_footer_grid_right">
                 <a href="index.html"><h2>One<span>Movies</span></h2></a>
             </div>
-            <div class="clearfix"></div>
+            <div class="clearfix"> </div>
         </div>
         <div class="col-md-5 w3ls_footer_grid1_left">
-            <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/"
-                                                                                        target="_blank" title="模板之家">模板之家</a>
-                - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+            <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
         </div>
         <div class="col-md-7 w3ls_footer_grid1_right">
             <ul>
@@ -373,9 +355,43 @@
                 </li>
             </ul>
         </div>
-        <div class="clearfix"></div>
+        <div class="clearfix"> </div>
     </div>
 </div>
+<!-- //footer -->
+<!-- Bootstrap Core JavaScript -->
 <script th:src="@{js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function(){
+        $(".dropdown").hover(
+            function() {
+                $('.dropdown-menu', this).stop( true, true ).slideDown("fast");
+                $(this).toggleClass('open');
+            },
+            function() {
+                $('.dropdown-menu', this).stop( true, true ).slideUp("fast");
+                $(this).toggleClass('open');
+            }
+        );
+    });
+</script>
+<!-- //Bootstrap Core JavaScript -->
+<!-- here stars scrolling icon -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        /*
+            var defaults = {
+            containerID: 'toTop', // fading element id
+            containerHoverID: 'toTopHover', // fading element hover id
+            scrollSpeed: 1200,
+            easingType: 'linear'
+            };
+        */
+
+        $().UItoTop({ easingType: 'easeOutQuart' });
+
+    });
+</script>
+<!-- //here ends scrolling icon -->
 </body>
 </html>

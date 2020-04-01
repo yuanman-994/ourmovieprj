@@ -3,80 +3,80 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.movieprj.mapper.MoviesMapper1">
-    <select id="findAll" resultMap="moviesInfo">
-    SELECT *
-    FROM movie
-    </select>
-    
-    <select id="selectMoviesByOnshow" resultMap="moviesInfo">
-    SELECT *
-    FROM movie
-    WHERE onshow = 1
-    </select>
+<!--    <select id="findAll" resultMap="moviesInfo">-->
+<!--    SELECT *-->
+<!--    FROM movie-->
+<!--    </select>-->
+<!--    -->
+<!--    <select id="selectMoviesByOnshow" resultMap="moviesInfo">-->
+<!--    SELECT *-->
+<!--    FROM movie-->
+<!--    WHERE onshow = 1-->
+<!--    </select>-->
 
-    <select id="selectMoviesById" resultMap="moviesInfo">
-        SELECT *
-        FROM movie
-        WHERE movie_id = #{movie_id}
-    </select>
-    <!--<select id="findMoviesWithCommentsById" resultMap="MoviesWithCommentsResult">
-    SELECT m.*,c.*,u.user_id,u.user_name
-    FROM movie as m,movie_commen as c,user as u
-    WHERE m.movie_id=c.movie_id
-    AND c.user_id=u.user_id
-    AND m.movie_id = #{movie_id}
-    </select>-->
+<!--    <select id="selectMoviesById" resultMap="moviesInfo">-->
+<!--        SELECT *-->
+<!--        FROM movie-->
+<!--        WHERE movie_id = #{movie_id}-->
+<!--    </select>-->
+<!--    &lt;!&ndash;<select id="findMoviesWithCommentsById" resultMap="MoviesWithCommentsResult">-->
+<!--    SELECT m.*,c.*,u.user_id,u.user_name-->
+<!--    FROM movie as m,movie_commen as c,user as u-->
+<!--    WHERE m.movie_id=c.movie_id-->
+<!--    AND c.user_id=u.user_id-->
+<!--    AND m.movie_id = #{movie_id}-->
+<!--    </select>&ndash;&gt;-->
 
-    <insert id="addMovies" parameterType="com.movieprj.beans.Movies">
-    INSERT INTO movie ()
-    VALUES()
-    </insert>
-    
-    <delete id="deleteMovies" parameterType="int">
-    DELETE FROM movie
-    WHERE movie_id = #{id}
-    </delete>
-    
-    <update id="updateMovies" parameterType="com.movieprj.beans.Movies">
-    UPDATE movie
-    <set>
-        <if test="name!=null">name = #{name},</if>
-        <if test="time!=null">time = #{time},</if>
-        <if test="director!=null">director = #{director},</if>
-        <if test="actors!=null">actors = #{actors},</if>
-        <if test="countryAndReligion!=null">countryAndReligion = #{countryAndReligion},</if>
-        <if test="type!=null">type = #{type},</if>
-        <if test="duration!=null">duration = #{duration},</if>
-    </set>
-    WHERE id = #{id}
-    </update>
-    
-    <resultMap id="moviesInfo" type="com.movieprj.beans.Movies">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="time" column="time"/>
-        <result property="director" column="director"/>
-        <result property="actors" column="actors"/>
-        <result property="countryAndReligion" column="countryAndReligion"/>
-        <result property="type" column="type"/>
-        <result property="duration" column="duration"/>
-    </resultMap>
+<!--    <insert id="addMovies" parameterType="com.movieprj.beans.Movies">-->
+<!--    INSERT INTO movie ()-->
+<!--    VALUES()-->
+<!--    </insert>-->
+<!--    -->
+<!--    <delete id="deleteMovies" parameterType="int">-->
+<!--    DELETE FROM movie-->
+<!--    WHERE movie_id = #{id}-->
+<!--    </delete>-->
+<!--    -->
+<!--    <update id="updateMovies" parameterType="com.movieprj.beans.Movies">-->
+<!--    UPDATE movie-->
+<!--    <set>-->
+<!--        <if test="name!=null">name = #{name},</if>-->
+<!--        <if test="time!=null">time = #{time},</if>-->
+<!--        <if test="director!=null">director = #{director},</if>-->
+<!--        <if test="actors!=null">actors = #{actors},</if>-->
+<!--        <if test="countryAndReligion!=null">countryAndReligion = #{countryAndReligion},</if>-->
+<!--        <if test="type!=null">type = #{type},</if>-->
+<!--        <if test="duration!=null">duration = #{duration},</if>-->
+<!--    </set>-->
+<!--    WHERE id = #{id}-->
+<!--    </update>-->
+<!--    -->
+<!--    <resultMap id="moviesInfo" type="com.movieprj.beans.Movies">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="name" column="name"/>-->
+<!--        <result property="time" column="time"/>-->
+<!--        <result property="director" column="director"/>-->
+<!--        <result property="actors" column="actors"/>-->
+<!--        <result property="countryAndReligion" column="countryAndReligion"/>-->
+<!--        <result property="type" column="type"/>-->
+<!--        <result property="duration" column="duration"/>-->
+<!--    </resultMap>-->
 
-    <resultMap id="MoviesWithCommentsResult" type="com.movieprj.beans.Movies">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="time" column="time"/>
-        <result property="director" column="director"/>
-        <result property="actors" column="actors"/>
-        <result property="countryAndReligion" column="countryAndReligion"/>
-        <result property="type" column="type"/>
-        <result property="duration" column="duration"/>
-        <collection property="commentList" ofType="com.movieprj.beans.Comment">
-            <id property="movie_id" column="movie_id"/>
-            <id property="user_id" column="user_id"/>
-            <result property="content" column="content"/>
-            <result property="comment_time" column="comment_time"/>
-            <result property="user.user_name" column="user.user_name"/>
-        </collection>
-    </resultMap>
+<!--    <resultMap id="MoviesWithCommentsResult" type="com.movieprj.beans.Movies">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="name" column="name"/>-->
+<!--        <result property="time" column="time"/>-->
+<!--        <result property="director" column="director"/>-->
+<!--        <result property="actors" column="actors"/>-->
+<!--        <result property="countryAndReligion" column="countryAndReligion"/>-->
+<!--        <result property="type" column="type"/>-->
+<!--        <result property="duration" column="duration"/>-->
+<!--        <collection property="commentList" ofType="com.movieprj.beans.Comment">-->
+<!--            <id property="movie_id" column="movie_id"/>-->
+<!--            <id property="user_id" column="user_id"/>-->
+<!--            <result property="content" column="content"/>-->
+<!--            <result property="comment_time" column="comment_time"/>-->
+<!--            <result property="user.user_name" column="user.user_name"/>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
 </mapper>

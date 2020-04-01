@@ -1,15 +1,16 @@
 package com.movieprj.beans;
 
 
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.List;
+
 
 //简短的用户表，只包含id，name，角色，用于登录认作及权限管理等功能
 public class UserPassword {
     private Integer user_id;
     private String user_name;
     private String password;
-    private Set<Role> roles = new HashSet<>();//用户拥有的角色
+    private List<Role> roles;//用户拥有的角色
 
     public Integer getUser_id() {
         return user_id;
@@ -35,11 +36,11 @@ public class UserPassword {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 

@@ -1,13 +1,14 @@
 package com.movieprj.beans;
 
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.List;
+
 
 //普通用户（非后台用户），角色类
 public class Role {
     private int role_id;//角色id
     private String role_name;//角色名，（普通，VIP等）
-    private Set<Permission> permissions = new HashSet<>();
+    private List<Permission> permissions;
 
     public int getRole_id() {
         return role_id;
@@ -25,11 +26,21 @@ public class Role {
         this.role_name = role_name;
     }
 
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
                 "role_id=" + role_id +
                 ", role_name='" + role_name + '\'' +
+                ", permissions=" + permissions +
                 '}';
     }
 }

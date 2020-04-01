@@ -1,5 +1,7 @@
 package com.movieprj.controllers;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,11 +46,21 @@ public class HelloControllers {
         return "group_buy";
     }
 
+
+
     @RequestMapping("/about_us")
     public String about_us(){ return "about_us";}
 
     @RequestMapping("/cooperation")
     public String cooperation(){ return "cooperation";}
+
+    @RequestMapping("/err")
+    @ResponseBody
+    public String err(){ return "没有权限!";}
+
+    @RequestMapping("/please_login_first")
+    @ResponseBody
+    public String please_login_first(){ return "请先登录!";}
 
     @ResponseBody
     @RequestMapping("/hello")

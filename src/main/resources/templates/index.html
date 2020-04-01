@@ -30,6 +30,7 @@
     <!-- banner-bottom-plugin -->
     <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
     <script th:src="@{js/owl.carousel.js}"></script>
+    <script th:src="@{js/login.js}"></script>
     <script>
         $(document).ready(function() {
             $("#owl-demo").owlCarousel({
@@ -57,6 +58,7 @@
             });
         });
     </script>
+
     <!-- start-smoth-scrolling -->
 </head>
 
@@ -100,10 +102,13 @@
                             </div>
                             <div class="form">
                                 <h3>Login to your account</h3>
-                                <form action="#" method="post">
-                                    <input type="text" name="Username" placeholder="Username" required="">
-                                    <input type="password" name="Password" placeholder="Password" required="">
-                                    <input type="submit" value="Login">
+                                <form>
+                                    <input type="text" name="user_name" placeholder="user_name" required="" >
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <ul>
+                                        <input type="button" value="Login" onclick="try_login()">
+                                        <a name="tips"></a>
+                                    </ul>
                                 </form>
                             </div>
                             <div class="form">

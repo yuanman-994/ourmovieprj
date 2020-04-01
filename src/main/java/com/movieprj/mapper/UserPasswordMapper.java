@@ -11,8 +11,9 @@ import java.util.List;
 public interface UserPasswordMapper {
 
     // 查询用户信息
-    @Select("SELECT * FROM user_password WHERE user_name =#{name}")
-    public UserPassword findByName(String name);
+    @Select("SELECT user_id FROM user_password WHERE user_name = #{name}")
+    public int findIdByName(String name);//以用户名查找用户id
+
     public UserPassword findById(Integer uid);//多表联合查询，user_password,role,permission
     public Role findRoleById (Integer rid);//role permisssion两表联合查询
     public List<Permission> findRolePermissionById(Integer rid);//从role_permission,permission中查找role_id为rid的role的permission

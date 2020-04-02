@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>企业相关信息</title>
     <!-- for-mobile-apps -->
@@ -212,6 +213,52 @@
         <!--百度地图容器-->
         <div style="width:697px;height:550px;border:#ccc solid 1px;margin:0px auto;" id="dituContent"></div>
         </div>
+
+    <h4 class="latest-text w3_latest_text">问题反馈</h4>
+
+    <div class="container">
+
+
+
+
+    <div class="all-comments">
+        <div class="all-comments-info">
+            <h3 >报告问题</h3>
+            <div class="agile-info-wthree-box">
+                <form>
+                    <input type="text" placeholder="Name" required="">
+                    <input type="text" placeholder="Email" required="">
+                    <input type="text" placeholder="相关单号" required="">
+                    <div class="wrap-col f-right">
+                        <ul>
+                            <li >
+                                <strong>问题类型：</strong>
+                                <span class="fl">
+                                <select id="errorType">
+                      <option value="1">购票问题</option>
+                                <option value="2">信息报错</option>
+                       <option value="3">举报问题</option>
+                                <option value="4">其他问题</option>
+                                </select>
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <textarea placeholder="Message" required=""></textarea>
+                    <input type="submit" value="SEND">
+                    <div class="clearfix"> </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    </div>
+
     </div>
 </div>
 <div class="footer">
@@ -306,8 +353,9 @@
     }
 
     //标注点数组
-    var markerArr = [{title:"华莱士一号影城",content:"我的备注",point:"104.102913|30.679865",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
-        ,{title:"华莱士二号影城",content:"我的备注",point:"104.106632|30.683592",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+    var markerArr = [{title:"华莱士一号影城",content:"西源大道19号",point:"103.935077|30.762955",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+        ,{title:"华莱士0号影城",content:"一环路东一段240号",point:"104.103416|30.680377",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+        ,{title:"华莱士2号影城",content:"川大路二段2号",point:"104.070862|30.650207",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
     ];
     //创建marker
     function addMarker(){

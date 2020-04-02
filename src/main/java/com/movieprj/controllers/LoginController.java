@@ -41,8 +41,9 @@ public class LoginController {
     @GetMapping("/logout")
     @ResponseBody
     public String logout(){
-        return "test";
+        return "logout";
     }
+
 
 //    //注解验角色和权限
 //    @RequiresRoles("commen")

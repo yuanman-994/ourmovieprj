@@ -20,3 +20,15 @@ function logout() {
     $("#login-button").empty()
     $("#login-button").append("Login")
 }
+function get_user_inf() {
+    $.ajax({
+        url: "/get_user_inf",
+        type: "GET",
+        success: function (result) {
+            // $("a[name=tips]").empty()
+            // $("a[name=tips]").append(result)
+            // $("#login-button").empty()
+            // $("#login-button").append(name)
+        }
+    })
+}

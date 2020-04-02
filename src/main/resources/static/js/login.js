@@ -10,6 +10,13 @@ function try_login() {
         success: function (result) {
             $("a[name=tips]").empty()
             $("a[name=tips]").append(result)
+            $("#login-button").empty()
+            $("#login-button").append(name)
         }
     })
+}
+
+function logout() {
+    $("#login-button").empty()
+    $("#login-button").append("Login")
 }

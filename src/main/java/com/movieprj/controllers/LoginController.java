@@ -38,6 +38,12 @@ public class LoginController {
         return "登录成功";
     }
 
+    @GetMapping("/logout")
+    @ResponseBody
+    public String logout(){
+        return "test";
+    }
+
 //    //注解验角色和权限
 //    @RequiresRoles("commen")
 //    @RequiresPermissions("vip")

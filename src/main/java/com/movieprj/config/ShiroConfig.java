@@ -49,12 +49,13 @@ public class ShiroConfig {
         map.put("/logout", "logout");
         //对所有用户认证
         map.put("/group_buy", "authc");
+        map.put("/group_buy","roles[VIP]");
         //登录
         shiroFilterFactoryBean.setLoginUrl("/please_login_first");
         //首页
         shiroFilterFactoryBean.setSuccessUrl("/index");
         //错误页面，认证不通过跳转
-        shiroFilterFactoryBean.setUnauthorizedUrl("/error");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/err");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;
     }

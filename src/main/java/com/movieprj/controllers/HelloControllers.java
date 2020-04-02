@@ -46,8 +46,6 @@ public class HelloControllers {
         return "group_buy";
     }
 
-
-
     @RequestMapping("/about_us")
     public String about_us(){ return "about_us";}
 

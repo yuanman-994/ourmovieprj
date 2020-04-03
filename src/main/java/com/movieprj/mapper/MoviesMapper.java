@@ -16,7 +16,8 @@ public interface MoviesMapper {
     @Select("SELECT * FROM movie WHERE movie_id =#{movie_id}")
     public Movies selectMoviesById(Integer movie_id);
 
-    public  List<Movies> selectMoviesByOnshow(boolean onshow);
+    @Select("SELECT * FROM movie WHERE onshow =1")
+    public  List<Movies> selectMoviesByOnshow(Integer onshow);
 
     public void addMovies(Movies movies);
 

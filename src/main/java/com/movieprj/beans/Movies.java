@@ -5,7 +5,7 @@ import java.util.List;
 public class Movies {
     private Integer movie_id;  //id
     private String movie_name; //电影名
-    private MoviesTypes type= new MoviesTypes();//电影类型（一对多）
+    private MoviesTypes type;//电影类型（一对多）
     private String intro;//电影介绍
     private  String cover;  //封面照片
     private  String photo; //剧照
@@ -17,7 +17,7 @@ public class Movies {
     private boolean top; //置顶状态
     private String duration; //时长
     private String countryAndreligion; //国家和地区
-    private boolean onshow;  //正在上映or即将上映
+    private Integer onshow;  //正在上映or即将上映
     private List<Comment> commentList; //评论(一对多）
 
 
@@ -133,11 +133,11 @@ public class Movies {
         this.countryAndreligion = countryAndreligion;
     }
 
-    public boolean isOnshow() {
+    public Integer getOnshow() {
         return onshow;
     }
 
-    public void setOnshow(boolean onshow) {
+    public void setOnshow(Integer onshow) {
         this.onshow = onshow;
     }
 

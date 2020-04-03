@@ -168,7 +168,7 @@ article img{}
 article .art-header{border-bottom: 1px solid #666; border-top: 1px solid #666;}
 article .art-header ul li.star  {padding:15px 5px;}
 article .art-header p{font-size:20px;font-weight:bold;color: #222;}
-article .art-header p a{font-size:18px;font-weight:500;color:#ffefff;}
+article .art-header p a{font-size:18px;font-weight:500;color: rgba(0, 0, 0, 0.71);}
 article .art-header p a:hover{color:#fcab2b;}
 
 

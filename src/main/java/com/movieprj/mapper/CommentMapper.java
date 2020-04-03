@@ -15,13 +15,13 @@ public interface CommentMapper {
             @Result(id=true,property = "movie_id",column = "movie_id"),
             @Result(id=true,property = "user_id",column = "user_id"),
             @Result(property = "content",column = "content"),
-            @Result(property = "comment_time",column = "commen_time"),
+            @Result(property = "comment_time",column = "comment_time"),
             @Result(property = "user",column = "user_id",one=@One(select="com.movieprj.mapper.UserMapper.findUserById",fetchType = FetchType.EAGER)),
     })
     public List<Comment> findCommentWithUserByMovieId(Integer id);
 
-    @Insert("INSERT INTO movie_commen(movie_id,user_id,content,commen_time) " +
-            "values (#{movie_id},#{user_id},#{content},#{commen_time})")
+    @Insert("INSERT INTO movie_commen(movie_id,user_id,content,comment_time) " +
+            "VALUES (#{movie_id},#{user_id},#{content},#{comment_time})")
     public int insertComment(Comment comment);
 
     @Update("UPDATE movie_commen SET content=#{content} WHERE user_id=#{user_id}")

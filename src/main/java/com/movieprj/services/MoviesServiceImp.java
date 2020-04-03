@@ -24,7 +24,7 @@ public class MoviesServiceImp implements MoviesService {
     }
 
     @Override
-    public  List<Movies> selectMoviesByOnshow(boolean onshow){
+    public  List<Movies> selectMoviesByOnshow(Integer onshow){
         return moviesMapper.selectMoviesByOnshow(onshow);
     }
 

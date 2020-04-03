@@ -195,7 +195,7 @@
         var url = document.location.href;
         var movie_id = getParam(url,'movie_id');
         var id;
-        var perpage=1;
+        var perpage=2; //一页显示多少条评论
         $.ajax({
             url: "/moviesComment?movie_id="+movie_id,
             data:{id:id},
@@ -207,7 +207,7 @@
             dataType: "json",
             //成功响应的结果
             success: function (data) {
-                var commentsTotalNum = data.commentList.length; //新闻记录的总条数
+                var commentsTotalNum = data.commentList.length; //评论记录的总条数
                 var comment = data.commentList;
                 var pageNum = Math.ceil(commentsTotalNum/perpage); //分页的总页数
                 var html ='';
@@ -271,6 +271,8 @@
             // type：http请求的类型
             var url = document.location.href;
             var movie_id = getParam(url,'movie_id');
+            document.getElementById("movie_id").value=movie_id;
+            document.getElementById("user_id").value=4;
             var id;
             $.ajax({
                 url: "/moviesInfo?movie_id="+movie_id,
@@ -284,7 +286,6 @@
                 //成功响应的结果
                 success: function (data) {
                     var movie = data.movie;
-                        console.log(movie.movieid);
                         //拼接html语句
                         var m= '' +
                             '<ul>' +
@@ -294,9 +295,10 @@
                             '<li><p>导演: <a href="#">'+movie.director+'</a></p></li>' +
                             '<li><p>评分: <a href="#">'+movie.rank+'</a></p></li>' +
                             '<li><p>上映日期: <a href="#">'+movie.release_date+'</a></p></li>' +
-                            '<li><a class="button bt1" href="#">立即购票</a><a class="button bt1" href="#">Trailer</a></li>' +
+                            '<li><a class="button bt1" href="/movie_schedule?movie_id='+movie_id+'">立即购票</a><a class="button bt1" href="#">Trailer</a></li>' +
                             '<li class="star"><a href="#"><img src="images/star.png" /></a></li>' +
                             '</ul>';
+                             //document.getElementById("moviestest").innerHTML = m;
                         $('#moviesInfo').html(m);
 
                 }});
@@ -309,6 +311,11 @@
         showPage(1);
         Movies.getInfo();
     });
+
+    function success(){
+        //if判断是否登录,未登录需提示登录
+        alert("评论成功！");
+    }
 </script>
 
 <div class="single-page-agile-main">
@@ -324,6 +331,10 @@
             <!-- /movie-browse-agile -->
             <div class="show-top-grids-w3lagile">
                 <div class="col-sm-8 single-left">
+                        <div class="wrap-container zerogrid">
+                            <div id="main-content" class="col-2-3">
+                                <div class="wrap-content">
+                                    <article>
                     <div class="art-header">
                         <div class="col-1-3">
                             <div class="wrap-col">
@@ -331,26 +342,16 @@
                             </div>
                         </div>
                         <div class="col-2-3">
-                            <div class="wrap-col">
-                            <!--<div class="wrap-col">
-                                <ul>
-                                    <li><p>Name: <a href="#">${movie.movie_name}</a></p></li>
-                                    <li><p>Production: <a href="#">Action</a></p></li>
-                                    <li><p>Actor: <a href="#">Action</a></p></li>
-                                    <li><p>Director: <a href="#">Action</a></p></li>
-                                    <li><p>Nation: <a href="#">Action</a></p></li>
-                                    <li><p>Tags: <a href="#">Action</a></p></li>
-                                    <li><p>Upload: <a href="#">Action</a></p></li>
-                                    <li><a class="button bt1" href="#">Play</a><a class="button bt1" href="#">Trailer</a></li>
-                                    <li class="star"><a href="#"><img src="images/star.png" /></a></li>
-                                </ul>
-                            </div>-->
-                            <div id="moviesInfo"></div>
+                            <div id="moviesInfo" class="wrap-col">
                             </div>
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <!--<div class="art-content">
+                                    </article>
+                                    </div>
+                            </div>
+                        </div>
+                    <div class="art-content">
                         <p>电影介绍1</p>
                         <img src="images/0.jpg" />
                         <p>电影介绍2</p>
@@ -369,7 +370,7 @@
                         <p>电影介绍5</p>
                         <p>电影介绍6</p>
                         <div class="clear"></div>
-                    </div>-->
+                    </div>
                   <!--  <div class="song">
                         <div class="song-info">
                             <h3>电影名</h3>
@@ -378,7 +379,7 @@
                             <div data-video="dLmKio67pVQ" id="video"> <img src="images/5.jpg" alt="" class="img-responsive" /> </div>
                         </div>
                     </div>-->
-                    <div class="song-grid-right">
+                    <!--<div class="song-grid-right">
                         <div class="share">
                             <h5>Share this</h5>
                             <div class="single-agile-shar-buttons">
@@ -403,10 +404,10 @@
                                         <a href="https://twitter.com/intent/tweet?screen_name=w3layouts" class="twitter-mention-button" data-show-count="false">Tweet to @w3layouts</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
                                     </li>
                                     <li>
-                                        <!-- Place this tag where you want the +1 button to render. -->
+                                        &lt;!&ndash; Place this tag where you want the +1 button to render. &ndash;&gt;
                                         <div class="g-plusone" data-size="medium"></div>
 
-                                        <!-- Place this tag after the last +1 button tag. -->
+                                        &lt;!&ndash; Place this tag after the last +1 button tag. &ndash;&gt;
                                         <script type="text/javascript">
                                             (function() {
                                                 var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
@@ -418,7 +419,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="clearfix"> </div>
                     <div class="media-grids" id="listTag">
                         <!--<div class="media">
@@ -463,13 +464,12 @@
                         <div class="all-comments-info">
                             <a href="#">Comments</a>
                             <div class="agile-info-wthree-box">
-                                <form>
-                                    <input type="text" placeholder="Name" required="">
-                                    <input type="text" placeholder="Email" required="">
-                                    <input type="text" placeholder="Phone" required="">
-                                    <textarea placeholder="Message" required=""></textarea>
-                                    <input type="submit" value="SEND">
-                                    <div class="clearfix"> </div>
+                                <form action="/addMComment" method="post">
+                                    <input type="hidden" id="movie_id" name="movie_id" value="">
+                                    <input type="hidden" id="user_id" name="user_id" value="">
+                                    <textarea id="content" name="content" placeholder="评论内容" required="required"></textarea>
+                                    <input type="submit" value="发表评论" onclick="success()">
+                                    <!--<div class="clearfix"> </div>-->
                                 </form>
                             </div>
                         </div>

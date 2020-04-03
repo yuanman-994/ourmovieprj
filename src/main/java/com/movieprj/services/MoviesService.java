@@ -10,7 +10,7 @@ public interface MoviesService {
 
     public Movies selectMoviesById(Integer movie_id);
 
-    public  List<Movies> selectMoviesByOnshow(boolean onshow);
+    public  List<Movies> selectMoviesByOnshow(Integer onshow);
 
     public void addMovies(Movies movies);
 

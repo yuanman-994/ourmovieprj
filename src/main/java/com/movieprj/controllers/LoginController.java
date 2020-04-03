@@ -8,10 +8,9 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 public class LoginController {
@@ -31,25 +30,24 @@ public class LoginController {
         } catch (AuthenticationException e) {
             e.printStackTrace();
             return "账号或密码错误！";
-        } catch (AuthorizationException e) {
-            e.printStackTrace();
-            return "没有权限";
         }
         return "登录成功";
     }
 
     @GetMapping("/logout")
     @ResponseBody
-    public String logout(){
+    public String logout() {//登出
         return "logout";
     }
 
-
-//    //注解验角色和权限
-//    @RequiresRoles("commen")
-//    @RequiresPermissions("vip")
-//    @RequestMapping("/test")
-//    public String index() {
-//        return "test!";
-//    }
+    @GetMapping("/get_user_inf")
+    public String get_user_inf() {//返回用户信息，目前只返回用户名。未来应加入头像信息相关
+        Subject currentSubject = SecurityUtils.getSubject();
+        if (currentSubject.isAuthenticated()){
+            return (String) currentSubject.getPrincipal();//返回用户名
+        }
+        else{
+            return "#no-login";//未登录
+        }
+    }
 }

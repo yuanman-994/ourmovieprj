@@ -95,17 +95,18 @@
                 success: function (data) {
                     var cinemaList = data.cinemaList;
                     console.log(data.cinemaList);
+                    var m='';
                     for(var i=0 ; i<data.cinemaList.length;i++){
-                        var m='<dl class="movieinfobox">';
+                       m+='<dl class="movieinfobox">';
                     m+=' <dt><a href=""target="_blank">'+cinemaList[i].cinema_name+'</a>' +
                         '</dt>'
                     +'<dd class="infotxt filmicon">' +
                         '<p>'+cinemaList[i].cinema_address+'</p>' +
                         '<div  class="ticketselect"  style="">'+
-                        '<a  class="ico_c_ticket" onclick="Schedule.getInfo(\''+day+'\',\''+cinemaList[i].cinema_id+'\');">查影讯<span>∨</span></a>' +
+                        '<a  class="ico_c_ticket" onclick="Schedule.getInfo(\''+day+'\',\''+cinemaList[i].cinema_id+'\',\''+i+'\');">查影讯<span>∨</span></a>' +
                         '</div>' +
                         '</dd>'+
-                        '<dd class="tickettime" id="tickettime" style="display: none;">';
+                        '<dd class="tickettime" id="tickettime'+i+'" style="display: none;">';
                     m+='</dl>';
                     }
 
@@ -166,7 +167,7 @@
 </script>
 <script>
     var Schedule = {
-        getInfo: function (d,c) { //day表示选择的日期：0：今天，1：明天，2：后天
+        getInfo: function (d,c,id) { //day表示选择的日期：0：今天，1：明天，2：后天
             //url:表示后台的url，就是 RequestMapping配置的内容
             // type：http请求的类型
             var url = document.location.href;
@@ -204,10 +205,10 @@
                             '</li>' +
                             '</ul>'
                     }
-                    m+='<p class="morelink"><a onclick="Display();"><b class="v_m">收起</b><span> ∧</span></a></p>'
-                    document.getElementById("tickettime").innerHTML = "";
-                    document.getElementById("tickettime").innerHTML = m;
-                    document.getElementById("tickettime").style.display="block";
+                    m+='<p class="morelink"><a onclick="Display(\''+id+'\');"><b class="v_m">收起</b><span> ∧</span></a></p>'
+                    document.getElementById("tickettime"+id).innerHTML = "";
+                    document.getElementById("tickettime"+id).innerHTML = m;
+                    document.getElementById("tickettime"+id).style.display="block";
                 }});
 
         }
@@ -217,12 +218,12 @@
     function Getdate() {
         var date = new Date();
         var month = date.getMonth()+1;
-        var day = date.getDay()-2;
+        var day = date.getDay()+5;
         var tomorrow = day+1;
         var aftertomorrow= day+2;
         var html='';
         html+='<ul id="valueDateRegion" class="clearfix transition6" style="left: 0px; width: 260px;">' +
-            '<li class="curr"><a target="_self">今天 &nbsp; '+month+'月'+day+'日<i class="ico_c_jiao00">&nbsp;</i></a></li>' +
+            '<li class="curr"><a onclick="Cinema.getInfo(0)">今天 &nbsp; '+month+'月'+day+'日<i class="ico_c_jiao00">&nbsp;</i></a></li>' +
             '</ul>' +
             '<ul id="valueDateRegion1" class="clearfix transition6" style="left: 170px; width: 260px;">' +
             '<li class="curr"><a onclick="Cinema.getInfo(1)"> 明天 &nbsp; '+month+'月'+tomorrow+'日<i class="ico_c_jiao00">&nbsp;</i></a></li>' +
@@ -239,8 +240,8 @@
         Cinema.getInfo(0);
         Getdate();
     });
-    function Display(){
-        document.getElementById("tickettime").style.display="none";
+    function Display(i){
+        document.getElementById("tickettime"+i).style.display="none";
     }
 </script>
 

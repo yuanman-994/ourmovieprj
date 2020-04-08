@@ -11,6 +11,21 @@ public class User {
     private String balance;
     private String score;
     private String password;
+    private String user_email;
+
+
+
+
+
+    public String getUser_email() {
+        return user_email;
+    }
+
+    public void setUser_email(String user_email) {
+        this.user_email = user_email;
+    }
+
+
 
     public Integer getUser_id() {
         return user_id;
@@ -83,7 +98,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
     @Override
     public String toString() {
         return "User{" +
@@ -96,6 +110,8 @@ public class User {
                 ", balance='" + balance + '\'' +
                 ", score='" + score + '\'' +
                 ", password='" + password + '\'' +
+                ", user_email='" + user_email + '\'' +
                 '}';
     }
+
 }

@@ -50,7 +50,6 @@
     <!-- start-smoth-scrolling -->
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
     <script type="text/javascript" th:src="@{js/easing.js}"></script>
-    <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
     <script type="text/javascript">
         jQuery(document).ready(function($) {
             $(".scroll").click(function(event){
@@ -115,11 +114,11 @@
                             </div>
                             <div class="form">
                                 <h3>Create an account</h3>
-                                <form action="#" method="post">
-                                    <input type="text" name="Username" placeholder="Username" required="">
-                                    <input type="password" name="Password" placeholder="Password" required="">
-                                    <input type="email" name="Email" placeholder="Email Address" required="">
-                                    <input type="text" name="Phone" placeholder="Phone Number" required="">
+                                <form action="/user/register" method="post">
+                                    <input type="text" name="user_name" placeholder="user_name" required="">
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <input type="email" name="user_email" placeholder="Email Address" required="">
+                                    <input type="text" name="phone_number" placeholder="phone_number" required="">
                                     <input type="submit" value="Register">
                                 </form>
                             </div>

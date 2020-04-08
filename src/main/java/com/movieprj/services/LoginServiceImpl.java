@@ -17,9 +17,4 @@ public class LoginServiceImpl implements LoginService {
         return userPasswordMapper.findById(uid);
     }
 
-    /**
-     * 模拟数据库查询
-     * @param userName
-     * @return
-     */
 }

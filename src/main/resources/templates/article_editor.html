@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>文章编辑</title>
+    <script type="text/javascript" th:src="@{js/tinymce/tinymce.min.js}"></script>
+    <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
+    <script>
+        tinymce.init({
+            selector: '#content',
+            language: 'zh_CN',
+            plugins: ['code', 'image', 'hr', 'lists', 'link', 'preview', 'anchor', 'code', 'table', 'insertdatetime', 'emoticons', 'imagetools'],
+            toolbar: ['bold | italic | underline | strikethrough | alignleft | aligncenter | alignright | alignjustify | styleselect | fontsizeselect | cut | copy | indent | outdent | blockquote | undo | redo | removeformat | subscript | superscript',
+                ' hr | bullist | numlist | link | unlink | openlink | anchor | table | insertdatetime | forecolor | backcolor | emoticons | image | editimage | imageoptions | rotateleft | rotateright | flipv | fliph',
+                'code | preview'],
+            width: 'auto',
+            height: 1000,
+            // images_upload_url : '/upload_image',
+            images_upload_handler: function (blobInfo, success, failure) {
+                var xhr, formData;
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open("POST", "/upload_image");
+                formData = new FormData();
+                formData.append("file", blobInfo.blob());
+                xhr.onload = function (e) {
+                    var json;
+
+                    if (xhr.status != 200) {
+                        failure('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    json = JSON.parse(this.responseText);
+
+                    if (!json || typeof json.location != 'string') {
+                        failure('Invalid JSON: ' + xhr.responseText);
+                        return;
+                    }
+                    success(json.location);
+                    // alert("233");
+
+                };
+
+                xhr.send(formData);
+            },
+        });
+    </script>
+</head>
+<body>
+<button onclick="submit_article()">上传文章</button>
+<form>
+    <input type="text" name="headline" value="文章标题"><br>
+    <input type="radio" name="article_type" value="1" checked>新闻
+    <input type="radio" name="article_type" value="2">影片看点
+    <textarea id="content" name="content"></textarea>
+</form>
+<script>
+    // 文章提交
+    function submit_article() {
+        var headline = $(" input[ name='headline' ] ").val()
+        var type = $(" input[ name='article_type' ]:checked ").val()
+        var content = tinyMCE.activeEditor.getContent()
+        //内容检查
+        if (headline.length * type.length * content.length == 0) {
+            alert("标题/文章内容不能为空！")
+            return
+        }
+        $.ajax({
+            url: "/upload_article",
+            type: "post",
+            // data表示发送的数据
+            data: JSON.stringify({headline: headline, type: type, content: content}),
+            // 定义发送请求的数据格式为JSON字符串
+            contentType: "application/json;charset=UTF-8",
+            //定义回调响应的数据格式为JSON字符串,该属性可以省略
+            dataType: "json",
+            //成功响应的结果
+            success: function (data) {
+                if (data == 0) {
+                    alert("上传成功");
+                } else {
+                    alert("上传失败！！");
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

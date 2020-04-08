@@ -1,11 +1,6 @@
 package com.movieprj.services.groupbuy;
 
-import com.movieprj.beans.Comment;
-import com.movieprj.beans.GroupBuyBeans;
-import com.movieprj.beans.MoviesTypes;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 //对应页面中实际展示的团购内容

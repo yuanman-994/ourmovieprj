@@ -11,12 +11,6 @@ public class GroupBuyController {
     @Autowired
     private GroupBuyServiceImp groupBuyServiceImp;
 
-//    @PostMapping("/test_post")
-//    @ResponseBody
-//    public void test_post(@RequestBody String data){
-//        System.out.println(data);
-//    }
-//
     @GetMapping("/get_group_buy_data_now")
     @ResponseBody
 //    响应加载团购数据请求，返回json式字符串，当期团购

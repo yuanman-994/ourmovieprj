@@ -1,10 +1,11 @@
 package com.movieprj.beans;
 
-public class Ticket_to_sell {
+public class Ticket {
     private Integer ticket_id;
     private Integer movie_schedule_id;
     private Integer seat_id;
     private String status;
+    private Integer order_id;
 
     public Integer getTicket_id() {
         return ticket_id;
@@ -38,13 +39,23 @@ public class Ticket_to_sell {
         this.status = status;
     }
 
+
+    public Integer getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(Integer order_id) {
+        this.order_id = order_id;
+    }
+
     @Override
     public String toString() {
-        return "Ticket_to_sell{" +
+        return "Ticket{" +
                 "ticket_id=" + ticket_id +
                 ", movie_schedule_id=" + movie_schedule_id +
                 ", seat_id=" + seat_id +
                 ", status='" + status + '\'' +
+                ", order_id=" + order_id +
                 '}';
     }
 }

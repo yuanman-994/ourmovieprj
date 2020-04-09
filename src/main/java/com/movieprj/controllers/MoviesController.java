@@ -1,13 +1,8 @@
 package com.movieprj.controllers;
 
-import com.movieprj.beans.Cinema;
-import com.movieprj.beans.Comment;
-import com.movieprj.beans.MovieSchedule;
-import com.movieprj.beans.Movies;
+import com.movieprj.beans.*;
 import com.movieprj.mapper.ScheduleMapper;
-import com.movieprj.services.CommentServiceImp;
-import com.movieprj.services.MoviesServiceImp;
-import com.movieprj.services.ScheduleServiceImp;
+import com.movieprj.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +26,18 @@ public class MoviesController {
     @Autowired
     private ScheduleServiceImp scheduleService;
 
+    @Autowired
+    private HallServiceImp hallService;
+
+    @Autowired
+    private SeatServiceImp seatService;
+
+    @Autowired
+    private TicketServiceImp ticketService;
+
+    @Autowired
+    private TicketOrderServiceImp ticketOrderService;
+
     @RequestMapping("/movie_single")
     public  String toMoviePage(Integer movie_id ){
         return "redirect:/movie_single1?movie_id="+movie_id;
@@ -49,6 +56,16 @@ public class MoviesController {
     @RequestMapping("/movie_schedule1")
     public  String toMovieSchedule1(Integer movie_id ){
         return "movie_schedule";
+    }
+
+    @RequestMapping("/seats_select")
+    public  String toSeatsSelect(Integer movie_schedule_id ){
+        return "redirect:/seats_select1?movie_schedule_id="+movie_schedule_id;
+    }
+
+    @RequestMapping("/seats_select1")
+    public  String toSeatsSelect1(Integer movie_schedule_id ){
+        return "seats_select";
     }
 
     @RequestMapping("/schedule_cinema")
@@ -115,15 +132,6 @@ public class MoviesController {
         return map;
     }
 
-    /*@GetMapping("/movie_single2")
-    public String toMoviePage(Integer movie_id, Model model, HttpSession httpSession){
-        //boolean isLogin = httpSession.getAttribute()!=null;
-        List<Comment> commentList = commentService.findCommentWithUserByMovieId(movie_id);
-        Movies movie = moviesService.selectMoviesById(movie_id);
-        model.addAttribute("commentList",commentList);
-        model.addAttribute("movie",movie);
-        return "movie_single";
-    }*/
 
     @RequestMapping("/moviesInfo")
     @ResponseBody
@@ -171,4 +179,82 @@ public class MoviesController {
         return "redirect:/movie_single1?movie_id="+comment.getMovie_id();
     }
 
+
+    @RequestMapping("/getSchedule")
+    @ResponseBody
+    public  Map<String,Object> getScheduleInf(Integer movie_schedule_id){
+        MovieSchedule movieSchedule = scheduleService.findScheduleById(movie_schedule_id);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("movieSchedule",movieSchedule);
+        return map;
+    }
+
+    @RequestMapping("/getHall")
+    @ResponseBody
+    public  Map<String,Object> getHall(Integer hall_id){
+        Hall hall = hallService.findHallById(hall_id);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("hall",hall);
+        return map;
+    }
+
+    @RequestMapping("/getSoldSeat")
+    @ResponseBody
+    public Map<String,Object> findSoldSeatByScheduleId(Integer movie_schedule_id){
+        List<Seat> sold_seat = seatService.findSoldSeatByScheduleId(movie_schedule_id);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("sold_seat",sold_seat);
+        return map;
+    }
+
+    @RequestMapping("/addTicket")
+    @ResponseBody
+    public Map<String,Object>addTicket(@RequestBody Map<String,Object> params){
+        Integer movie_schedule_id = Integer.parseInt(params.get("movie_schedule_id").toString());
+        String seats = params.get("seats").toString();
+        String[] s = seats.replaceAll(" ","").replaceAll("\\[","").replaceAll("\\]","").split(",");
+        String[] a;
+        Ticket ticket = new Ticket();
+        Date date=new Date();
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyyMMdd");
+        Integer order_id ;
+        order_id = Integer.parseInt(simpleDate.format(date))*100+movie_schedule_id;
+        ticket.setMovie_schedule_id(movie_schedule_id);
+        ticket.setOrder_id(order_id);
+        int[] seat_id={0,0,0,0,0};
+        if(s.length-3<=5){
+        for(int i =0; i<s.length-3;i++){
+          a=s[i+3].split("_");
+          seat_id[i]= (Integer.parseInt(a[0])-1)*10+Integer.parseInt(a[1]);
+          ticket.setSeat_id(seat_id[i]);
+          ticket.setStatus("1");
+          ticketService.addTicket(ticket);
+        }}
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("seats",seat_id);
+        return map;
+    }
+
+    @RequestMapping("/addTicketOrder")
+    @ResponseBody
+    public Map<String,Object>addTicketOrder(@RequestBody Map<String,Object> params){
+        Integer movie_schedule_id = Integer.parseInt(params.get("movie_schedule_id").toString());
+        Integer user_id = Integer.parseInt(params.get("user_id").toString());
+        Float total = Float.parseFloat(params.get("total").toString());
+        TicketOrder ticketOrder = new TicketOrder();
+        Date date=new Date();
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDate1 = new SimpleDateFormat("yyyyMMdd");
+        Integer order_id = Integer.parseInt(simpleDate1.format(date))*100+movie_schedule_id;
+        ticketOrder.setMovie_schedule_id(movie_schedule_id);
+        ticketOrder.setUser_id(user_id);
+        ticketOrder.setPrice(total);
+        ticketOrder.setPay_way("alipay");
+        ticketOrder.setTime(simpleDate.format(date));
+        ticketOrder.setOrder_id(order_id);
+        ticketOrderService.addTicketOrder(ticketOrder);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("order",ticketOrder);
+        return map;
+    }
 }

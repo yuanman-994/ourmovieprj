@@ -8,7 +8,7 @@ public class Article {
     private String release_time;//发布时间
     private String article_url;//文章资源地址
     private int type;//文章类型
-    private int check;//文章审核状态，0为未审核，1为通过，-1为未通过
+    private int check_status;//文章审核状态，0为未审核，1为通过，-1为未通过
 
     public int getArticle_id() {
         return article_id;
@@ -66,12 +66,12 @@ public class Article {
         this.type = type;
     }
 
-    public int getCheck() {
-        return check;
+    public int getCheck_status() {
+        return check_status;
     }
 
-    public void setCheck(int check) {
-        this.check = check;
+    public void setCheck_status(int check_status) {
+        this.check_status = check_status;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class Article {
                 ", release_time='" + release_time + '\'' +
                 ", article_url='" + article_url + '\'' +
                 ", type=" + type +
-                ", check=" + check +
+                ", check=" + check_status +
                 '}';
     }
 }

@@ -49,9 +49,12 @@ public class ShiroConfig {
         map.put("/logout", "logout");
         //对所有用户认证
         map.put("/group_buy", "authc");
-        map.put("/group_buy","roles[VIP]");
+        map.put("/group_buy","roles[VIP,admin]");
         map.put("/bac_index","roles[admin]");
         map.put("/article_manage","roles[admin]");
+        map.put("/self_article_manage","roles[admin]");
+        map.put("/article_manage/**","roles[admin]");
+//        map.put("/**","roles[admin]");
         //登录
         shiroFilterFactoryBean.setLoginUrl("/please_login_first");
         //首页

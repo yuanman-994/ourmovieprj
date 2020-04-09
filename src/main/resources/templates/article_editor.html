@@ -6,6 +6,15 @@
     <script type="text/javascript" th:src="@{js/tinymce/tinymce.min.js}"></script>
     <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
     <script>
+        var paras = location.search;			//search获得地址中的参数，内容为'?itemId=12'
+        var result = paras.match(/[^\?&]*=[^&]*/g); 	//match是字符串中符合的字段一个一个取出来，result中的值为['login=xx','table=admin']
+        paras = {};					//让paras变成没有内容的json对象
+        for(i in result){
+            var temp = result[i].split('=');	//split()将一个字符串分解成一个数组,两次遍历result中的值分别为['itemId','xx']
+            paras[temp[0]] = temp[1];
+        }
+        var article_id = paras.article_id;
+
         tinymce.init({
             selector: '#content',
             language: 'zh_CN',
@@ -37,52 +46,51 @@
                         return;
                     }
                     success(json.location);
-                    // alert("233");
-
                 };
-
                 xhr.send(formData);
             },
         });
     </script>
 </head>
-<body>
-<button onclick="submit_article()">上传文章</button>
+<body onload="load_article(article_id)">
+<button>上传文章</button>
 <form>
-    <input type="text" name="headline" value="文章标题"><br>
-    <input type="radio" name="article_type" value="1" checked>新闻
-    <input type="radio" name="article_type" value="2">影片看点
     <textarea id="content" name="content"></textarea>
 </form>
 <script>
     // 文章提交
+    function load_article() {
+        $.get("/article/get_text_by_id?article_id="+article_id,function (result) {
+            tinyMCE.activeEditor.setContent(result)
+        })
+    }
     function submit_article() {
-        var headline = $(" input[ name='headline' ] ").val()
-        var type = $(" input[ name='article_type' ]:checked ").val()
-        var content = tinyMCE.activeEditor.getContent()
-        //内容检查
-        if (headline.length * type.length * content.length == 0) {
-            alert("标题/文章内容不能为空！")
-            return
-        }
-        $.ajax({
-            url: "/upload_article",
-            type: "post",
-            // data表示发送的数据
-            data: JSON.stringify({headline: headline, type: type, content: content}),
-            // 定义发送请求的数据格式为JSON字符串
-            contentType: "application/json;charset=UTF-8",
-            //定义回调响应的数据格式为JSON字符串,该属性可以省略
-            dataType: "json",
-            //成功响应的结果
-            success: function (data) {
-                if (data == 0) {
-                    alert("上传成功");
-                } else {
-                    alert("上传失败！！");
-                }
-            }
-        });
+        // var headline = $(" input[ name='headline' ] ").val()
+        // var type = $(" input[ name='article_type' ]:checked ").val()
+        // var content = tinyMCE.activeEditor.getContent()
+        // //内容检查
+        // if (headline.length * type.length * content.length == 0) {
+        //     alert("标题/文章内容不能为空！")
+        //     return
+        // }
+        // $.ajax({
+        //     url: "/upload_article",
+        //     type: "post",
+        //     // data表示发送的数据
+        //     data: JSON.stringify({headline: headline, type: type, content: content}),
+        //     // 定义发送请求的数据格式为JSON字符串
+        //     contentType: "application/json;charset=UTF-8",
+        //     //定义回调响应的数据格式为JSON字符串,该属性可以省略
+        //     dataType: "json",
+        //     //成功响应的结果
+        //     success: function (data) {
+        //         if (data == 0) {
+        //             alert("上传成功");
+        //         } else {
+        //             alert("上传失败！！");
+        //         }
+        //     }
+        // });
     }
 </script>
 </body>

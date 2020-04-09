@@ -43,10 +43,6 @@ public class HelloControllers {
         return "see_movie";
     }
 
-    @RequestMapping("/seats_select")
-    public String seats_select() {
-        return "seats_select";
-    }
 
     @RequestMapping("/group_buy")
     public String group_buy() {

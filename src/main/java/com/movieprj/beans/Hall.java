@@ -7,6 +7,7 @@ public class Hall {
     private Integer cinema_id;
     private Integer number_of_seats;
     private List<Seat> seatList;
+    private String seat_map;
 
     public Integer getHall_id() {
         return hall_id;
@@ -38,5 +39,13 @@ public class Hall {
 
     public void setSeatList(List<Seat> seatList) {
         this.seatList = seatList;
+    }
+
+    public String getSeat_map() {
+        return seat_map;
+    }
+
+    public void setSeat_map(String seat_map) {
+        this.seat_map = seat_map;
     }
 }

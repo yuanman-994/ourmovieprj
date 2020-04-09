@@ -34,6 +34,7 @@
     <!-- start-smoth-scrolling -->
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
     <script type="text/javascript" th:src="@{js/easing.js}"></script>
+    <script th:src="@{js/login.js}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($) {
             $(".scroll").click(function(event){
@@ -68,7 +69,7 @@
 
 </head>
 
-<body>
+<body onload="get_user_inf()">
 <!-- header -->
 <div class="header">
     <div class="container">
@@ -83,8 +84,9 @@
         </div>
         <div class="w3l_sign_in_register">
             <ul>
-                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) 123 345 653</li>
-                <li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
+                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) R 345 653</li>
+                <li><a href="#" data-toggle="modal" data-target="#myModal" id = "login-button">Login</a></li>
+                <li><a href="/logout" onclick="logout()">Logout</a></li>
             </ul>
         </div>
         <div class="clearfix"> </div>
@@ -108,10 +110,13 @@
                             </div>
                             <div class="form">
                                 <h3>Login to your account</h3>
-                                <form action="#" method="post">
-                                    <input type="text" name="Username" placeholder="Username" required="">
-                                    <input type="password" name="Password" placeholder="Password" required="">
-                                    <input type="submit" value="Login">
+                                <form>
+                                    <input type="text" name="user_name" placeholder="user_name" required="" >
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <ul>
+                                        <input type="button" value="Login" onclick="try_login()">
+                                        <a name="tips"></a>
+                                    </ul>
                                 </form>
                             </div>
                             <div class="form">
@@ -272,7 +277,7 @@
             var url = document.location.href;
             var movie_id = getParam(url,'movie_id');
             document.getElementById("movie_id").value=movie_id;
-            document.getElementById("user_id").value=4;
+            document.getElementById("user_id").value=6;
             var id;
             $.ajax({
                 url: "/moviesInfo?movie_id="+movie_id,
@@ -315,6 +320,7 @@
     function success(){
         //if判断是否登录,未登录需提示登录
         alert("评论成功！");
+        window.location.reload();
     }
 </script>
 

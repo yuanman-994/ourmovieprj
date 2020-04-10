@@ -32,6 +32,7 @@
                 xhr.open("POST", "/upload_image");
                 formData = new FormData();
                 formData.append("file", blobInfo.blob());
+                formData.append("article_id", article_id);
                 xhr.onload = function (e) {
                     var json;
 
@@ -53,7 +54,7 @@
     </script>
 </head>
 <body onload="load_article(article_id)">
-<button>上传文章</button>
+<button onclick="submit_article()">上传文章</button>
 <form>
     <textarea id="content" name="content"></textarea>
 </form>
@@ -65,32 +66,24 @@
         })
     }
     function submit_article() {
-        // var headline = $(" input[ name='headline' ] ").val()
-        // var type = $(" input[ name='article_type' ]:checked ").val()
-        // var content = tinyMCE.activeEditor.getContent()
-        // //内容检查
-        // if (headline.length * type.length * content.length == 0) {
-        //     alert("标题/文章内容不能为空！")
-        //     return
-        // }
-        // $.ajax({
-        //     url: "/upload_article",
-        //     type: "post",
-        //     // data表示发送的数据
-        //     data: JSON.stringify({headline: headline, type: type, content: content}),
-        //     // 定义发送请求的数据格式为JSON字符串
-        //     contentType: "application/json;charset=UTF-8",
-        //     //定义回调响应的数据格式为JSON字符串,该属性可以省略
-        //     dataType: "json",
-        //     //成功响应的结果
-        //     success: function (data) {
-        //         if (data == 0) {
-        //             alert("上传成功");
-        //         } else {
-        //             alert("上传失败！！");
-        //         }
-        //     }
-        // });
+        $.ajax({
+            url: "/article/upload_article",
+            type: "post",
+            // data表示发送的数据
+            data: JSON.stringify({article_id: article_id,content: tinyMCE.activeEditor.getContent()}),
+            // 定义发送请求的数据格式为JSON字符串
+            contentType: "application/json;charset=UTF-8",
+            //定义回调响应的数据格式为JSON字符串,该属性可以省略
+            dataType: "json",
+            //成功响应的结果
+            success: function (data) {
+                if (data == 0) {
+                    alert("上传成功");
+                } else {
+                    alert("上传失败！！");
+                }
+            }
+        });
     }
 </script>
 </body>

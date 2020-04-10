@@ -41,7 +41,7 @@ public class ArticleController {
 
     @RequestMapping("/upload_image")
     public @ResponseBody
-    Map<String, Object> upload_image(@RequestParam("file") MultipartFile file,
+    Map<String, Object> upload_image(@RequestParam("file") MultipartFile file,@RequestParam("article_id") String article_id,
                                      HttpServletRequest request) throws Exception {
         Map<String, Object> ret = new HashMap<>();
 
@@ -50,7 +50,7 @@ public class ArticleController {
 
         String path = System.getProperty("user.dir");
         String realPath = path + "\\src\\main\\resources\\static\\images";
-        String location = articleServiceImp.upload_image(file, realPath, author_name);
+        String location = articleServiceImp.upload_image(file, realPath, author_name,article_id);
 
         ret.put("location", location);
 
@@ -75,5 +75,17 @@ public class ArticleController {
     @ResponseBody
     public String get_text_by_id(@RequestParam int article_id){
         return articleServiceImp.get_text_by_id(article_id);
+    }
+
+    @PostMapping("/article/upload_article")
+    @ResponseBody
+    public int upload_article(@RequestBody Map<String, String> data){
+        return articleServiceImp.upload_article(data);
+    }
+
+    @PostMapping("/article/del_article")
+    @ResponseBody
+    public int del_article(String[] ids){
+        return articleServiceImp.del_article(ids);
     }
 }

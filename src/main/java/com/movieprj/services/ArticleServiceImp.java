@@ -39,7 +39,6 @@ public class ArticleServiceImp implements ArticleService {
             String article_path = path + "\\src\\main\\resources\\static\\article";
             String author_dic = article_path + "\\" + author_id;//作者个人文件夹
 
-            System.out.println(author_dic);
             File direFile = new File(author_dic);
             if (direFile.exists() == false || direFile.isDirectory() == false) {//文件夹不存在，则新建
                 direFile.mkdir();
@@ -52,7 +51,6 @@ public class ArticleServiceImp implements ArticleService {
             }
 
             FileWriter fwriter = new FileWriter(abs_article_url, false);
-            System.out.println(data.get("content"));
             fwriter.write(data.get("content"));
             fwriter.close();
             articleMapper.saveArticleUrlById(article_id, article_url);
@@ -64,9 +62,9 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public String upload_image(MultipartFile image, String basePath, String author_name) {
+    public String upload_image(MultipartFile image, String basePath, String author_name, String article_id) {
+        System.out.println(basePath);
         String ret = "";
-
         //生成uuid作为文件名称
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         //获得文件类型，如果不是图片，禁止上传
@@ -75,22 +73,33 @@ public class ArticleServiceImp implements ArticleService {
         String suffixName = contentType.substring(contentType.indexOf("/") + 1);
         //得到文件名
         String imageName = uuid + "." + suffixName;
+
         int author_id = userPasswordMapper.findIdByName(author_name);
-        //获取文件夹路径
+        //获取作者个人图片存储文件夹路径
         String direPath = basePath + "\\" + author_id;
+
         File direFile = new File(direPath);
         //文件夹如果不存在，新建文件夹
         if (direFile.exists() == false || direFile.isDirectory() == false) {
             direFile.mkdir();
         }
-        //得到文件路径
-        String path = direPath + "\\" + imageName;
+
+        //得到文章图片文件夹路径
+        String imagedir = direFile + "\\" + article_id;
+        File direimage = new File(imagedir);
+        //文件夹如果不存在，新建文件夹
+        if (direimage.exists() == false || direimage.isDirectory() == false) {
+            direimage.mkdir();
+        }
+
+        //图片绝对地址
+        String path = direimage + "\\" + imageName;
         try {
             image.transferTo(new File(path));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "images\\" + author_id + "\\" + imageName;
+        return "images\\" + author_id + "\\" + article_id + "\\" + imageName;
     }
 
     @Override
@@ -158,7 +167,7 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public String get_text_by_id(int article_id) {
 
-        String url = articleMapper.selectUrlById(article_id);
+        String url = articleMapper.getUrlById(article_id);
 
         String path = System.getProperty("user.dir");
         String article_path = path + "\\src\\main\\resources\\static\\article";
@@ -175,10 +184,87 @@ public class ArticleServiceImp implements ArticleService {
                 buffer.append(s.trim());
             }
             result = buffer.toString();
-            System.out.println(result);
+//            System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public int upload_article(Map<String, String> data) {
+        int article_id = Integer.valueOf(data.get("article_id"));
+        String content = data.get("content");//要保存的内容
+
+        String article_url = articleMapper.getUrlById(article_id);//文章相对地址
+
+        try {
+            String path = System.getProperty("user.dir");
+            String article_path = path + "\\src\\main\\resources\\static\\article";
+
+            String abs_article_url = article_path + "\\" + article_url;//文章绝对地址
+            File file = new File(abs_article_url);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileWriter fwriter = new FileWriter(abs_article_url, false);
+            fwriter.write(content);
+            articleMapper.updateCheckById(article_id,0);//修改审核状态为未审核
+            fwriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
+    public int del_article(String[] ids) {//删除文章
+        for (String id : ids) {
+            if (!this.del_article_by_id(Integer.valueOf(id)))
+                return -1;
+        }
+        return 0;
+    }
+
+    public boolean del_article_by_id(int article_id) {
+        try {
+            String article_url = articleMapper.getUrlById(article_id);
+            int author_id = articleMapper.getAuthorIdById(article_id);
+            String path = System.getProperty("user.dir");
+            String article_dir_path = path + "\\src\\main\\resources\\static\\article";
+            String image_dir_path = path + "\\src\\main\\resources\\static\\images";
+            String article_to_del = article_dir_path + "\\" + article_url;
+            String image_dir_to_del = image_dir_path + "\\" + author_id + "\\" + article_id;
+
+            File article_file = new File(article_to_del);
+            if (article_file.exists())
+                if (article_file.isFile())
+                    article_file.delete();
+
+            File image_file = new File(image_dir_to_del);
+            if (image_file.exists())
+                if (image_file.isDirectory()) {
+                    this.deleteDir(image_file);
+                }
+            articleMapper.deleateById(article_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
     }
 }

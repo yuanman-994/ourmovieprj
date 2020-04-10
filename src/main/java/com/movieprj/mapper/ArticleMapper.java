@@ -16,12 +16,21 @@ public interface ArticleMapper {
     @Update("UPDATE article SET article_url=#{url} WHERE article_id=#{id}")
     public void saveArticleUrlById(int id, String url);//保存article_url
 
+    @Update("UPDATE article SET check_status=#{check} WHERE article_id=#{id}")
+    public void updateCheckById(int id, int check);//保存article_url
+
     @Select("SELECT article_url FROM article WHERE article_id=#{id}")
-    public String selectUrlById(int id);
+    public String getUrlById(int id);
+
+    @Select("SELECT author_id FROM article WHERE article_id=#{id}")
+    public int getAuthorIdById(int id);
 
     @Select("SELECT * FROM article WHERE author_id=#{id}")
     public List<Article> getArticleById(int id);//查询个人文章
 
     @Update("UPDATE article SET headline=#{headline},click_num=#{click_num},type=#{article_type} WHERE article_id=#{article_id}")
     public void updata_row(int article_id, String headline, int click_num, int article_type);
+
+    @Delete("DELETE FROM article WHERE article_id=#{id}")
+    public void deleateById(int id);
 }

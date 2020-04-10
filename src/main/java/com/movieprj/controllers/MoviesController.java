@@ -222,9 +222,9 @@ public class MoviesController {
         ticket.setMovie_schedule_id(movie_schedule_id);
         ticket.setOrder_id(order_id);
         int[] seat_id={0,0,0,0,0};
-        if(s.length-3<=5){
-        for(int i =0; i<s.length-3;i++){
-          a=s[i+3].split("_");
+        if(s.length<=5){
+        for(int i =0; i<s.length;i++){
+          a=s[i].split("_");
           seat_id[i]= (Integer.parseInt(a[0])-1)*10+Integer.parseInt(a[1]);
           ticket.setSeat_id(seat_id[i]);
           ticket.setStatus("1");

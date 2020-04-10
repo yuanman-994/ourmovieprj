@@ -269,8 +269,8 @@
 					});
 					//sold seat
 					var sold_seat_list = Seat.getSoldSeat();
-					for(var i=0;i<sold_seat_list.length;i++){
-						sc.get([sold_seat_list[i].loc_x+'_'+sold_seat_list[i].loc_y]).status('unavailable');
+					for(var l=0;l<sold_seat_list.length;l++){
+						sc.get([sold_seat_list[l].loc_x+'_'+sold_seat_list[l].loc_y]).status('unavailable');
 					}
 					//sc.get(['1_2', '4_4','4_5','6_6','6_7','8_5','8_6','8_7','8_8', '10_1', '10_2']).status('unavailable');
                     return seats_id;
@@ -285,11 +285,11 @@
 				});
 				function decide(){
 					console.log(selected_seats.length);
-                    if(selected_seats.length<=3){
+                    if(selected_seats.length<=0){
                     	alert("请选择座位！");
                     	window.location.reload();
 					}
-                    else if(selected_seats.length>=4&&selected_seats.length<=8){
+                    else if(selected_seats.length>=1&&selected_seats.length<=5){
                     	TicketOrder.addOrder();
                     	Ticket.getInfo();
 					}

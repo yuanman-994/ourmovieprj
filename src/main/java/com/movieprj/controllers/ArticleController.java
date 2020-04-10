@@ -19,24 +19,30 @@ public class ArticleController {
     private ArticleServiceImp articleServiceImp;
 
     @RequestMapping("/article_editor")
-    public String hello(){
+    public String article_editor() {
         return "article_editor";
     }
 
-    @PostMapping("/upload_article")
+    @RequestMapping("/self_article_manage")
+    public String self_article_manage() {
+        return "self_article_manage";
+    }
+
+    @PostMapping("/add_article")
     @ResponseBody
-    public int upload_article(@RequestBody Map<String,String> data){
+    public int add_article(@RequestBody Map<String, String> data) {
         Subject currentSubject = SecurityUtils.getSubject();
         String author_name = (String) currentSubject.getPrincipal();
-        if (articleServiceImp.save_article(author_name,data))
+        if (articleServiceImp.save_article(author_name, data))
             return 0;
         else
             return -1;
     }
 
     @RequestMapping("/upload_image")
-    public @ResponseBody Map<String, Object> upload_image( @RequestParam("file") MultipartFile file,
-                                                          HttpServletRequest request) throws Exception {
+    public @ResponseBody
+    Map<String, Object> upload_image(@RequestParam("file") MultipartFile file,
+                                     HttpServletRequest request) throws Exception {
         Map<String, Object> ret = new HashMap<>();
 
         Subject currentSubject = SecurityUtils.getSubject();
@@ -49,5 +55,25 @@ public class ArticleController {
         ret.put("location", location);
 
         return ret;
+    }
+
+    @GetMapping("/article_manage/get_self_article_data")
+    @ResponseBody
+    public String get_self_article_data() {
+        Subject currentSubject = SecurityUtils.getSubject();
+        String author_name = (String) currentSubject.getPrincipal();
+        return articleServiceImp.get_self_article_data(author_name);
+    }
+
+    @PostMapping("/article/update_row")
+    @ResponseBody
+    public int update_row(@RequestBody Map<String, String> data) {
+        return articleServiceImp.update_row(data);
+    }
+
+    @GetMapping("/article/get_text_by_id")
+    @ResponseBody
+    public String get_text_by_id(@RequestParam int article_id){
+        return articleServiceImp.get_text_by_id(article_id);
     }
 }

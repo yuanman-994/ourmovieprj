@@ -36,6 +36,11 @@ public class ArticleController {
         return "article_check";
     }
 
+    @RequestMapping("/all_article_manage")
+    public String all_article_manage() {
+        return "all_article_manage";
+    }
+
     @RequestMapping("/self_article_manage")
     public String self_article_manage() {
         return "self_article_manage";

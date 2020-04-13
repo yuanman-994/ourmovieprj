@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>个人文章管理</title>
+    <title>所有文章管理</title>
     <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
     <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all"/>
@@ -24,7 +24,7 @@
     <script>
         function load_article_data() {
             $("#article-table").bootstrapTable({
-                url: '/article_manage/get_self_article_data',
+                url: '/article_manage/get_all_article_data',
                 class: 'table table-bordered table-hover table-striped',
                 uniqueId: "article_id",
                 striped: true,                      //是否显示行间隔色
@@ -71,7 +71,7 @@
                     formatter: actionFormatter,
                 }],
                 onClickCell: function (field, value, row, $element) {
-                    var chang_disabled = new Array("article_id","click_num","author_name", "check_status", "release_time", "operate");
+                    var chang_disabled = new Array("article_id", "author_name","headline" ,"check_status", "release_time", "operate");
                     var o_value = value;//单元格原值
                     if ($.inArray(field, chang_disabled) >= 0)
                         return;
@@ -100,14 +100,12 @@
         function actionFormatter(value, row, index) {
             var result = "";
             var article_id = row.article_id;
-            // result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='view')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
-            result += "<a href='#' onclick=\"goto_editor_page('" + article_id + "')\" class='btn btn-xs blue' title='编辑'><span class='glyphicon glyphicon-pencil'></span></a href=>";
-            // result += "<a href='javascript:;' class='btn btn-xs red' onclick=\"DeleteByIds('" + id + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+            result += "<a href='#' onclick=\"goto_view_page('" + article_id + "')\" class='btn btn-xs blue' title='编辑'><span class='glyphicon glyphicon-search'></span></a href=>";
             return result;
         }
 
-        function goto_editor_page(article_id) {
-            location.replace('\\article_editor?article_id=' + article_id);
+        function goto_view_page(article_id) {
+            location.replace('\\article_view?article_id=' + article_id);
         }
 
         function saveData(index, field, value) {//保存到当前页面
@@ -119,10 +117,9 @@
         }
 
         function check(row) {//输入数据检查
-            var headilne = row.headline;
             var click_num = row.click_num;
             var type = row.type;
-            if (headilne.length * click_num.length * type.length == 0) {
+            if (click_num.length * type.length == 0) {
                 alert("不能为空值！！")
                 return false;
             }
@@ -188,37 +185,11 @@
                     });
                 }
             })
-            $("#add").on("click", function () {
-                var headline = "请修改标题"
-                var type = 1
-                var content = "<p>文章内容</p>"
-                $.ajax({
-                    url: "/add_article",
-                    type: "post",
-                    // data表示发送的数据
-                    data: JSON.stringify({headline: headline, type: type, content: content}),
-                    // 定义发送请求的数据格式为JSON字符串
-                    contentType: "application/json;charset=UTF-8",
-                    //定义回调响应的数据格式为JSON字符串,该属性可以省略
-                    dataType: "json",
-                    //成功响应的结果
-                    success: function (data) {
-                        if (data == 0) {
-                            $("#article-table").bootstrapTable("refresh", {//静态刷新表格
-                                silent: true
-                            });
-                        } else {
-                            alert("新增失败！！");
-                        }
-                    }
-                });
-            })
         })
     </script>
 </head>
 <body onload="load_article_data()">
 <button id="remove">删除</button>
-<button id="add">新增</button>
 <table id="article-table"></table>
 </body>
 </html>

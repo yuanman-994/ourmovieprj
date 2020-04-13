@@ -1,6 +1,7 @@
 package com.movieprj.services;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movieprj.beans.Article;
@@ -141,6 +142,45 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
+    public String get_all_article_data() {
+        List<Article> articles = articleMapper.getArticle();
+
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < articles.size(); i++) {
+            Article a = articles.get(i);
+            int id = a.getAuthor_id();
+            String name = userPasswordMapper.findNameById(id);
+            JSONObject json = new JSONObject();
+            json.put("article_id", a.getArticle_id());
+            json.put("author_name", name);
+            json.put("headline", a.getHeadline());
+            json.put("click_num", a.getClick_num());
+            json.put("release_time", a.getRelease_time());
+            String type;
+            if (a.getType() == 1)
+                type = "新闻";
+            else
+                type = "影片看点";
+            json.put("type", type);
+            String check = "未通过";
+            switch (a.getCheck_status()) {
+                case 0:
+                    check = "未审核";
+                    break;
+                case 1:
+                    check = "已通过";
+                    break;
+                case -1:
+                    check = "未通过";
+                    break;
+            }
+            json.put("check_status", check);
+            jsonArray.add(json);
+        }
+        return jsonArray.toString();
+    }
+
+    @Override
     public int update_row(Map<String, String> row) {
         try {
 //            System.out.println(row);
@@ -210,6 +250,7 @@ public class ArticleServiceImp implements ArticleService {
             FileWriter fwriter = new FileWriter(abs_article_url, false);
             fwriter.write(content);
             articleMapper.updateCheckById(article_id,0);//修改审核状态为未审核
+            articleMapper.updateTimeById(article_id);
             fwriter.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -266,5 +307,16 @@ public class ArticleServiceImp implements ArticleService {
             }
         }
         return dir.delete();
+    }
+
+    @Override
+    public int update_check(JSONArray ja) {
+        for (int i = 0;i<ja.size();i++){
+            JSONObject jsonObject = ja.getJSONObject(i);
+            int article_id = (int)jsonObject.get("article_id");
+            int check_status = (int)jsonObject.get("check");
+            articleMapper.updateCheckById(article_id,check_status);
+        }
+        return 0;
     }
 }

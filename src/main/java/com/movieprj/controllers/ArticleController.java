@@ -1,7 +1,10 @@
 package com.movieprj.controllers;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.movieprj.services.ArticleService;
 import com.movieprj.services.ArticleServiceImp;
+import com.mysql.cj.xdevapi.JsonArray;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,16 @@ public class ArticleController {
     @RequestMapping("/article_editor")
     public String article_editor() {
         return "article_editor";
+    }
+
+    @RequestMapping("/article_view")
+    public String article_view() {
+        return "article_view";
+    }
+
+    @RequestMapping("/article_check")
+    public String article_check() {
+        return "article_check";
     }
 
     @RequestMapping("/self_article_manage")
@@ -65,6 +78,12 @@ public class ArticleController {
         return articleServiceImp.get_self_article_data(author_name);
     }
 
+    @GetMapping("/article_manage/get_all_article_data")
+    @ResponseBody
+    public String get_all_article_data() {
+        return articleServiceImp.get_all_article_data();
+    }
+
     @PostMapping("/article/update_row")
     @ResponseBody
     public int update_row(@RequestBody Map<String, String> data) {
@@ -87,5 +106,12 @@ public class ArticleController {
     @ResponseBody
     public int del_article(String[] ids){
         return articleServiceImp.del_article(ids);
+    }
+
+    @PostMapping("/article/update_check")
+    @ResponseBody
+    public int update_check(@RequestBody String datas){
+        JSONArray jsArr = JSONObject.parseArray(datas);
+        return articleServiceImp.update_check(jsArr);
     }
 }

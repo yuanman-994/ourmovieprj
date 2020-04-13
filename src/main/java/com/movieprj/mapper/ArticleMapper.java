@@ -13,8 +13,14 @@ public interface ArticleMapper {
     @Options(useGeneratedKeys = true, keyProperty = "article_id", keyColumn = "article_id")
     public void saveArticle(Article article);//得到自动生成的主键值同步保存在article中。article_url置空
 
+    @Select("SELECT * FROM article")
+    public List<Article> getArticle();//查询所有文章
+
     @Update("UPDATE article SET article_url=#{url} WHERE article_id=#{id}")
     public void saveArticleUrlById(int id, String url);//保存article_url
+
+    @Update("UPDATE article SET release_time=CURRENT_TIMESTAMP() WHERE article_id=#{id}")
+    public void updateTimeById(int id);//保存article_url
 
     @Update("UPDATE article SET check_status=#{check} WHERE article_id=#{id}")
     public void updateCheckById(int id, int check);//保存article_url

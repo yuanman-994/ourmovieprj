@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>文章审核</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all"/>
+    <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all"/>
+    <!-- news-css -->
+    <link rel="stylesheet" th:href="@{/css/news-css/news.css}" type="text/css" media="all"/>
+    <!-- //news-css -->
+    <!-- list-css -->
+    <link rel="stylesheet" th:href="@{/css/list-css/list.css}" type="text/css" media="all"/>
+    <!-- //list-css -->
+    <!-- font-awesome icons -->
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+    <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap.min.js}"></script>
+    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
+    <script type="text/javascript" th:src="@{js/bootstrap-table.min.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.min.js}"></script>
+    <script>
+        function load_article_data() {
+            $("#article-table").bootstrapTable({
+                url: '/article_manage/get_all_article_data',
+                class: 'table table-bordered table-hover table-striped',
+                uniqueId: "article_id",
+                striped: true,                      //是否显示行间隔色
+                pagination: true,
+                sortable: true,                     //是否启用排序
+                toolbar: '#toolbar',              //工具按钮用哪个容器
+                pageSize: 10,                     //每页的记录行数（*）
+                pageList: [15, 30, 50],        //可供选择的每页的行数（*）
+                search: true,                      //是否显示表格搜索
+                showRefresh: true,
+                columns: [{
+                    checkbox: true
+                }, {
+                    field: 'article_id',
+                    title: '文章id',
+                    sortable: true
+                }, {
+                    field: 'author_name',
+                    title: '作者名',
+                    sortable: true
+                }, {
+                    field: 'headline',
+                    title: '标题',
+                    sortable: true
+                }, {
+                    field: 'click_num',
+                    title: '点击量',
+                    sortable: true
+                }, {
+                    field: 'release_time',
+                    title: '最后修改时间',
+                    sortable: true
+                }, {
+                    field: 'type',
+                    title: '文章类型',
+                    sortable: true
+                }, {
+                    field: 'check_status',
+                    title: '审核状态',
+                    sortable: true
+                }, {
+                    field: 'operate',
+                    title: '操作',
+                    formatter: actionFormatter,
+                }]
+            })
+        };
+        function actionFormatter(value, row, index) {
+            var result = "";
+            var article_id = row.article_id;
+            result += "<a href='#' onclick=\"goto_view_page('" + article_id + "')\" class='btn btn-xs blue' title='编辑'><span class='glyphicon glyphicon-search'></span></a href=>";
+            return result;
+        }
+        function goto_view_page(article_id) {
+            location.replace('\\article_view?article_id=' + article_id);
+        }
+        function update_check(check){//1 通过，0 未通过
+            var rows = $("#article-table").bootstrapTable('getSelections'); // 获得要删除的数据
+            if (rows.length == 0) { // rows 主要是为了判断是否选中，下面的else内容才是主要
+                alert("请先选择要更改的记录!");
+                return;
+            } else {
+                if (!confirm("是否确认更改？"))
+                    return;
+                var datas = new Array();
+                $(rows).each(function () {
+                    var j = {"article_id":this.article_id,"check":check}
+                    datas.push(j);
+                });
+                $.ajax({
+                    url: "/article/update_check",
+                    type: "post",
+                    // data表示发送的数据
+                    data:JSON.stringify(datas),
+                    traditional: true,
+                    // 定义发送请求的数据格式为JSON字符串
+                    contentType: "application/json;charset=UTF-8",
+                    dataType: "json",
+                    //成功响应的结果
+                    success: function (data) {
+                        if (data != 0) {
+                            alert("更新失败！！");
+                        } else {
+                            $("#article-table").bootstrapTable("refresh", {//静态刷新表格
+                                silent: true
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<button id="check_pass" onclick="update_check(1)">审核通过</button>
+<button id="check_dispass" onclick="update_check(-1)">审核不通过</button>
+<body onload="load_article_data()">
+<table id="article-table"></table>
+</body>
+</html>

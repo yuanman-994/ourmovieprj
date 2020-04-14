@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>叶问4：完结篇 佛山影讯 2020年01月30日</title>
-    <meta name="Keywords" content="叶问4：完结篇,2020年01月30日">
-    <meta name="Description" content="叶问4：完结篇 佛山影讯 2020年01月30日">
+    <title>电影排期</title>
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
     <link type="image/x-icon" href="http://static1.mtime.cn/favicon.ico" rel="icon">
     <link type="image/x-icon" href="http://static1.mtime.cn/favicon.ico" rel="shortcut icon">
     <link type="image/x-icon" href="http://static1.mtime.cn/favicon.ico" rel="bookmark">
@@ -36,44 +36,12 @@
     <script  type="text/javascript" charset="utf-8" th:src="@{js/MovieShowtimePage.js}" async="true"></script>
     <script  type="text/javascript" charset="utf-8" th:src="@{js/ga.js}" async="true"></script>
     <script  type="text/javascript" charset="utf-8" th:src="@{js/h.js}" async="true"></script>
-    <script id="__core_0" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/Manager.msi"
-            async="true"></script>
-    <script id="__core_1" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/ga.js"
-            async="true"></script>
-    <script id="__core_2" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/h.js"
-            async="true"></script>
-    <script id="__core_3" type="text/javascript" charset="utf-8"
-            src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/CinemaFilterControl.js" async="true"></script>
-    <script id="__core_4" type="text/javascript" charset="utf-8"
-            src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/MovieShowtimePage.js" async="true"></script>
-    <script id="__core_5" type="text/javascript" charset="utf-8"
-            src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/GoodsAndFeatureCtrl.js" async="true"></script>
-    <script id="__core_6" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/Manager(1).msi"
-            async="true"></script>
-    <script id="__core_7" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/Cinema.api"
-            async="true"></script>
-    <script id="__core_8" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/Cinema(1).api"
-            async="true"></script>
-    <script id="__core_9" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/Cinema(2).api"
-            async="true"></script>
-    <script id="__core_10" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/video.min.js"
-            async="true"></script>
-    <script id="__core_11" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/Trade.p"
-            async="true"></script>
-    <script id="__core_12" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/Message.msi"
-            async="true"></script>
-    <script id="__core_13" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/download-app"
-            async="true"></script>
-    <script id="__core_14" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/ECommerce.api"
-            async="true"></script>
-    <script id="__core_15" type="text/javascript" charset="utf-8"
-            src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/TheaterListBoxData.m" async="true"></script>
-    <script id="__core_16" type="text/javascript" charset="utf-8" src="./叶问4：完结篇 佛山影讯 2020年01月30日_files/Cinema(3).api"
-            async="true"></script>
 </head>
-<body>
+
+<!-- js -->
 <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
 <script th:src="@{js/getParam.js}"></script>
+<script th:src="@{js/login.js}"></script>
 <script>
     var Cinema = {
         getInfo: function (d) { //day表示选择的日期：0：今天，1：明天，2：后天
@@ -95,18 +63,19 @@
                 success: function (data) {
                     var cinemaList = data.cinemaList;
                     console.log(data.cinemaList);
+                    var m='';
                     for(var i=0 ; i<data.cinemaList.length;i++){
-                        var m='<dl class="movieinfobox">';
-                    m+=' <dt><a href=""target="_blank">'+cinemaList[i].cinema_name+'</a>' +
-                        '</dt>'
-                    +'<dd class="infotxt filmicon">' +
-                        '<p>'+cinemaList[i].cinema_address+'</p>' +
-                        '<div  class="ticketselect"  style="">'+
-                        '<a  class="ico_c_ticket" onclick="Schedule.getInfo(\''+day+'\',\''+cinemaList[i].cinema_id+'\');">查影讯<span>∨</span></a>' +
-                        '</div>' +
-                        '</dd>'+
-                        '<dd class="tickettime" id="tickettime" style="display: none;">';
-                    m+='</dl>';
+                        m+='<dl class="movieinfobox">';
+                        m+=' <dt><a href=""target="_blank">'+cinemaList[i].cinema_name+'</a>' +
+                            '</dt>'
+                            +'<dd class="infotxt filmicon">' +
+                            '<p>'+cinemaList[i].cinema_address+'</p>' +
+                            '<div  class="ticketselect"  style="">'+
+                            '<a  class="ico_c_ticket" onclick="Schedule.getInfo(\''+day+'\',\''+cinemaList[i].cinema_id+'\',\''+i+'\');">查影讯<span>∨</span></a>' +
+                            '</div>' +
+                            '</dd>'+
+                            '<dd class="tickettime" id="tickettime'+i+'" style="display: none;">';
+                        m+='</dl>';
                     }
 
                     document.getElementById("cinemaListRegion").innerHTML = "";
@@ -154,11 +123,11 @@
                         '</ul>' +
                         '</div>'+
                         '</div>';
-                      document.getElementById("movieInfoRegion").innerHTML = m;
+                    document.getElementById("movieInfoRegion").innerHTML = m;
 
-                      var n='<h2 title="'+movie.movie_name+'">'+movie.movie_name+' </h2>' +
-                          '<h3 title="'+movie.movie_name+'">'+movie.movie_name+' </h3>';
-                        document.getElementById("moviename").innerHTML = n;
+                    var n='<h2 title="'+movie.movie_name+'">'+movie.movie_name+' </h2>' +
+                        '<h3 title="'+movie.movie_name+'">'+movie.movie_name+' </h3>';
+                    document.getElementById("moviename").innerHTML = n;
                 }});
 
         }
@@ -166,7 +135,7 @@
 </script>
 <script>
     var Schedule = {
-        getInfo: function (d,c) { //day表示选择的日期：0：今天，1：明天，2：后天
+        getInfo: function (d,c,id) { //day表示选择的日期：0：今天，1：明天，2：后天
             //url:表示后台的url，就是 RequestMapping配置的内容
             // type：http请求的类型
             var url = document.location.href;
@@ -190,7 +159,7 @@
                     console.log(schedule);
                     var m='';
                     for(var i=0 ; i<data.scheduleList.length;i++){
-                        m+='<ul class="clearfix">' +
+                        m+='<ul class="clearfix" onclick="window.location.href=\'/seats_select?movie_schedule_id='+schedule[i].movie_schedule_id+'\'">' +
                             '<li class="notlink">' +
                             '<div class="timebox fl">' +
                             '<p class="only">'+schedule[i].end_sell+'<span class="nextday"></span></p>' +
@@ -204,10 +173,10 @@
                             '</li>' +
                             '</ul>'
                     }
-                    m+='<p class="morelink"><a onclick="Display();"><b class="v_m">收起</b><span> ∧</span></a></p>'
-                    document.getElementById("tickettime").innerHTML = "";
-                    document.getElementById("tickettime").innerHTML = m;
-                    document.getElementById("tickettime").style.display="block";
+                    m+='<p class="morelink"><a onclick="Display(\''+id+'\');"><b class="v_m">收起</b><span> ∧</span></a></p>'
+                    document.getElementById("tickettime"+id).innerHTML = "";
+                    document.getElementById("tickettime"+id).innerHTML = m;
+                    document.getElementById("tickettime"+id).style.display="block";
                 }});
 
         }
@@ -217,12 +186,12 @@
     function Getdate() {
         var date = new Date();
         var month = date.getMonth()+1;
-        var day = date.getDay()-2;
+        var day = date.getDay()+5;
         var tomorrow = day+1;
         var aftertomorrow= day+2;
         var html='';
         html+='<ul id="valueDateRegion" class="clearfix transition6" style="left: 0px; width: 260px;">' +
-            '<li class="curr"><a target="_self">今天 &nbsp; '+month+'月'+day+'日<i class="ico_c_jiao00">&nbsp;</i></a></li>' +
+            '<li class="curr"><a onclick="Cinema.getInfo(0)">今天 &nbsp; '+month+'月'+day+'日<i class="ico_c_jiao00">&nbsp;</i></a></li>' +
             '</ul>' +
             '<ul id="valueDateRegion1" class="clearfix transition6" style="left: 170px; width: 260px;">' +
             '<li class="curr"><a onclick="Cinema.getInfo(1)"> 明天 &nbsp; '+month+'月'+tomorrow+'日<i class="ico_c_jiao00">&nbsp;</i></a></li>' +
@@ -239,11 +208,90 @@
         Cinema.getInfo(0);
         Getdate();
     });
-    function Display(){
-        document.getElementById("tickettime").style.display="none";
+    function Display(i){
+        document.getElementById("tickettime"+i).style.display="none";
     }
 </script>
+<script>
+    $('.toggle').click(function(){
+        // Switches the Icon
+        $(this).children('i').toggleClass('fa-pencil');
+        // Switches the forms
+        $('.form').animate({
+            height: "toggle",
+            'padding-top': 'toggle',
+            'padding-bottom': 'toggle',
+            opacity: "toggle"
+        }, "slow");
+    });
+</script>
 
+<body>
+
+<!--<div class="header">
+    <div class="container1">
+        <div class="w3layouts_logo">
+            <a href="index.html"><h1>One<span>Movies</span></h1></a>
+        </div>
+        <div class="w3_search">
+            <form action="#" method="post">
+                <input type="text" name="Search" placeholder="Search" required="">
+                <input type="submit" value="Go">
+            </form>
+        </div>
+
+        <div class="w3l_sign_in_register">
+            <ul>
+                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) R 345 653</li>
+                <li><a href="#" data-toggle="modal" data-target="#myModal" id = "login-button">Login</a></li>
+                <li><a href="/logout" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="modal video-modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                Sign In & Sign Up
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <section>
+                <div class="modal-body">
+                    <div class="w3_login_module">
+                        <div class="module form-module">
+                            <div class="toggle"><i class="fa fa-times fa-pencil"></i>
+                                <div class="tooltip">Click Me</div>
+                            </div>
+                            <div class="form">
+                                <h3>Login to your account</h3>
+                                <form>
+                                    <input type="text" name="user_name" placeholder="user_name" required="" >
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <ul>
+                                        <input type="button" value="Login" onclick="try_login()">
+                                        <a name="tips"></a>
+                                    </ul>
+                                </form>
+                            </div>
+                            <div class="form">
+                                <h3>Create an account</h3>
+                                <form action="#" method="post">
+                                    <input type="text" name="Username" placeholder="Username" required="">
+                                    <input type="password" name="Password" placeholder="Password" required="">
+                                    <input type="email" name="Email" placeholder="Email Address" required="">
+                                    <input type="text" name="Phone" placeholder="Phone Number" required="">
+                                    <input type="submit" value="Register">
+                                </form>
+                            </div>
+                            <div class="cta"><a href="#">Forgot your password?</a></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>-->
 <div class="newshowtime">
     <div class="nstimebg"> &nbsp;</div>
     <div class="nstimemid">

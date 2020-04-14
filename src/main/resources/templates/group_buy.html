@@ -4,37 +4,40 @@
     <title>Dynamic</title>
     <!-- for-mobile-apps -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="keywords" content="" />
-    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
-    function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content=""/>
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
     <!-- //for-mobile-apps -->
-    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
-    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all" />
-    <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all" />
-    <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css' />
-    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all" />
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all"/>
+    <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all"/>
     <!-- news-css -->
-    <link rel="stylesheet" th:href="@{/css/news-css/news.css}" type="text/css" media="all" />
+    <link rel="stylesheet" th:href="@{/css/news-css/news.css}" type="text/css" media="all"/>
     <!-- //news-css -->
     <!-- list-css -->
-    <link rel="stylesheet" th:href="@{/css/list-css/list.css}" type="text/css" media="all" />
+    <link rel="stylesheet" th:href="@{/css/list-css/list.css}" type="text/css" media="all"/>
     <!-- //list-css -->
     <!-- font-awesome icons -->
-    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
     <!-- //font-awesome icons -->
     <!-- js -->
     <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
-    <!-- //js -->
-    <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
-    <!-- start-smoth-scrolling -->
+    <script type="text/javascript" th:src="@{js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
     <script type="text/javascript" th:src="@{js/easing.js}"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            $(".scroll").click(function(event){
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
                 event.preventDefault();
-                $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
             });
         });
     </script>
@@ -54,6 +57,7 @@
                 pageSize: 15,                     //每页的记录行数（*）
                 pageList: [15, 30, 50],        //可供选择的每页的行数（*）
                 search: true,                      //是否显示表格搜索
+                showRefresh: true,
                 onClickRow: function () {
                     //团购购票
                 },
@@ -103,37 +107,39 @@
                 pageSize: 15,                     //每页的记录行数（*）
                 pageList: [15, 30, 50],        //可供选择的每页的行数（*）
                 search: true,                      //是否显示表格搜索
-                columns: [{
-                    field: 'cinema_name',
-                    title: '影院名',
-                    sortable: true
-                }, {
-                    field: 'start_time',
-                    title: '开始时间',
-                    sortable: true
-                }, {
-                    field: 'end_time',
-                    title: '结束时间',
-                    sortable: true
-                }, {
-                    field: 'start_sell',
-                    title: '开售时间',
-                    sortable: true
-                }, {
-                    field: 'end_sell',
-                    title: '结售时间',
-                    sortable: true
-                }, {
-                    field: 'now_sales',
-                    title: '已售'
-                }, {
-                    field: 'max_sales',
-                    title: '最大'
-                }, {
-                    field: 'price',
-                    title: '价格',
-                    sortable: true
-                },
+                showRefresh: true,
+                columns: [
+                    {
+                        field: 'cinema_name',
+                        title: '影院名',
+                        sortable: true
+                    }, {
+                        field: 'start_time',
+                        title: '开始时间',
+                        sortable: true
+                    }, {
+                        field: 'end_time',
+                        title: '结束时间',
+                        sortable: true
+                    }, {
+                        field: 'start_sell',
+                        title: '开售时间',
+                        sortable: true
+                    }, {
+                        field: 'end_sell',
+                        title: '结售时间',
+                        sortable: true
+                    }, {
+                        field: 'now_sales',
+                        title: '已售'
+                    }, {
+                        field: 'max_sales',
+                        title: '最大'
+                    }, {
+                        field: 'price',
+                        title: '价格',
+                        sortable: true
+                    },
                 ],
             })
         };
@@ -160,7 +166,7 @@
                 <li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
             </ul>
         </div>
-        <div class="clearfix"> </div>
+        <div class="clearfix"></div>
     </div>
 </div>
 <!-- //header -->
@@ -170,7 +176,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 Sign In & Sign Up
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <section>
                 <div class="modal-body">
@@ -206,7 +213,7 @@
     </div>
 </div>
 <script>
-    $('.toggle').click(function(){
+    $('.toggle').click(function () {
         // Switches the Icon
         $(this).children('i').toggleClass('fa-pencil');
         // Switches the forms
@@ -224,7 +231,8 @@
     <div class="container">
         <nav class="navbar navbar-default">
             <div class="navbar-header navbar-left">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -236,10 +244,10 @@
                 <nav>
                     <ul class="nav navbar-nav">
                         <li class="active"><a th:href="@{/index}">首页</a></li>
-                        <li ><a th:href="@{/dynamic}" >影城动态</a></li>
+                        <li><a th:href="@{/dynamic}">影城动态</a></li>
                         <li><a th:href="@{/see_movie}">看电影</a></li>
                         <li><a th:href="@{/group_buy}">团购</a></li>
-                        <li ><a href="#" >商城 </a></li>
+                        <li><a href="#">商城 </a></li>
                         <li><a th:href="@{/cooperation}">商务合作信息</a></li>
                         <li><a th:href="@{/about_us}">关于企业信息</a></li>
                     </ul>
@@ -325,10 +333,12 @@
             <div class="col-md-6 w3ls_footer_grid_right">
                 <a href="index.html"><h2>One<span>Movies</span></h2></a>
             </div>
-            <div class="clearfix"> </div>
+            <div class="clearfix"></div>
         </div>
         <div class="col-md-5 w3ls_footer_grid1_left">
-            <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+            <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/"
+                                                                                        target="_blank" title="模板之家">模板之家</a>
+                - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
         </div>
         <div class="col-md-7 w3ls_footer_grid1_right">
             <ul>
@@ -355,21 +365,21 @@
                 </li>
             </ul>
         </div>
-        <div class="clearfix"> </div>
+        <div class="clearfix"></div>
     </div>
 </div>
 <!-- //footer -->
 <!-- Bootstrap Core JavaScript -->
 <script th:src="@{js/bootstrap.min.js}"></script>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         $(".dropdown").hover(
-            function() {
-                $('.dropdown-menu', this).stop( true, true ).slideDown("fast");
+            function () {
+                $('.dropdown-menu', this).stop(true, true).slideDown("fast");
                 $(this).toggleClass('open');
             },
-            function() {
-                $('.dropdown-menu', this).stop( true, true ).slideUp("fast");
+            function () {
+                $('.dropdown-menu', this).stop(true, true).slideUp("fast");
                 $(this).toggleClass('open');
             }
         );
@@ -378,7 +388,7 @@
 <!-- //Bootstrap Core JavaScript -->
 <!-- here stars scrolling icon -->
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         /*
             var defaults = {
             containerID: 'toTop', // fading element id
@@ -388,7 +398,7 @@
             };
         */
 
-        $().UItoTop({ easingType: 'easeOutQuart' });
+        $().UItoTop({easingType: 'easeOutQuart'});
 
     });
 </script>

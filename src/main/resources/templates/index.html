@@ -58,7 +58,6 @@
             });
         });
     </script>
-
     <!-- start-smoth-scrolling -->
 </head>
 
@@ -196,13 +195,90 @@
     });
     $(".slidey-list-description").dotdotdot();
 </script>
+<script>
+    $(function () {
+        OnshowMovies.getInfo();
+    });
+    var OnshowMovies = {
+        getInfo: function () {
+            //url:表示后台的url，就是 RequestMapping配置的内容
+            // type：http请求的类型
+            var id;
+            $.ajax({
+                url: "/onshowMovies",
+                data:{id:id},
+                type: "post",
+                async:false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var moviesList = data.moviesList;
+                    //拼接html语句
+                    var m='';
+                    for(var i=0; i<moviesList.length;i++){
+                        console.log(moviesList[i].movie_id);
+                        m='';
+                        m+=
+                            '<div class="w3l-movie-gride-agile w3l-movie-gride-agile1">' +
+                            '<a href="/movie_single?movie_id='+moviesList[i].movie_id+'" class="hvr-shutter-out-horizontal"><img src="images/m13.jpg" title="album-name" class="img-responsive" alt=" " />' +
+                            '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
+                            '</a>' +
+                            '<div class="mid-1 agileits_w3layouts_mid_1_home">' +
+                            '<div class="w3l-movie-text">' +
+                            '<h6><a href="/movie_single?movie_id='+moviesList[i].movie_id+'">'+moviesList[i].movie_name+'</a></h6>' +
+                            '</div>' +
+                            '<div class="mid-2 agile_mid_2_home">' +
+                            '<p>2016</p>' +
+                            '<div class="block-stars">' +
+                            '<ul class="w3l-ratings">' +
+                            '<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>' +
+                            '<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>' +
+                            '<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>' +
+                            '<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>' +
+                            '<li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a></li>' +
+                            '</ul>' +
+                            '</div>' +
+                            '<div class="clearfix"></div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="ribben">' +
+                            '<p>NEW</p>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        $('#onshowMovies'+i).html(m);
+                    }
+                    /*  var html='';
+                      for(var n=0; n<moviesList.length;n++){
+                          html+='<div class="item" id="onshowMovies'+n+'"></div>';
+                      }
+                      document.getElementById("owl-demo").innerHTML = html;*/
+
+                }});
+
+        }
+    };
+</script>
 <!-- //banner -->
 <!-- banner-bottom -->
 <div class="banner-bottom">
     <div class="container">
         <div class="w3_agile_banner_bottom_grid">
             <div id="owl-demo" class="owl-carousel owl-theme">
-                <div class="item">
+                <div class="item" id="onshowMovies0"></div>
+                <div class="item" id="onshowMovies1"></div>
+                <div class="item" id="onshowMovies2"></div>
+                <div class="item" id="onshowMovies3"></div>
+                <div class="item" id="onshowMovies4"></div>
+                <div class="item" id="onshowMovies5"></div>
+                <div class="item" id="onshowMovies6"></div>
+                <div class="item" id="onshowMovies7"></div>
+                <div class="item" id="onshowMovies8"></div>
+                <div class="item" id="onshowMovies9"></div>
+            <!--    <div class="item">
                     <div class="w3l-movie-gride-agile w3l-movie-gride-agile1">
                         <a th:href="@{/movie_single}" class="hvr-shutter-out-horizontal"><img src="images/m13.jpg" title="album-name" class="img-responsive" alt=" " />
                             <div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>
@@ -453,7 +529,7 @@
                             <p>NEW</p>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

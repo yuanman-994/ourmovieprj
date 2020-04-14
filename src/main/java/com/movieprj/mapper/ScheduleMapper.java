@@ -23,4 +23,6 @@ public interface ScheduleMapper {
             "AND #{date_time} BETWEEN start_sell AND end_sell")
     public List<MovieSchedule> findScheduleByMovieIdAndCinemaIdAndDate(Integer cinema_id,Integer movie_id,String date_time);
 
+    @Select("SELECT * FROM movie_schedule WHERE movie_schedule_id = #{movie_schedule_id} ")
+    public MovieSchedule findScheduleById(Integer movie_schedule_id);
 }

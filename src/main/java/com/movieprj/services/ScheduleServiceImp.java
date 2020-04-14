@@ -24,4 +24,9 @@ public class ScheduleServiceImp implements ScheduleService {
         return scheduleMapper.findScheduleByMovieIdAndCinemaIdAndDate(cinema_id,movie_id,date_time);
     }
 
+    @Override
+    public MovieSchedule findScheduleById(Integer movie_schedule_id) {
+        return scheduleMapper.findScheduleById(movie_schedule_id);
+    }
+
 }

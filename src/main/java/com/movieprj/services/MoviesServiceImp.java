@@ -29,18 +29,21 @@ public class MoviesServiceImp implements MoviesService {
     }
 
     @Override
-    public void addMovies(Movies movies) {
+    public int addMovies(Movies movies) {
         moviesMapper.addMovies(movies);
+        return 1;
     }
 
     @Override
-    public void deleteMovies(Integer id) {
-        moviesMapper.deleteMovies(id);
+    public int deleteMovies(Integer movie_id) {
+        moviesMapper.deleteMovies(movie_id);
+        return 1;
     }
 
     @Override
-    public void updateMovies(Movies movies) {
+    public int updateMovies(Movies movies) {
         moviesMapper.updateMovies(movies);
+        return 1;
     }
 
 

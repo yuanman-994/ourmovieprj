@@ -39,8 +39,8 @@ public class CommentServiceImp implements CommentService{
     }
 
     @Override
-    public int deleteComment(Integer id) {
-        commentMapper.deleteComment(id);
+    public int deleteComment(Integer movie_id,Integer user_id) {
+        commentMapper.deleteComment(movie_id,user_id);
         return 0;
     }
 

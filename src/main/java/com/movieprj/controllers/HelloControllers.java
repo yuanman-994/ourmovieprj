@@ -1,7 +1,5 @@
 package com.movieprj.controllers;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HelloControllers {
 
+
+    @RequestMapping("/back_index")
+    public String back_index(){
+        return "back_index";
+    }
+
+    @RequestMapping("/article_manage")
+    public String article_manage(){
+        return "article_manage";
+    }
 
     @RequestMapping("/index")
     public String index() {
@@ -34,11 +42,6 @@ public class HelloControllers {
     @RequestMapping("/see_movie")
     public String see_movie() {
         return "see_movie";
-    }
-
-    @RequestMapping("/seats_select")
-    public String seats_select() {
-        return "seats_select";
     }
 
 

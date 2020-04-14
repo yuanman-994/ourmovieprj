@@ -12,10 +12,10 @@ public interface MoviesService {
 
     public  List<Movies> selectMoviesByOnshow(Integer onshow);
 
-    public void addMovies(Movies movies);
+    public int addMovies(Movies movies);
 
-    public void deleteMovies(Integer id);
+    public int deleteMovies(Integer movie_id);
 
-    public void updateMovies(Movies movies);
+    public int updateMovies(Movies movies);
 
 }

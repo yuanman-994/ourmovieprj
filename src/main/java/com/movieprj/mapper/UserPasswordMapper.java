@@ -14,8 +14,10 @@ public interface UserPasswordMapper {
     @Select("SELECT user_id FROM user_password WHERE user_name = #{name}")
     public int findIdByName(String name);//以用户名查找用户id
 
-    public UserPassword findById(Integer uid);//多表联合查询，user_password,role,permission
+    @Select("SELECT user_name FROM user_password WHERE user_id = #{id}")
+    public String findNameById(int id);
 
+    public UserPassword findById(Integer uid);//多表联合查询，user_password,role,permission
     public Role findRoleById (Integer rid);//role permisssion两表联合查询
     public List<Permission> findRolePermissionById(Integer rid);//从role_permission,permission中查找role_id为rid的role的permission
     public List<Role> findUserRoleById(Integer uid);//从user_role,role中查找user_id为uid的user的role

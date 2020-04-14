@@ -2,30 +2,31 @@ package com.movieprj.beans;
 
 
 public class MoviesTypes {
-    private  Integer type_id;   //类型id
-    private String name;     //类型名称
+    private  String type_name;   //类型名称
+    private Integer movie_id;     //电影id
 
-    public Integer getType_id() {
-        return type_id;
+
+    public String getType_name() {
+        return type_name;
     }
 
-    public void setType_id(Integer type_id) {
-        this.type_id = type_id;
+    public void setType_name(String type_name) {
+        this.type_name = type_name;
     }
 
-    public String getName() {
-        return name;
+    public Integer getMovie_id() {
+        return movie_id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMovie_id(Integer movie_id) {
+        this.movie_id = movie_id;
     }
 
     @Override
     public String toString() {
         return "MoviesTypes{" +
-                "typeid='" + type_id + '\'' +
-                ", name='" + name + '\'' +
+                "type_name='" + type_name + '\'' +
+                ", movie_id=" + movie_id +
                 '}';
     }
 }

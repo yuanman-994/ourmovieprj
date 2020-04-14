@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -10,9 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-
-    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
-
     <link rel="icon" type="image/png" href="images/i/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="images/i/app-icon72x72@2x.png">
     <meta name="apple-mobile-web-app-title" content="Amaze UI" />
@@ -21,184 +18,10 @@
     <link rel="stylesheet" href="css/admincss/amazeui.datatables.min.css" />
     <link rel="stylesheet" href="css/admincss/app.css">
     <script src="js/adminjs/jquery.min.js"></script>
-    <script>
-        function load_article_data() {
-            $("#article-table").bootstrapTable({
-                url: '/article_manage/get_all_article_data',
-                class: 'table table-bordered table-hover table-striped',
-                uniqueId: "article_id",
-                striped: true,                      //是否显示行间隔色
-                pagination: true,
-                sortable: true,                     //是否启用排序
-                toolbar: '#toolbar',              //工具按钮用哪个容器
-                pageSize: 10,                     //每页的记录行数（*）
-                pageList: [15, 30, 50],        //可供选择的每页的行数（*）
-                search: true,                      //是否显示表格搜索
-                // showRefresh: true,
-                columns: [{
-                    checkbox: true
-                }, {
-                    field: 'article_id',
-                    title: '文章id',
-                    sortable: true
-                }, {
-                    field: 'author_name',
-                    title: '作者名',
-                    sortable: true
-                }, {
-                    field: 'headline',
-                    title: '标题',
-                    sortable: true
-                }, {
-                    field: 'click_num',
-                    title: '点击量',
-                    sortable: true
-                }, {
-                    field: 'release_time',
-                    title: '最后修改时间',
-                    sortable: true
-                }, {
-                    field: 'type',
-                    title: '文章类型',
-                    sortable: true
-                }, {
-                    field: 'check_status',
-                    title: '审核状态',
-                    sortable: true
-                }, {
-                    field: 'operate',
-                    title: '操作',
-                    formatter: actionFormatter,
-                }],
-                onClickCell: function (field, value, row, $element) {
-                    var chang_disabled = new Array("article_id", "author_name","headline" ,"check_status", "release_time", "operate");
-                    var o_value = value;//单元格原值
-                    if ($.inArray(field, chang_disabled) >= 0)
-                        return;
-                    $element.attr('contenteditable', true);
-                    $element.unbind('blur').bind('blur', function () {//不这样写的话会触发两次回调
-                        let index = $element.parent().data('index');
-                        let tdValue = $element.html();
-                        if (tdValue != o_value) {
-                            saveData(index, field, tdValue);
-                            if (!check(row)) {
-                                $("#article-table").bootstrapTable("refresh", {//静态刷新表格
-                                    silent: true
-                                });
-                            } else {
-                                update_row(row)
-                                $("#article-table").bootstrapTable("refresh", {//静态刷新表格
-                                    silent: true
-                                });
-                            }
-                        }
-                    })
-                }
-            })
-        };
 
-        function actionFormatter(value, row, index) {
-            var result = "";
-            var article_id = row.article_id;
-            result += "<div class=\"tpl-table-black-operation\">\n" +
-                "                                                    <a href=\"#\" onclick=\"goto_view_page('" + article_id + "')\">\n" +
-                "                                                        <i class=\"am-icon-search\"></i> 查看\n" +
-                "                                                    </a>\n"
-                "                                                </div>"
-            return result;
-        }
-
-        function goto_view_page(article_id) {
-            location.replace('\\article_view?article_id=' + article_id);
-        }
-
-        function saveData(index, field, value) {//保存到当前页面
-            $("#article-table").bootstrapTable('updateCell', {
-                index: index,       //行索引
-                field: field,       //列名
-                value: value        //cell值
-            })
-        }
-
-        function check(row) {//输入数据检查
-            var click_num = row.click_num;
-            var type = row.type;
-            if (click_num.length * type.length == 0) {
-                alert("不能为空值！！")
-                return false;
-            }
-            if (type != "影片看点" && type != "新闻") {
-                alert("类型必须为影片看点或新闻！！")
-                return false;
-            }
-            if (!/^[0-9]*$/.test(click_num)) {
-                alert("只能输入数字！！")
-                return false;
-            }
-            return true;
-        }
-
-        function update_row(row) {//升级数据到服务器
-            $.ajax({
-                url: "/article/update_row",
-                type: "post",
-                // data表示发送的数据
-                data: JSON.stringify(row),
-                // 定义发送请求的数据格式为JSON字符串
-                contentType: "application/json;charset=UTF-8",
-                //定义回调响应的数据格式为JSON字符串,该属性可以省略
-                dataType: "json",
-                //成功响应的结果
-                success: function (data) {
-                    if (data != 0) {
-                        alert("数据更新失败！！");
-                    }
-                }
-            });
-        }
-
-        $(function () {
-            $("#remove").on("click", function () {
-                var rows = $("#article-table").bootstrapTable('getSelections'); // 获得要删除的数据
-                if (rows.length == 0) { // rows 主要是为了判断是否选中，下面的else内容才是主要
-                    alert("请先选择要删除的记录!");
-                    return;
-                } else {
-                    if (!confirm("是否确认删除？"))
-                        return;
-                    var ids = new Array(); // 声明一个数组
-                    $(rows).each(function () { // 通过获得别选中的来进行遍历
-                        ids.push(this.article_id); // cid为获得到的整条数据中的一列
-                    });
-                    $.ajax({
-                        url: "/article/del_article",
-                        type: "post",
-                        // data表示发送的数据
-                        data: {"ids": ids},
-                        traditional: true,
-                        success: function (data) {
-                            if (data != 0) {
-                                alert("删除失败！！");
-                            } else {
-                                alert("删除成功！！");
-                                $("#article-table").bootstrapTable("refresh", {//静态刷新表格
-                                    silent: true
-                                });
-                            }
-                        }
-                    });
-                }
-            })
-            $("#refresh").on("click", function () {
-                $("#article-table").bootstrapTable("refresh", {//静态刷新表格
-                    silent: true
-                });
-            })
-        })
-    </script>
 </head>
 
-<body data-type="widgets" onload="load_article_data()">
+<body data-type="widgets">
 <script src="js/adminjs/theme.js"></script>
 <div class="am-g tpl-g">
     <!-- 头部 -->
@@ -229,6 +52,7 @@
                     <li class="am-text-sm tpl-header-navbar-welcome">
                         <a href="javascript:;">欢迎你, <span>Amaze UI</span> </a>
                     </li>
+
                     <!-- 新邮件 -->
                     <li class="am-dropdown tpl-dropdown" data-am-dropdown>
                         <a href="javascript:;" class="am-dropdown-toggle tpl-dropdown-toggle" data-am-dropdown-toggle>
@@ -450,25 +274,6 @@
     <!-- 内容区域 -->
     <div class="tpl-content-wrapper">
 
-        <div class="widget am-cf">
-            <div class="widget-head am-cf">
-                <div class="widget-title am-fl">所有文章管理</div>
-                <div class="widget-function am-fr">
-                    <a href="javascript:;" class="am-icon-cog"></a>
-                </div>
-            </div>
-            <div class="widget-body  widget-body-lg am-fr">
-                <div class="am-btn-toolbar">
-                    <div class="am-btn-group am-btn-group-xs">
-                        <button id="refresh" type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-refresh"></span> 刷新</button>
-                        <button id="remove" type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>
-                    </div>
-                </div>
-                <table width="100%" class="am-table am-table-compact tpl-table-black " id="article-table">
-
-                </table>
-            </div>
-        </div>
     </div>
 </div>
 </div>
@@ -476,10 +281,7 @@
 <script src="js/adminjs/amazeui.datatables.min.js"></script>
 <script src="js/adminjs/dataTables.responsive.min.js"></script>
 <script src="js/adminjs/app.js"></script>
-<script type="text/javascript" th:src="@{js/bootstrap.min.js}"></script>
 
-<script type="text/javascript" th:src="@{js/bootstrap-table.min.js}"></script>
-<script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.min.js}"></script>
 </body>
 
 </html>

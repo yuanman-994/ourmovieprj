@@ -24,6 +24,6 @@ public class RegistController {
     @RequestMapping(value = "/register")
     public String register(User user){
         userService.regist(user);
-        return "/index";
+        return "/faq";
     }
 }

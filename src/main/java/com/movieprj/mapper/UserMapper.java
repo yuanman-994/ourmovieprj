@@ -16,4 +16,5 @@ public interface UserMapper {
     @Insert( "INSERT INTO user (user_name,phone_number,password,user_email) " +
             "values (#{user_name},#{phone_number},#{password},#{user_email})" )
     void register(User user);
+
 }

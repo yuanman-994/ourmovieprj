@@ -53,6 +53,15 @@ public class HelloControllers {
     @RequestMapping("/cooperation")
     public String cooperation(){ return "cooperation";}
 
+    @RequestMapping("/lost_password")
+    public String customer(){ return "lost_password";}
+
+    @RequestMapping("/admin_index")
+    public String admin_index(){ return "admin_index";}
+
+    @RequestMapping("/faq")
+    public String faq(){ return "faq";}
+
     @RequestMapping("/err")
     @ResponseBody
     public String err(){ return "没有权限!";}

@@ -5,7 +5,7 @@ import java.util.List;
 public class Movies {
     private Integer movie_id;  //id
     private String movie_name; //电影名
-    private MoviesTypes type;//电影类型（一对多）
+    private List<MoviesTypes> moviesTypesList;//电影类型（一对多）
     private String intro;//电影介绍
     private  String cover;  //封面照片
     private  String photo; //剧照
@@ -37,13 +37,6 @@ public class Movies {
         this.movie_name = movie_name;
     }
 
-    public MoviesTypes getType() {
-        return type;
-    }
-
-    public void setType(MoviesTypes type) {
-        this.type = type;
-    }
 
     public String getIntro() {
         return intro;
@@ -149,12 +142,21 @@ public class Movies {
         this.commentList = commentList;
     }
 
+
+    public List<MoviesTypes> getMoviesTypesList() {
+        return moviesTypesList;
+    }
+
+    public void setMoviesTypesList(List<MoviesTypes> moviesTypesList) {
+        this.moviesTypesList = moviesTypesList;
+    }
+
     @Override
     public String toString() {
         return "Movies{" +
                 "movie_id=" + movie_id +
                 ", movie_name='" + movie_name + '\'' +
-                ", type=" + type +
+                ", moviesTypesList=" + moviesTypesList +
                 ", intro='" + intro + '\'' +
                 ", cover='" + cover + '\'' +
                 ", photo='" + photo + '\'' +

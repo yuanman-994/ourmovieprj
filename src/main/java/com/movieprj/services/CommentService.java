@@ -13,5 +13,5 @@ public interface CommentService {
 
     public int updateComment(Comment comment);
 
-    public int deleteComment(Integer id);
+    public int deleteComment(Integer movie_id,Integer user_id);
 }

@@ -24,10 +24,10 @@ public interface CommentMapper {
             "VALUES (#{movie_id},#{user_id},#{content},#{comment_time})")
     public int insertComment(Comment comment);
 
-    @Update("UPDATE movie_commen SET content=#{content} WHERE user_id=#{user_id}")
+    @Update("UPDATE movie_commen SET content=#{content},comment_time=#{comment_time} WHERE movie_id=#{movie_id} AND user_id=#{user_id}")
     public int updateComment(Comment comment);
 
-    @Delete("DELETE FROM movie_commen WHERE user_id=#{user_id}")
-    public int deleteComment(Integer id);
+    @Delete("DELETE FROM movie_commen WHERE movie_id=#{movie_id} AND user_id=#{user_id}")
+    public int deleteComment(Integer movie_id,Integer user_id);
 
 }

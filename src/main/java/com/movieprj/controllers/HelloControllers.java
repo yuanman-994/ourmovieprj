@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HelloControllers {
 
+
     @RequestMapping("/back_index")
     public String back_index(){
         return "back_index";

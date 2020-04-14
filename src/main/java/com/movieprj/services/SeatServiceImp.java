@@ -17,4 +17,44 @@ public class SeatServiceImp implements SeatService{
     public List<Seat> findSoldSeatByScheduleId(Integer movie_schedule_id) {
         return seatMapper.findSoldSeatByScheduleId(movie_schedule_id);
     }
+
+    @Override
+    public List<Seat> findAllSeats() {
+        return seatMapper.findAllSeats();
+    }
+
+    @Override
+    public List<Seat> findSeatsByHallId(Integer hall_id) {
+        return seatMapper.findSeatsByHallId(hall_id);
+    }
+
+    @Override
+    public int addSeat(Seat seat) {
+        seatMapper.addSeat(seat);
+        return 0;
+    }
+
+    @Override
+    public int deleteSeat(Integer seat_id) {
+        seatMapper.deleteSeat(seat_id);
+        return 0;
+    }
+
+    @Override
+    public int updateSeats(Seat seat) {
+        seatMapper.updateSeats(seat);
+        return 0;
+    }
+
+    @Override
+    public int batchAddSeats(List<Seat> seatList) {
+        seatMapper.batchAddSeats(seatList);
+        return 0;
+    }
+
+    @Override
+    public int batchDeleteSeats(List<Seat> seatList) {
+        seatMapper.batchDeleteSeats(seatList);
+        return 0;
+    }
 }

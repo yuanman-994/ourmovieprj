@@ -17,6 +17,8 @@
 	<script th:src="@{js/jquery.seat-charts.js}"></script>
 	<script th:src="@{js/getParam.js}"></script>
 </head>
+
+<body>
 <script>
 	var Schedule1 = {
 		getInfo: function () {
@@ -180,7 +182,6 @@
 		document.getElementById("main").innerHTML = m;
 	}
 </script>
-<body>
 <div class="content">
 	<h1>Movie Ticket Booking</h1>
 	<div class="main" id="main">
@@ -338,7 +339,7 @@
 						var seats ;
 						var user_id=1;//接入登陆用户接口后再改
 						seats = selected_seats.length;
-						var total = (seats-3)*price;
+						var total = seats*price;
 						$.ajax({
 							url: "/addTicketOrder",
 							data:JSON.stringify({movie_schedule_id:movie_schedule_id,user_id:user_id,total:total}),

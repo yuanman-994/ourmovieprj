@@ -16,11 +16,6 @@ public class HelloControllers {
         return "back_index";
     }
 
-    @RequestMapping("/article_manage")
-    public String article_manage(){
-        return "article_manage";
-    }
-
     @RequestMapping("/index")
     public String index() {
         return "index";
@@ -45,10 +40,7 @@ public class HelloControllers {
     }
 
 
-    @RequestMapping("/group_buy")
-    public String group_buy() {
-        return "group_buy";
-    }
+
 
     @RequestMapping("/about_us")
     public String about_us(){ return "about_us";}

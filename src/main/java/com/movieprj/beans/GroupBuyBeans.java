@@ -88,7 +88,7 @@ public class GroupBuyBeans {
         return "GroupBuyDao{" +
                 "group_buy_id=" + group_buy_id +
                 ", cinema_id=" + cinema_id +
-                ", strat_time='" + start_time + '\'' +
+                ", start_time='" + start_time + '\'' +
                 ", end_time='" + end_time + '\'' +
                 ", price=" + price +
                 ", now_sales=" + now_sales +

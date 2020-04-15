@@ -3,7 +3,9 @@ package com.movieprj.services.groupbuy;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.movieprj.beans.Cinema;
 import com.movieprj.beans.GroupBuyBeans;
+import com.movieprj.mapper.CinemaMapper;
 import com.movieprj.mapper.GroupBuyMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.List;
 public class GroupBuyServiceImp implements GroupBuyService {
     @Resource
     private GroupBuyMapper groupBuyMapper;
+    @Resource
+    private CinemaMapper cinemaMapper;
 
     public String getGroupBuyDataNow() {//返回当期团购数据，json格式字符串
         List<GroupBuyBeans> groupBuyBeansData = groupBuyMapper.getGroupBuyDataNOW();
@@ -65,5 +69,29 @@ public class GroupBuyServiceImp implements GroupBuyService {
         groupBuyPageComponent.max_sales=groupBuyBeans.getMax_sales();
         groupBuyPageComponent.start_sell=groupBuyBeans.getStart_sell();
         groupBuyPageComponent.end_sell=groupBuyBeans.getEnd_sell();
+    }
+
+    @Override
+    public String getCinema() {
+        List<Cinema> data = cinemaMapper.findAll();
+        JSONArray jsonArray = new JSONArray();
+        for (Cinema c : data){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("cinema_id",c.getCinema_id());
+            jsonObject.put("cinema_name",c.getCinema_name());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray.toJSONString();
+    }
+
+    @Override
+    public int saveGroupBuy(GroupBuyBeans groupBuyBeans) {
+        try{
+            groupBuyMapper.insertGroupBuy(groupBuyBeans);
+        } catch (Exception e){
+            e.printStackTrace();
+            return -1;
+        }
+        return 0;
     }
 }

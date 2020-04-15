@@ -24,7 +24,7 @@ public class ArticleServiceImp implements ArticleService {
     private ArticleMapper articleMapper;
 
     @Override
-    public Boolean save_article(String author_name, Map<String, String> data) {
+    public Boolean saveArticle(String author_name, Map<String, String> data) {
         try {
             int author_id = userPasswordMapper.findIdByName(author_name);
             Article article = new Article();
@@ -63,7 +63,7 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public String upload_image(MultipartFile image, String basePath, String author_name, String article_id) {
+    public String uploadImage(MultipartFile image, String basePath, String author_name, String article_id) {
         System.out.println(basePath);
         String ret = "";
         //生成uuid作为文件名称
@@ -104,7 +104,7 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public String get_self_article_data(String author_name) {
+    public String getSelfArticleData(String author_name) {
         int id = userPasswordMapper.findIdByName(author_name);
         List<Article> articles = articleMapper.getArticleById(id);
 
@@ -142,7 +142,7 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public String get_all_article_data() {
+    public String getAllArticleData() {
         List<Article> articles = articleMapper.getArticle();
 
         JSONArray jsonArray = new JSONArray();
@@ -181,7 +181,7 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public int update_row(Map<String, String> row) {
+    public int updateRow(Map<String, String> row) {
         try {
 //            System.out.println(row);
             int article_id, click_num, article_type = 1;
@@ -205,7 +205,7 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public String get_text_by_id(int article_id) {
+    public String getTextById(int article_id) {
 
         String url = articleMapper.getUrlById(article_id);
 
@@ -232,7 +232,7 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public int upload_article(Map<String, String> data) {
+    public int uploadArticle(Map<String, String> data) {
         int article_id = Integer.valueOf(data.get("article_id"));
         String content = data.get("content");//要保存的内容
 
@@ -260,7 +260,7 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public int del_article(String[] ids) {//删除文章
+    public int delArticle(String[] ids) {//删除文章
         for (String id : ids) {
             if (!this.del_article_by_id(Integer.valueOf(id)))
                 return -1;
@@ -310,7 +310,7 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public int update_check(JSONArray ja) {
+    public int updateCheck(JSONArray ja) {
         for (int i = 0;i<ja.size();i++){
             JSONObject jsonObject = ja.getJSONObject(i);
             int article_id = (int)jsonObject.get("article_id");

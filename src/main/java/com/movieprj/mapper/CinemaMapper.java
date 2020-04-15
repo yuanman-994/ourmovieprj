@@ -3,6 +3,8 @@ package com.movieprj.mapper;
 import com.movieprj.beans.Cinema;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface CinemaMapper {
 
@@ -21,4 +23,7 @@ public interface CinemaMapper {
             "cinema_introduction = #{cinema_introduction} " +
             "WHERE cinema_id = #{cinema_id} ")
     public int updateCinema(Cinema cinema);
+
+    @Select("SELECT * FROM cinema")
+    public List<Cinema> findAll();
 }

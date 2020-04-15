@@ -9,16 +9,15 @@
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="renderer" content="webkit">
-    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <link rel="icon" type="image/png" href="images/i/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="images/i/app-icon72x72@2x.png">
-    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
     <script src="js/adminjs/echarts.min.js"></script>
-    <link rel="stylesheet" href="css/admincss/amazeui.min.css" />
-    <link rel="stylesheet" href="css/admincss/amazeui.datatables.min.css" />
+    <link rel="stylesheet" href="css/admincss/amazeui.min.css"/>
+    <link rel="stylesheet" href="css/admincss/amazeui.datatables.min.css"/>
     <link rel="stylesheet" href="css/admincss/app.css">
     <script src="js/adminjs/jquery.min.js"></script>
-
 </head>
 
 <body data-type="widgets">
@@ -74,7 +73,9 @@
                                             <i class="am-icon-circle-o am-text-success"></i>
                                             <span>夕风色</span>
                                         </div>
-                                        <div class="am-text-truncate"> Amaze UI 的诞生，依托于 GitHub 及其他技术社区上一些优秀的资源；Amaze UI 的成长，则离不开用户的支持。 </div>
+                                        <div class="am-text-truncate"> Amaze UI 的诞生，依托于 GitHub 及其他技术社区上一些优秀的资源；Amaze UI
+                                            的成长，则离不开用户的支持。
+                                        </div>
                                         <div class="menu-messages-content-time">2016-09-21 下午 16:40</div>
                                     </div>
                                 </a>
@@ -93,7 +94,7 @@
                                             <i class="am-icon-circle-o am-text-warning"></i>
                                             <span>禁言小张</span>
                                         </div>
-                                        <div class="am-text-truncate"> 为了能最准确的传达所描述的问题， 建议你在反馈时附上演示，方便我们理解。 </div>
+                                        <div class="am-text-truncate"> 为了能最准确的传达所描述的问题， 建议你在反馈时附上演示，方便我们理解。</div>
                                         <div class="menu-messages-content-time">2016-09-16 上午 09:23</div>
                                     </div>
                                 </a>
@@ -280,7 +281,7 @@
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
                         <div class="widget-head am-cf">
-                            <div class="widget-title am-fl">线条表单</div>
+                            <div class="widget-title am-fl">增加团购</div>
                             <div class="widget-function am-fr">
                                 <a href="javascript:;" class="am-icon-cog"></a>
                             </div>
@@ -289,78 +290,135 @@
 
                             <form class="am-form tpl-form-line-form">
                                 <div class="am-form-group">
-                                    <label for="user-name" class="am-u-sm-3 am-form-label">标题 <span class="tpl-form-line-small-title">Title</span></label>
+                                    <label for="cinema" class="am-u-sm-3 am-form-label">影院</label>
                                     <div class="am-u-sm-9">
-                                        <input type="text" class="tpl-form-input" id="user-name" placeholder="请输入标题文字">
-                                        <small>请填写标题文字10-20字左右。</small>
+                                        <select data-am-selected="{searchBox: 1}" style="display: none;" id="cinema">
+
+                                        </select>
                                     </div>
                                 </div>
-
+                                <script>
+                                    function load_cinema() {
+                                        $.ajax({
+                                            url: "/group_buy/get_cinema",
+                                            type: "get",
+                                            //定义回调响应的数据格式为JSON字符串,该属性可以省略
+                                            dataType: "json",
+                                            //成功响应的结果
+                                            success: function (data) {
+                                                $(data).each(function(index,element){
+                                                    var cinema_id = element.cinema_id;
+                                                    var cinema_name = element.cinema_name;
+                                                    $("#cinema").append("<option value="+cinema_id+">"+cinema_name+"</option>\n")
+                                                })
+                                            }
+                                        });
+                                    }
+                                    load_cinema()
+                                </script>
                                 <div class="am-form-group">
-                                    <label class="am-u-sm-3 am-form-label">SEO关键字 <span class="tpl-form-line-small-title">SEO</span></label>
+                                    <label for="start_time_date" class="am-u-sm-3 am-form-label">票开始日期</label>
                                     <div class="am-u-sm-9">
-                                        <input type="text" placeholder="输入SEO关键字">
+                                        <input type="date" id="start_time_date">
+                                    </div>
+                                    <label for="start_time_time" class="am-u-sm-3 am-form-label">票开始时间</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="time" id="start_time_time">
+                                    </div>
+                                    <label for="end_time_date" class="am-u-sm-3 am-form-label">票结束日期</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="date" id="end_time_date">
+                                    </div>
+                                    <label for="end_time_time" class="am-u-sm-3 am-form-label">票结束时间</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="time" id="end_time_time">
                                     </div>
                                 </div>
-
                                 <div class="am-form-group">
-                                    <label for="user-weibo" class="am-u-sm-3 am-form-label">封面图 <span class="tpl-form-line-small-title">Images</span></label>
+                                    <label for="start_sell_date" class="am-u-sm-3 am-form-label">团购开售日期</label>
                                     <div class="am-u-sm-9">
-                                        <div class="am-form-group am-form-file">
-                                            <div class="tpl-form-file-img">
-                                                <img src="assets/img/a5.png" alt="">
-                                            </div>
-                                            <button type="button" class="am-btn am-btn-danger am-btn-sm">
-                                                <i class="am-icon-cloud-upload"></i> 添加封面图片</button>
-                                            <input id="doc-form-file" type="file" multiple="">
-                                        </div>
-
+                                        <input type="date" id="start_sell_date">
+                                    </div>
+                                    <label for="start_sell_time" class="am-u-sm-3 am-form-label">团购开售时间</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="time" id="start_sell_time">
+                                    </div>
+                                    <label for="end_sell_date" class="am-u-sm-3 am-form-label">团购结售日期</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="date" id="end_sell_date">
+                                    </div>
+                                    <label for="end_sell_time" class="am-u-sm-3 am-form-label">团购结售时间</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="time" id="end_sell_time">
                                     </div>
                                 </div>
-
                                 <div class="am-form-group">
-                                    <label for="user-weibo" class="am-u-sm-3 am-form-label">添加分类 <span class="tpl-form-line-small-title">Type</span></label>
+                                    <label for="max_sales" class="am-u-sm-3 am-form-label">放票数</label>
                                     <div class="am-u-sm-9">
-                                        <input type="text" id="user-weibo" placeholder="请添加分类用点号隔开">
-                                        <div>
-
-                                        </div>
+                                        <input type="text" class="tpl-form-input" id="max_sales" placeholder="请输入">
                                     </div>
                                 </div>
-
                                 <div class="am-form-group">
-                                    <label for="user-intro" class="am-u-sm-3 am-form-label">隐藏文章</label>
+                                    <label for="price" class="am-u-sm-3 am-form-label">价格</label>
                                     <div class="am-u-sm-9">
-                                        <div class="tpl-switch">
-                                            <input type="checkbox" class="ios-switch bigswitch tpl-switch-btn" checked="">
-                                            <div class="tpl-switch-btn-view">
-                                                <div>
-                                                </div>
-                                            </div>
-                                        </div>
-
+                                        <input type="text" class="tpl-form-input" id="price" placeholder="请输入">
                                     </div>
                                 </div>
-
-                                <div class="am-form-group">
-                                    <label for="user-intro" class="am-u-sm-3 am-form-label">文章内容</label>
-                                    <div class="am-u-sm-9">
-                                        <textarea class="" rows="10" id="user-intro" placeholder="请输入文章内容"></textarea>
-                                    </div>
-                                </div>
-
                                 <div class="am-form-group">
                                     <div class="am-u-sm-9 am-u-sm-push-3">
-                                        <button type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                        <button type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success " onclick="submit_data()">
+                                            提交
+                                        </button>
                                     </div>
                                 </div>
+                                <script>
+                                    function submit_data() {
+                                        var start_time_time=$("#start_time_time").val()
+                                        var end_time_time=$("#end_time_time").val()
+                                        var start_time_date=$("#start_time_date").val()
+                                        var end_time_date =$("#end_time_date").val()
+                                        var start_sell_time=$("#start_sell_time").val()
+                                        var end_sell_time=$("#end_sell_time").val()
+                                        var start_sell_date=$("#start_sell_date").val()
+                                        var end_sell_date=$("#end_sell_date").val()
+
+                                        var start_time = start_time_date + " " + start_time_time
+                                        var end_time = end_time_date + " " + end_time_time
+                                        var start_sell = start_sell_date + " " + start_sell_time
+                                        var end_sell = end_sell_date + " " + end_sell_time
+                                        var now_sales = 0
+                                        var max_sales = $("#max_sales").val()
+                                        var price = $("#price").val()
+                                        var cinema_id = $("#cinema").val()
+
+                                        //输入合法性检查未完成
+
+                                        data = {"start_time":start_time,"end_time":end_time,"start_sell":start_sell,"end_sell":end_sell,
+                                            "now_sales":now_sales,"max_sales":max_sales,"price":price,"cinema_id":cinema_id};
+
+                                        $.ajax({
+                                            url: "/group_buy/add_group_buy",
+                                            type: "post",
+                                            // data表示发送的数据
+                                            data: JSON.stringify(data),
+                                            // 定义发送请求的数据格式为JSON字符串
+                                            contentType: "application/json;charset=UTF-8",
+                                            //定义回调响应的数据格式为JSON字符串,该属性可以省略
+                                            dataType: "json",
+                                            //成功响应的结果
+                                            success: function (data) {
+                                                if (data != 0) {
+                                                    alert("数据上传失败！！");
+                                                }
+                                            }
+                                        });
+                                    }
+                                </script>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>

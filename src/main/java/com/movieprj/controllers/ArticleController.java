@@ -2,9 +2,7 @@ package com.movieprj.controllers;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.movieprj.services.ArticleService;
 import com.movieprj.services.ArticleServiceImp;
-import com.mysql.cj.xdevapi.JsonArray;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +49,7 @@ public class ArticleController {
     public int add_article(@RequestBody Map<String, String> data) {
         Subject currentSubject = SecurityUtils.getSubject();
         String author_name = (String) currentSubject.getPrincipal();
-        if (articleServiceImp.save_article(author_name, data))
+        if (articleServiceImp.saveArticle(author_name, data))
             return 0;
         else
             return -1;
@@ -68,7 +66,7 @@ public class ArticleController {
 
         String path = System.getProperty("user.dir");
         String realPath = path + "\\src\\main\\resources\\static\\images";
-        String location = articleServiceImp.upload_image(file, realPath, author_name,article_id);
+        String location = articleServiceImp.uploadImage(file, realPath, author_name,article_id);
 
         ret.put("location", location);
 
@@ -80,43 +78,43 @@ public class ArticleController {
     public String get_self_article_data() {
         Subject currentSubject = SecurityUtils.getSubject();
         String author_name = (String) currentSubject.getPrincipal();
-        return articleServiceImp.get_self_article_data(author_name);
+        return articleServiceImp.getSelfArticleData(author_name);
     }
 
     @GetMapping("/article_manage/get_all_article_data")
     @ResponseBody
     public String get_all_article_data() {
-        return articleServiceImp.get_all_article_data();
+        return articleServiceImp.getAllArticleData();
     }
 
     @PostMapping("/article/update_row")
     @ResponseBody
     public int update_row(@RequestBody Map<String, String> data) {
-        return articleServiceImp.update_row(data);
+        return articleServiceImp.updateRow(data);
     }
 
     @GetMapping("/article/get_text_by_id")
     @ResponseBody
     public String get_text_by_id(@RequestParam int article_id){
-        return articleServiceImp.get_text_by_id(article_id);
+        return articleServiceImp.getTextById(article_id);
     }
 
     @PostMapping("/article/upload_article")
     @ResponseBody
     public int upload_article(@RequestBody Map<String, String> data){
-        return articleServiceImp.upload_article(data);
+        return articleServiceImp.uploadArticle(data);
     }
 
     @PostMapping("/article/del_article")
     @ResponseBody
     public int del_article(String[] ids){
-        return articleServiceImp.del_article(ids);
+        return articleServiceImp.delArticle(ids);
     }
 
     @PostMapping("/article/update_check")
     @ResponseBody
     public int update_check(@RequestBody String datas){
         JSONArray jsArr = JSONObject.parseArray(datas);
-        return articleServiceImp.update_check(jsArr);
+        return articleServiceImp.updateCheck(jsArr);
     }
 }

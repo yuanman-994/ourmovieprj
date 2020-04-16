@@ -8,6 +8,9 @@ import java.util.List;
 @Mapper
 public interface CinemaMapper {
 
+    @Select("SELECT * FROM cinema ")
+    public List<Cinema> findAllCinema();
+
     @Select("SELECT * FROM cinema WHERE cinema_id =#{cinema_id}")
     public Cinema findCinemaById(Integer cinema_id);
 

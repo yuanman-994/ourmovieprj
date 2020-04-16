@@ -5,11 +5,19 @@ import com.movieprj.beans.Movies;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface HallMapper {
 
+    @Select("SELECT * FROM hall ")
+    public List<Hall> findAllHall();
+
     @Select("SELECT * FROM hall WHERE hall_id =#{hall_id}")
     public Hall findHallById(Integer hall_id);
+
+    @Select("SELECT * FROM hall WHERE cinema_id =#{cinema_id}")
+    public List<Hall> findHallByCinemaId(Integer cinema_id);
 
     @Insert("INSERT INTO hall(hall_id,cinema_id,number_of_seats,seat_map,hall_name) " +
             "VALUES (#{hall_id},#{cinema_id},#{number_of_seats},#{seat_map},#{hall_name})")

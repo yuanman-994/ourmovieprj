@@ -9,6 +9,30 @@ public class Article {
     private String article_url;//文章资源地址
     private int type;//文章类型
     private int check_status;//文章审核状态，0为未审核，1为通过，-1为未通过
+    private String article_cover_image;//文章封面图片资源相对地址
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "article_id=" + article_id +
+                ", author_id=" + author_id +
+                ", headline='" + headline + '\'' +
+                ", click_num=" + click_num +
+                ", release_time='" + release_time + '\'' +
+                ", article_url='" + article_url + '\'' +
+                ", type=" + type +
+                ", check_status=" + check_status +
+                ", article_cover_image='" + article_cover_image + '\'' +
+                '}';
+    }
+
+    public String getArticle_cover_image() {
+        return article_cover_image;
+    }
+
+    public void setArticle_cover_image(String article_cover_image) {
+        this.article_cover_image = article_cover_image;
+    }
 
     public int getArticle_id() {
         return article_id;
@@ -74,17 +98,4 @@ public class Article {
         this.check_status = check_status;
     }
 
-    @Override
-    public String toString() {
-        return "Article{" +
-                "article_id=" + article_id +
-                ", author_id=" + author_id +
-                ", headline='" + headline + '\'' +
-                ", click_num=" + click_num +
-                ", release_time='" + release_time + '\'' +
-                ", article_url='" + article_url + '\'' +
-                ", type=" + type +
-                ", check=" + check_status +
-                '}';
-    }
 }

@@ -65,7 +65,7 @@ public class ArticleController {
         String author_name = (String) currentSubject.getPrincipal();
 
         String path = System.getProperty("user.dir");
-        String realPath = path + "\\src\\main\\resources\\static\\images";
+        String realPath = path + "\\src\\main\\resources\\static\\images\\articleImages";
         String location = articleServiceImp.uploadImage(file, realPath, author_name,article_id);
 
         ret.put("location", location);
@@ -116,5 +116,20 @@ public class ArticleController {
     public int update_check(@RequestBody String datas){
         JSONArray jsArr = JSONObject.parseArray(datas);
         return articleServiceImp.updateCheck(jsArr);
+    }
+
+    @PostMapping("/article/upload_cover")
+    @ResponseBody
+    public int upload_cover(@RequestParam("file") MultipartFile file,@RequestParam("article_id") int article_id,
+                            HttpServletRequest request){
+        String path = System.getProperty("user.dir");
+        String realPath = path + "\\src\\main\\resources\\static\\images\\articleCoverImages";
+        return articleServiceImp.uploadCover(file, realPath,article_id);
+    }
+
+    @GetMapping("/article/view_image")
+    @ResponseBody
+    public String view_image(int article_id) {
+        return articleServiceImp.getCover(article_id);
     }
 }

@@ -19,6 +19,12 @@ public interface ArticleMapper {
     @Update("UPDATE article SET article_url=#{url} WHERE article_id=#{id}")
     public void saveArticleUrlById(int id, String url);//保存article_url
 
+    @Update("UPDATE article SET article_cover_image=#{url} WHERE article_id=#{id}")
+    public void saveArticleCoverById(int id, String url);
+
+    @Select("SELECT article_cover_image FROM article WHERE article_id=#{id}")
+    public String getArticleCoverById(int id);
+
     @Update("UPDATE article SET release_time=CURRENT_TIMESTAMP() WHERE article_id=#{id}")
     public void updateTimeById(int id);//保存article_url
 

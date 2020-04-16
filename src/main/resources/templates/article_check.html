@@ -79,11 +79,25 @@
             result += "<div class=\"tpl-table-black-operation\">\n" +
                 "                                                    <a href=\"#\" onclick=\"goto_view_page('" + article_id + "')\">\n" +
                 "                                                        <i class=\"am-icon-search\"></i> 查看\n" +
+                "                                                    </a>\n<a href=\"#\" style='color: #1d8dcd' onclick=\"viewImage('" + article_id + "')\">\n" +
+                "                                                        <i class=\"am-icon-eye\"></i> 查看封面\n" +
                 "                                                    </a>\n"
             "                                                </div>"
             return result;
         }
-
+        function viewImage(article_id) {
+            $.ajax({
+                url: "/article/view_image?article_id="+article_id,
+                type: "get",
+                success: function (data) {
+                    window.open(data);
+                    console.log(data);
+                },
+                error:function(data){
+                    console.log(data)
+                }
+            });
+        }
         function goto_view_page(article_id) {
             location.replace('\\article_view?article_id=' + article_id);
         }

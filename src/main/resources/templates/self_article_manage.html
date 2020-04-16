@@ -9,16 +9,16 @@
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="renderer" content="webkit">
-    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
 
     <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
 
     <link rel="icon" type="image/png" href="images/i/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="images/i/app-icon72x72@2x.png">
-    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
     <script src="js/adminjs/echarts.min.js"></script>
-    <link rel="stylesheet" href="css/admincss/amazeui.min.css" />
-    <link rel="stylesheet" href="css/admincss/amazeui.datatables.min.css" />
+    <link rel="stylesheet" href="css/admincss/amazeui.min.css"/>
+    <link rel="stylesheet" href="css/admincss/amazeui.datatables.min.css"/>
     <link rel="stylesheet" href="css/admincss/app.css">
     <script src="js/adminjs/jquery.min.js"></script>
     <script>
@@ -71,7 +71,7 @@
                     formatter: actionFormatter,
                 }],
                 onClickCell: function (field, value, row, $element) {
-                    var chang_disabled = new Array("article_id","click_num","author_name", "check_status", "release_time", "operate");
+                    var chang_disabled = new Array("article_id", "click_num", "author_name", "check_status", "release_time", "operate");
                     var o_value = value;//单元格原值
                     if ($.inArray(field, chang_disabled) >= 0)
                         return;
@@ -101,16 +101,57 @@
             var result = "";
             var article_id = row.article_id;
             result += "<div class=\"tpl-table-black-operation\">\n" +
-                "                                                    <a href=\"#\" onclick=\"goto_editor_page('" + article_id + "')\">\n" +
+                "                                                    <a href=\"#\"  onclick=\"gotoEditorPage('" + article_id + "')\">\n" +
                 "                                                        <i class=\"am-icon-pencil\"></i> 编辑\n" +
+                "                                                    </a>\n<a href=\"#\" style='color: #00e359' onclick=\"uploadImage('" + article_id + "')\">\n" +
+                "                                                        <i class=\"am-icon-upload\"></i> 上传封面\n" +
+                "                                                    </a>\n<a href=\"#\" style='color: #1d8dcd' onclick=\"viewImage('" + article_id + "')\">\n" +
+                "                                                        <i class=\"am-icon-eye\"></i> 查看封面\n" +
                 "                                                    </a>\n"
             "                                                </div>"
             return result;
         }
 
+        function uploadImage(article_id) {
+            $("#article-table").after('<input type="file" id="load_xls" name="file" style="display:none" onchange ="uploadCover(' + article_id + ')">');
+            document.getElementById("load_xls").click();
+        }
 
+        function uploadCover(article_id) {
+            var myform = new FormData();
+            myform.append("article_id", article_id);
+            myform.append('file',$('#load_xls')[0].files[0]);
+            $.ajax({
+                url: "/article/upload_cover",
+                type: "POST",
+                data: myform,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    console.log(data);
+                    $("#load_xls").remove();
+                },
+                error:function(data){
+                    console.log(data)
+                }
+            });
+        }
 
-        function goto_editor_page(article_id) {
+        function viewImage(article_id) {
+            $.ajax({
+                url: "/article/view_image?article_id="+article_id,
+                type: "get",
+                success: function (data) {
+                    window.open(data);
+                    console.log(data);
+                },
+                error:function(data){
+                    console.log(data)
+                }
+            });
+        }
+
+        function gotoEditorPage(article_id) {
             location.replace('\\article_editor?article_id=' + article_id);
         }
 
@@ -278,7 +319,9 @@
                                             <i class="am-icon-circle-o am-text-success"></i>
                                             <span>夕风色</span>
                                         </div>
-                                        <div class="am-text-truncate"> Amaze UI 的诞生，依托于 GitHub 及其他技术社区上一些优秀的资源；Amaze UI 的成长，则离不开用户的支持。 </div>
+                                        <div class="am-text-truncate"> Amaze UI 的诞生，依托于 GitHub 及其他技术社区上一些优秀的资源；Amaze UI
+                                            的成长，则离不开用户的支持。
+                                        </div>
                                         <div class="menu-messages-content-time">2016-09-21 下午 16:40</div>
                                     </div>
                                 </a>
@@ -297,7 +340,7 @@
                                             <i class="am-icon-circle-o am-text-warning"></i>
                                             <span>禁言小张</span>
                                         </div>
-                                        <div class="am-text-truncate"> 为了能最准确的传达所描述的问题， 建议你在反馈时附上演示，方便我们理解。 </div>
+                                        <div class="am-text-truncate"> 为了能最准确的传达所描述的问题， 建议你在反馈时附上演示，方便我们理解。</div>
                                         <div class="menu-messages-content-time">2016-09-16 上午 09:23</div>
                                     </div>
                                 </a>
@@ -487,9 +530,15 @@
             <div class="widget-body  widget-body-lg am-fr">
                 <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-xs">
-                        <button id="refresh" type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-refresh"></span> 刷新</button>
-                        <button id="add" type="button" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 增加</button>
-                        <button id="remove" type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>
+                        <button id="refresh" type="button" class="am-btn am-btn-default am-btn-secondary"><span
+                                class="am-icon-refresh"></span> 刷新
+                        </button>
+                        <button id="add" type="button" class="am-btn am-btn-default am-btn-success"><span
+                                class="am-icon-plus"></span> 增加
+                        </button>
+                        <button id="remove" type="button" class="am-btn am-btn-default am-btn-danger"><span
+                                class="am-icon-trash-o"></span> 删除
+                        </button>
                     </div>
                 </div>
                 <table width="100%" class="am-table am-table-compact tpl-table-black " id="article-table">

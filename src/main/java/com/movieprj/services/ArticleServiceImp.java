@@ -1,7 +1,6 @@
 package com.movieprj.services;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movieprj.beans.Article;
@@ -64,7 +63,6 @@ public class ArticleServiceImp implements ArticleService {
 
     @Override
     public String uploadImage(MultipartFile image, String basePath, String author_name, String article_id) {
-        System.out.println(basePath);
         String ret = "";
         //生成uuid作为文件名称
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
@@ -100,7 +98,7 @@ public class ArticleServiceImp implements ArticleService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "images\\" + author_id + "\\" + article_id + "\\" + imageName;
+        return "images\\articleImages\\" + author_id + "\\" + article_id + "\\" + imageName;
     }
 
     @Override
@@ -249,7 +247,7 @@ public class ArticleServiceImp implements ArticleService {
             }
             FileWriter fwriter = new FileWriter(abs_article_url, false);
             fwriter.write(content);
-            articleMapper.updateCheckById(article_id,0);//修改审核状态为未审核
+            articleMapper.updateCheckById(article_id, 0);//修改审核状态为未审核
             articleMapper.updateTimeById(article_id);
             fwriter.close();
         } catch (Exception e) {
@@ -262,21 +260,22 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public int delArticle(String[] ids) {//删除文章
         for (String id : ids) {
-            if (!this.del_article_by_id(Integer.valueOf(id)))
+            if (!this.delArticleById(Integer.valueOf(id)))
                 return -1;
         }
         return 0;
     }
 
-    public boolean del_article_by_id(int article_id) {
+    public boolean delArticleById(int article_id) {
         try {
             String article_url = articleMapper.getUrlById(article_id);
             int author_id = articleMapper.getAuthorIdById(article_id);
             String path = System.getProperty("user.dir");
             String article_dir_path = path + "\\src\\main\\resources\\static\\article";
-            String image_dir_path = path + "\\src\\main\\resources\\static\\images";
+            String image_dir_path = path + "\\src\\main\\resources\\static\\images\\articleImages";
             String article_to_del = article_dir_path + "\\" + article_url;
             String image_dir_to_del = image_dir_path + "\\" + author_id + "\\" + article_id;
+            String cover_to_del = path + "\\src\\main\\resources\\static\\images\\articleCoverImages\\"+article_id+".jpeg";
 
             File article_file = new File(article_to_del);
             if (article_file.exists())
@@ -288,6 +287,12 @@ public class ArticleServiceImp implements ArticleService {
                 if (image_file.isDirectory()) {
                     this.deleteDir(image_file);
                 }
+
+            File article_cover = new File(cover_to_del);
+            if (article_cover.exists())
+                if (article_cover.isFile())
+                    article_cover.delete();
+
             articleMapper.deleateById(article_id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -311,12 +316,43 @@ public class ArticleServiceImp implements ArticleService {
 
     @Override
     public int updateCheck(JSONArray ja) {
-        for (int i = 0;i<ja.size();i++){
+        for (int i = 0; i < ja.size(); i++) {
             JSONObject jsonObject = ja.getJSONObject(i);
-            int article_id = (int)jsonObject.get("article_id");
-            int check_status = (int)jsonObject.get("check");
-            articleMapper.updateCheckById(article_id,check_status);
+            int article_id = (int) jsonObject.get("article_id");
+            int check_status = (int) jsonObject.get("check");
+            articleMapper.updateCheckById(article_id, check_status);
         }
         return 0;
+    }
+
+    @Override
+    public int uploadCover(MultipartFile image, String basePath, int article_id) {
+        try {
+            //获得文件类型，如果不是图片，禁止上传
+            String contentType = image.getContentType();
+            //获得文件的后缀名
+            String suffixName = contentType.substring(contentType.indexOf("/") + 1);
+            //得到文件名
+            String imageName = article_id + "." + suffixName;
+
+            //图片绝对地址
+            String path = basePath + "\\" + imageName;
+            image.transferTo(new File(path));
+            String url = "images\\articleCoverImages\\"+imageName;
+            articleMapper.saveArticleCoverById(article_id,url);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
+    public String getCover(int article_id) {
+        String url = articleMapper.getArticleCoverById(article_id);
+        if (url==null)
+            return "images\\articleCoverImages\\default.jpeg";
+        else
+            return url;
     }
 }

@@ -2,13 +2,9 @@ package com.movieprj.controllers;
 
 import com.movieprj.beans.GroupBuyBeans;
 import com.movieprj.services.groupbuy.GroupBuyServiceImp;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Controller
 public class GroupBuyController {
@@ -63,6 +59,7 @@ public class GroupBuyController {
         //此处应检查用户权限（是否可以添加该影院的团购信息）
         return groupBuyServiceImp.saveGroupBuy(groupBuyBeans);
     }
+
     @PostMapping("/group_buy/update_group_buy")
     @ResponseBody
     public int updateGroupBuy(@RequestBody GroupBuyBeans groupBuyBeans) {

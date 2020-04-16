@@ -15,4 +15,6 @@ public interface ArticleService {
     public int uploadArticle(Map<String,String> data);
     public int delArticle(String[] ids);
     public int updateCheck(JSONArray ja);
+    public int uploadCover(MultipartFile image, String basePath, int article_id);
+    public String getCover(int article_id);
 }

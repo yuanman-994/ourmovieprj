@@ -94,4 +94,29 @@ public class GroupBuyServiceImp implements GroupBuyService {
         }
         return 0;
     }
+
+    @Override
+    public int updateGroupBuy(GroupBuyBeans groupBuyBeans) {
+        try{
+            groupBuyMapper.updateGroupBuy(groupBuyBeans);
+        } catch (Exception e){
+            e.printStackTrace();
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
+    public int stopSell(int[] ids) {
+
+        try{
+            for (int id : ids) {
+                groupBuyMapper.stopSellById(id);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return -1;
+        }
+        return 0;
+    }
 }

@@ -15,10 +15,10 @@ public interface GroupBuyMapper {
     @Select("SELECT * FROM group_buy")
     public List<GroupBuyBeans> getAllGroupBuyData();//查询所有团购
 
-    @Select("SELECT * FROM group_buy WHERE end_time > CURRENT_TIMESTAMP()")
+    @Select("SELECT * FROM group_buy WHERE end_sell > CURRENT_TIMESTAMP()")
     public List<GroupBuyBeans> getGroupBuyDataNOW();//查询当期团购
 
-    @Select("SELECT * FROM group_buy WHERE end_time < CURRENT_TIMESTAMP()")
+    @Select("SELECT * FROM group_buy WHERE end_sell < CURRENT_TIMESTAMP()")
     public List<GroupBuyBeans> getGroupBuyDataPast();//查询往期团购
 
     @Select("SELECT cinema_name FROM cinema WHERE cinema_id =#{id}")
@@ -29,4 +29,10 @@ public interface GroupBuyMapper {
     @Options(useGeneratedKeys = true, keyProperty = "group_buy_id", keyColumn = "group_buy_id")
     public void insertGroupBuy(GroupBuyBeans groupBuyBeans);
 
+
+    @Update("UPDATE group_buy SET start_sell=#{start_sell},end_sell=#{end_sell},max_sales=#{max_sales} WHERE group_buy_id=#{group_buy_id}")
+    public void updateGroupBuy(GroupBuyBeans groupBuyBeans);
+
+    @Update("UPDATE group_buy SET end_sell = CURRENT_TIMESTAMP() WHERE group_buy_id=#{id}")
+    public void stopSellById(int id);
 }

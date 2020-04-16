@@ -24,7 +24,7 @@
     <script>
         function load_group_buy_data_now() {//请求当期团购数据,并动态创建页面对象。
             $("#group-buy-table").bootstrapTable({
-                url: '/group_buy/get_group_buy_data_now',
+                url: '/group_buy/get_group_buy_data_past',
                 class: 'table table-bordered table-hover table-striped',
                 striped: true,                      //是否显示行间隔色
                 pagination: true,
@@ -34,142 +34,45 @@
                 pageList: [15, 30, 50],        //可供选择的每页的行数（*）
                 // search: true,                      //是否显示表格搜索
                 // showRefresh: true,
-                columns: [
-                    {
-                        checkbox: true
+                columns: [{
+                        field: 'group_buy_id',
+                        title: '团购id',
+                        sortable: true
                     }, {
-                    field: 'group_buy_id',
-                    title: '团购id',
-                    sortable: true
-                }, {
-                    field: 'cinema_name',
-                    title: '影院名',
-                    sortable: true
-                }, {
-                    field: 'start_time',
-                    title: '开始时间',
-                    sortable: true
-                }, {
-                    field: 'end_time',
-                    title: '结束时间',
-                    sortable: true
-                }, {
-                    field: 'start_sell',
-                    title: '开售时间',
-                    sortable: true
-                }, {
-                    field: 'end_sell',
-                    title: '结售时间',
-                    sortable: true
-                }, {
-                    field: 'now_sales',
-                    title: '已售'
-                }, {
-                    field: 'max_sales',
-                    title: '最大'
-                }, {
-                    field: 'price',
-                    title: '价格',
-                    sortable: true
-                },
+                        field: 'cinema_name',
+                        title: '影院名',
+                        sortable: true
+                    }, {
+                        field: 'start_time',
+                        title: '开始时间',
+                        sortable: true
+                    }, {
+                        field: 'end_time',
+                        title: '结束时间',
+                        sortable: true
+                    }, {
+                        field: 'start_sell',
+                        title: '开售时间',
+                        sortable: true
+                    }, {
+                        field: 'end_sell',
+                        title: '结售时间',
+                        sortable: true
+                    }, {
+                        field: 'now_sales',
+                        title: '已售'
+                    }, {
+                        field: 'max_sales',
+                        title: '最大'
+                    }, {
+                        field: 'price',
+                        title: '价格',
+                        sortable: true
+                    },
                 ],
-                onClickCell: function (field, value, row, $element) {
-                    var chang_abled = new Array("start_sell", "end_sell", "max_sales");
-                    var o_value = value;//单元格原值
-
-                    if ($.inArray(field, chang_abled) >= 0) {
-                        $element.attr('contenteditable', true);
-                        $element.unbind('blur').bind('blur', function () {//不这样写的话会触发两次回调
-                            let index = $element.parent().data('index');
-                            let tdValue = $element.html();
-                            if (tdValue != o_value) {
-                                saveData(index, field, tdValue);
-                                if (!check(row)) {
-                                    $("#group-buy-table").bootstrapTable("refresh", {//静态刷新表格
-                                        silent: true
-                                    });
-                                } else {
-                                    update_row(row)
-                                    // $("#group-buy-table").bootstrapTable("refresh", {//静态刷新表格
-                                    //     silent: true
-                                    // }); 不知道为什么数据更新有延迟，手动刷新才能看到修改后的结果
-                                }
-                            }
-                        })
-                    }
-                }
-            })
-        };
-
-        function saveData(index, field, value) {//保存到当前页面
-            $("#group-buy-table").bootstrapTable('updateCell', {
-                index: index,       //行索引
-                field: field,       //列名
-                value: value        //cell值
             })
         }
-
-        function update_row(row) {//升级数据到服务器
-            $.ajax({
-                url: "/group_buy/update_group_buy",
-                type: "post",
-                // data表示发送的数据
-                data: JSON.stringify(row),
-                // 定义发送请求的数据格式为JSON字符串
-                contentType: "application/json;charset=UTF-8",
-                //定义回调响应的数据格式为JSON字符串,该属性可以省略
-                dataType: "json",
-                //成功响应的结果
-                success: function (data) {
-                    if (data != 0) {
-                        alert("数据更新失败！！");
-                    }
-                }
-            });
-        }
-
-        function check(row) {//合法性检查
-            return true
-        }
-        $(function () {
-            $("#remove").on("click", function () {
-                var rows = $("#group-buy-table").bootstrapTable('getSelections'); // 获得要删除的数据
-                if (rows.length == 0) { // rows 主要是为了判断是否选中，下面的else内容才是主要
-                    alert("请先选择!");
-                    return;
-                } else {
-                    if (!confirm("是否确认停售？"))
-                        return;
-                    var ids = new Array(); // 声明一个数组
-                    $(rows).each(function () { // 通过获得别选中的来进行遍历
-                        ids.push(this.group_buy_id); // cid为获得到的整条数据中的一列
-                    });
-                    $.ajax({
-                        url: "/group_buy/stop_sell",
-                        type: "post",
-                        // data表示发送的数据
-                        data: {"ids": ids},
-                        traditional: true,
-                        success: function (data) {
-                            if (data != 0) {
-                                alert("操作失败！！");
-                            } else {
-                                alert("操作成功！！");
-                                $("#group-buy-table").bootstrapTable("refresh", {//静态刷新表格
-                                    silent: true
-                                });
-                            }
-                        }
-                    });
-                }
-            })
-            $("#refresh").on("click", function () {
-                $("#article-table").bootstrapTable("refresh", {//静态刷新表格
-                    silent: true
-                });
-            })
-        })
-    </script>
+        </script>
 </head>
 
 <body data-type="widgets" onload="load_group_buy_data_now()">
@@ -427,18 +330,12 @@
     <div class="tpl-content-wrapper">
         <div class="widget am-cf">
             <div class="widget-head am-cf">
-                <div class="widget-title am-fl">团购信息维护 仅支持修改开，结售时间 立即停售 修改最大销量（不能低于已售量）</div>
+                <div class="widget-title am-fl">往期团购数据</div>
                 <div class="widget-function am-fr">
                     <a href="javascript:;" class="am-icon-cog"></a>
                 </div>
             </div>
             <div class="widget-body  widget-body-lg am-fr">
-                <div class="am-btn-toolbar">
-                    <div class="am-btn-group am-btn-group-xs">
-                        <button id="refresh" type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-refresh"></span> 刷新</button>
-                        <button id="remove" type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 立即停售</button>
-                    </div>
-                </div>
                 <table width="100%" class="am-table am-table-compact tpl-table-black " id="group-buy-table">
 
                 </table>

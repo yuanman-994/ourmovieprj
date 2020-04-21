@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Dynamic</title>
+    <title>影城动态</title>
     <!-- for-mobile-apps -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -38,10 +38,63 @@
             });
         });
     </script>
+    <script type="text/javascript" th:src="@{js/page-divide.js}"></script>
+    <script type="text/javascript" th:src="@{js/article.js}"></script>
+    <script>
+        var total1;//看点总页数
+        var total2;//新闻总页数
+        var page_size=10;//每页最大数据数
+        var id1="article1";
+        var id2="article2";
+        var page1 = "page-di-1";
+        var page2 = "page-di-2";
+        function load_article_1(aim,max) {
+            get_data(aim,page_size,1,id1);
+            creat(total1,aim,max,page1,"load_article_1");
+        }
+        function load_article_2(aim,max) {
+            get_data(aim,page_size,2,id2);
+            creat(total2,aim,max,page2,"load_article_2");
+        }
+        function load1(total) {
+            total1 = total;
+            get_data(1,page_size,1,id1);//得到第一页内容
+            creat(total1,1,6,page1,"load_article_1");//生成分页
+        }
+        function load2(total) {
+            total2 = total;
+            get_data(1,page_size,2,id2);//得到第一页内容
+            creat(total2,1,6,page2,"load_article_2");//生成分页
+        }
+        function get_total(type,total_per_page,func) {//得到某一类型的文章总页数
+            $.ajax({
+                url: 'article/get_total?type='+type+'&total_per_page='+total_per_page,
+                type: "get",
+                success: function (data) {
+                    func(data)
+                }
+            });
+        }
+        function get_data(aim,total_per_page,type,id) {
+            $.ajax({
+                url: 'article/get_data?aim='+aim+'&total_per_page='+total_per_page+'&type='+type,
+                type: "get",
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                success: function (data) {
+                    loadArticles(JSON.parse(data),id);
+                }
+            });
+        }
+        function load_page() {
+            get_total(1,page_size,load1);//得到影片看点总页数,
+            get_total(2,page_size,load2)
+        }
+    </script>
     <!-- start-smoth-scrolling -->
 </head>
 
-<body>
+<body onload="load_page()">
 <!-- header -->
 <div class="header">
     <div class="container">
@@ -179,474 +232,20 @@
                         <div id="myTabContent" class="tab-content">
 <!--                            影片看点-->
                             <div role="tabpanel" class="tab-pane fade in active" id="home1" aria-labelledby="home1-tab">
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m1.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m2.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
+                                <div id = "article1">
+
                                 </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m3.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m4.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m5.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m6.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m7.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m8.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m9.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m10.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m11.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m12.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m13.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m14.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m15.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m16.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
+                                <ul class="pagination pagination-lg" id = "page-di-1">
+                                </ul>
                             </div>
 <!--                            影院新闻-->
                             <div role="tabpanel" class="tab-pane fade" id="w3bsd" aria-labelledby="w3bsd-tab">
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m17.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m18.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
+                                <div id = "article2">
+
                                 </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m19.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m20.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m21.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m22.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m1.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m2.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m3.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m4.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m5.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m6.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
-                                <div class="wthree-news-top-left">
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m7.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="col-md-6 w3-agileits-news-left">
-                                        <div class="col-sm-5 wthree-news-img">
-                                            <a th:href="@{/news_single}"><img src="images/m8.jpg" alt="" /></a>
-                                        </div>
-                                        <div class="col-sm-7 wthree-news-info">
-                                            <h5><a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h5>
-                                            <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis eget.</p>
-                                            <ul>
-                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                                <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                            </ul>
-                                        </div>
-                                        <div class="clearfix"> </div>
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                </div>
+                                <ul class="pagination pagination-lg" id = "page-di-2">
+
+                                </ul>
                             </div>
                         </div>
                     </div>

@@ -132,4 +132,17 @@ public class ArticleController {
     public String view_image(int article_id) {
         return articleServiceImp.getCover(article_id);
     }
+
+    @GetMapping("article/get_total")
+    @ResponseBody
+    public int getTotal(@RequestParam("type") int type,@RequestParam("total_per_page") int total_per_page) {
+        return articleServiceImp.getTotal(type,total_per_page);
+    }
+
+    @GetMapping("article/get_data")
+    @ResponseBody
+    public String getData(@RequestParam("type") int type,@RequestParam("total_per_page") int total_per_page,@RequestParam("aim") int aim) {
+        String data = articleServiceImp.getData(type,total_per_page,aim);
+        return data;
+    }
 }

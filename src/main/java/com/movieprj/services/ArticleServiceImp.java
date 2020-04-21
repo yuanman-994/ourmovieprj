@@ -1,6 +1,7 @@
 package com.movieprj.services;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movieprj.beans.Article;
@@ -293,7 +294,7 @@ public class ArticleServiceImp implements ArticleService {
                 if (article_cover.isFile())
                     article_cover.delete();
 
-            articleMapper.deleateById(article_id);
+            articleMapper.deleteById(article_id);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -354,5 +355,32 @@ public class ArticleServiceImp implements ArticleService {
             return "images\\articleCoverImages\\default.jpeg";
         else
             return url;
+    }
+
+    @Override
+    public int getTotal(int type, int total_per_page) {
+        int total = articleMapper.getTotal(type);
+        double result = (double)total/total_per_page;
+        return (int)Math.ceil(result);
+    }
+
+    @Override
+    public String getData(int type, int page_size, int currIndex) {
+        List<Article> list = articleMapper.getByPage((currIndex-1)*page_size,page_size,type);
+        JSONArray jsonArray = new JSONArray();
+        for (Article a : list){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("article_id",a.getArticle_id());
+            jsonObject.put("author_name",userPasswordMapper.findNameById(a.getAuthor_id()));
+            jsonObject.put("headline",a.getHeadline());
+            jsonObject.put("click_num",a.getClick_num());
+            jsonObject.put("release_time",a.getRelease_time());
+            String cover = a.getArticle_cover_image();
+            if (cover == null)
+                cover = "images\\articleCoverImages\\default.jpeg";
+            jsonObject.put("cover",cover);
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray.toString();
     }
 }

@@ -44,5 +44,11 @@ public interface ArticleMapper {
     public void updata_row(int article_id, String headline, int click_num, int article_type);
 
     @Delete("DELETE FROM article WHERE article_id=#{id}")
-    public void deleateById(int id);
+    public void deleteById(int id);
+
+    @Select("SELECT COUNT(*) FROM article WHERE type=#{type}")
+    public int getTotal(int type);
+
+    @Select("SELECT * FROM article WHERE type=#{type} AND check_status=1 ORDER BY release_time DESC limit #{currIndex} , #{pageSize} ")
+    public List<Article> getByPage(int currIndex,int pageSize,int type);//分页查询
 }

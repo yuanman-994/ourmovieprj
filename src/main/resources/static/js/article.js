@@ -1,4 +1,6 @@
 //用于动态创建影城动态页面部分内容的一些函数
+
+//文章样式
 var line = '<div class="wthree-news-top-left">{0}{1}{2}</div>'
 var leftOrRight = '<div class="col-md-6 w3-agileits-news-left">\n' +
     '                                        <div class="col-sm-5 wthree-news-img">\n' +
@@ -15,6 +17,13 @@ var leftOrRight = '<div class="col-md-6 w3-agileits-news-left">\n' +
     '                                        <div class="clearfix"> </div>\n' +
     '                                    </div>';
 var end = '<div class="clearfix"> </div>';
+
+//最新更新文章的样式
+var updated_news = '<div class="date-text">\n' +
+    '                                        <a href="/news_single?article_id={0}">{1}<span class="blinking"><img\n' +
+    '                                                src="images/new.png" alt=""/></span></a>\n' +
+    '                                        <p>{2}</p>\n' +
+    '                                    </div>';
 
 String.format = function (src) {
 
@@ -50,6 +59,19 @@ function loadArticles(data, id, lineclass) {//data:数据，对象数组 id:字�
         }
     }
 }
+
+function loadUpdated(data,id) {//需加载的数据，容器id
+    var i;
+    var len = data.length;
+    $("#" + id).empty();//移除之前的内容
+
+    for (i = 0; i < len; i ++) {
+        var article = data[i];
+        var str = String.format(updated_news,article.article_id,article.release_time,article.headline)
+        $("#" + id).append(str);
+    }
+}
+
 
 function getString(article) {
     return String.format(leftOrRight, article.cover,article.headline,article.author_name,article.release_time,article.click_num,article.article_id);

@@ -48,6 +48,7 @@
         var id2="article2";
         var page1 = "page-di-1";
         var page2 = "page-di-2";
+        var updated_news_id = "cycler";//最新更新文章容器id
         function load_article_1(aim,max) {
             get_data(aim,page_size,1,id1);
             creat(total1,aim,max,page1,"load_article_1");
@@ -86,9 +87,23 @@
                 }
             });
         }
+        function load_updated_news() {//加载最新更新文章
+            $.ajax({
+                url: 'article/get_updated_news',
+                type: "get",
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                success: function (data) {
+                    loadUpdated(JSON.parse(data),updated_news_id);
+                    cycle($('#cycler div:first'),  $('#cycler'));
+                }
+            });
+        }
+
         function load_page() {
             get_total(1,page_size,load1);//得到影片看点总页数,
-            get_total(2,page_size,load2)
+            get_total(2,page_size,load2);
+            load_updated_news();
         }
     </script>
     <!-- start-smoth-scrolling -->
@@ -255,53 +270,13 @@
                 <!-- 右侧，最新更新文章 -->
                 <div class="news-right-top">
                     <div class="wthree-news-right-heading">
-                        <h3>Updated News</h3>
+                        <h3>最新更新</h3>
                     </div>
                     <div class="wthree-news-right-top">
                         <div class="news-grids-bottom">
                             <!-- date -->
                             <div id="design" class="date">
                                 <div id="cycler">
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">August 15,2016</a>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">July 08,2016 <span class="blinking"><img src="images/new.png" alt="" /></span></a>
-                                        <p>Nullam non turpis sit amet metus tristique egestas et et orci.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">February 15,2016</a>
-                                        <p>Duis venenatis ac ipsum vel ultricies in placerat quam</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">January 15,2016 <span class="blinking"><img src="images/new.png" alt="" /></span></a>
-                                        <p>Pellentesque ullamcorper fringilla ipsum, ornare dapibus velit volutpat sit amet.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">September 24,2016</a>
-                                        <p>In lobortis ipsum mi, ac imperdiet elit pellentesque at.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">August 15,2016</a>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">July 08,2016 <span class="blinking"><img src="images/new.png" alt="" /></span></a>
-                                        <p>Nullam non turpis sit amet metus tristique egestas et et orci.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">February 15,2016</a>
-                                        <p>Duis venenatis ac ipsum vel ultricies in placerat quam</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">January 15,2016 <span class="blinking"><img src="images/new.png" alt="" /></span></a>
-                                        <p>Pellentesque ullamcorper fringilla ipsum, ornare dapibus velit volutpat sit amet.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a th:href="@{/news_single}">September 24,2016</a>
-                                        <p>In lobortis ipsum mi, ac imperdiet elit pellentesque at.</p>
-                                    </div>
                                 </div>
                                 <script>
                                     function blinker() {
@@ -313,12 +288,12 @@
                                 <script>
                                     function cycle($item, $cycler){
                                         setTimeout(cycle, 2000, $item.next(), $cycler);
-
+                                        // alert($item)
                                         $item.slideUp(1000,function(){
                                             $item.appendTo($cycler).show();
                                         });
                                     }
-                                    cycle($('#cycler div:first'),  $('#cycler'));
+
                                 </script>
                             </div>
                             <!-- //date -->
@@ -328,7 +303,7 @@
                 <!-- 右侧，最热文章 -->
                 <div class="news-right-bottom">
                     <div class="wthree-news-right-heading">
-                        <h3>Top News</h3>
+                        <h3>近期热点</h3>
                     </div>
                     <div class="news-right-bottom-bg">
                         <div class="news-grids-bottom">

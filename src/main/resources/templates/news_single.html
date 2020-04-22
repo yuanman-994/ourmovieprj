@@ -9,7 +9,6 @@
     <script type="application/x-javascript"> addEventListener("load", function () {
         setTimeout(hideURLbar, 0);
     }, false);
-
     function hideURLbar() {
         window.scrollTo(0, 1);
     } </script>
@@ -45,6 +44,7 @@
         });
     </script>
     <script type="text/javascript" th:src="@{js/tinymce/tinymce.min.js}"></script>
+    <script type="text/javascript" th:src="@{js/article.js}"></script>
     <!-- start-smoth-scrolling -->
     <script>
         var paras = location.search;			//search获得地址中的参数，内容为'?itemId=12'
@@ -55,6 +55,8 @@
         	paras[temp[0]] = temp[1];
         }
         var article_id = paras.article_id;
+        var updated_news_id = "cycler";//最新更新文章容器id
+
         var inf = '<h4 >{0}</h4>\n' +
             '                            <div class="s-author">\n' +
             '                                <p>Posted By <a href="#"><i class="fa fa-user" aria-hidden="true"></i> {1}</a> &nbsp;&nbsp;\n' +
@@ -92,9 +94,24 @@
             });
         }
 
+        function load_updated_news() {//加载最新更新文章
+            $.ajax({
+                url: 'article/get_updated_news',
+                type: "get",
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                success: function (data) {
+                    loadUpdated(JSON.parse(data),updated_news_id);
+                    cycle($('#cycler div:first'),  $('#cycler'));
+                }
+            });
+        }
+
+
         function load() {
         	load_inf();
             load_article();
+            load_updated_news();
         }
 
         String.format = function (src) {
@@ -370,52 +387,6 @@
                             <!-- date -->
                             <div id="design" class="date">
                                 <div id="cycler">
-                                    <div class="date-text">
-                                        <a href="news_single.html">August 15,2016</a>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a href="news_single.html">July 08,2016 <span class="blinking"><img
-                                                src="images/new.png" alt=""/></span></a>
-                                        <p>Nullam non turpis sit amet metus tristique egestas et et orci.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a href="news_single.html">February 15,2016</a>
-                                        <p>Duis venenatis ac ipsum vel ultricies in placerat quam</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a href="news_single.html">January 15,2016 <span class="blinking"><img
-                                                src="images/new.png" alt=""/></span></a>
-                                        <p>Pellentesque ullamcorper fringilla ipsum, ornare dapibus velit volutpat sit
-                                            amet.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a href="news_single.html">September 24,2016</a>
-                                        <p>In lobortis ipsum mi, ac imperdiet elit pellentesque at.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a href="news_single.html">August 15,2016</a>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a href="news_single.html">July 08,2016 <span class="blinking"><img
-                                                src="images/new.png" alt=""/></span></a>
-                                        <p>Nullam non turpis sit amet metus tristique egestas et et orci.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a href="news_single.html">February 15,2016</a>
-                                        <p>Duis venenatis ac ipsum vel ultricies in placerat quam</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a href="news_single.html">January 15,2016 <span class="blinking"><img
-                                                src="images/new.png" alt=""/></span></a>
-                                        <p>Pellentesque ullamcorper fringilla ipsum, ornare dapibus velit volutpat sit
-                                            amet.</p>
-                                    </div>
-                                    <div class="date-text">
-                                        <a href="news_single.html">September 24,2016</a>
-                                        <p>In lobortis ipsum mi, ac imperdiet elit pellentesque at.</p>
-                                    </div>
                                 </div>
                                 <script>
                                     function blinker() {
@@ -428,13 +399,10 @@
                                 <script>
                                     function cycle($item, $cycler) {
                                         setTimeout(cycle, 2000, $item.next(), $cycler);
-
                                         $item.slideUp(1000, function () {
                                             $item.appendTo($cycler).show();
                                         });
                                     }
-
-                                    cycle($('#cycler div:first'), $('#cycler'));
                                 </script>
                             </div>
                             <!-- //date -->

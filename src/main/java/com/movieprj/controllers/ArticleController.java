@@ -151,4 +151,10 @@ public class ArticleController {
     public String getSingle(@RequestParam("article_id") int article_id) {
         return articleServiceImp.getSingle(article_id);
     }
+
+    @GetMapping("article/get_updated_news")
+    @ResponseBody
+    public String getUpdatedNews() {//得到最新更新文章，不分分类，取10个
+        return articleServiceImp.getUpdatedNews();
+    }
 }

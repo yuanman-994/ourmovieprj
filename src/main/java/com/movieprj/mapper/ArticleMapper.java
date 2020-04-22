@@ -54,4 +54,7 @@ public interface ArticleMapper {
 
     @Select("SELECT * FROM article WHERE article_id=#{article_id}")
     public Article getSingle(int article_id);
+
+    @Select("SELECT * FROM article WHERE check_status=1 ORDER BY release_time DESC limit 0 , 10")
+    public List<Article> getUpdatedNews();
 }

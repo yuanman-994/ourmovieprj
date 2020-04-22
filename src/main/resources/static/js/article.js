@@ -1,46 +1,11 @@
 //用于动态创建影城动态页面部分内容的一些函数
-// <div role="tabpanel" class="tab-pane fade in active" id="home1" aria-labelledby="home1-tab">
-//    <div class="wthree-news-top-left">
-//      <div class="col-md-6 w3-agileits-news-left">
-//          <div class="col-sm-5 wthree-news-img">
-//              <a th:href="@{/news_single}"><img src="images/m1.jpg" alt="" /></a>
-//          </div>
-//          <div class="col-sm-7 wthree-news-info">
-//              <div>
-//                  <h5><a th:href="@{/news_single}">文章1</a></h5>
-//                  <ul>
-//                      <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-//                      <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-//                  </ul>
-//              </div>
-//          </div>
-//          <div class="clearfix"> </div>
-//     </div>
-//     <div class="col-md-6 w3-agileits-news-left">
-//          <div class="col-sm-5 wthree-news-img">
-//              <a th:href="@{/news_single}"><img src="images/m1.jpg" alt="" /></a>
-//          </div>
-//          <div class="col-sm-7 wthree-news-info">
-//              <div>
-//                  <h5><a th:href="@{/news_single}">文章2</a></h5>
-//                  <ul>
-//                      <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-//                      <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-//                  </ul>
-//              </div>
-//          </div>
-//          <div class="clearfix"> </div>
-//     </div>
-//     <div class="clearfix"> </div>
-//   </div>
-// </div>
 var line = '<div class="wthree-news-top-left">{0}{1}{2}</div>'
 var leftOrRight = '<div class="col-md-6 w3-agileits-news-left">\n' +
     '                                        <div class="col-sm-5 wthree-news-img">\n' +
-    '                                            <a th:href="@{/news_single}"><img src="{0}" alt="" /></a>\n' +
+    '                                            <a href="/news_single?article_id={5}"><img src="{0}" alt="" /></a>\n' +
     '                                        </div>\n' +
     '                                        <div class="col-sm-7 wthree-news-info">\n' +
-    '                                            <h5><a th:href="@{/news_single}">{1}</a></h5>\n' +
+    '                                            <h5><a href="/news_single?article_id={5}">{1}</a></h5>\n' +
     '                                            <h4>{2}</h4>\n' +
     '                                            <ul>\n' +
     '                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i>{3}</li>\n' +
@@ -87,5 +52,5 @@ function loadArticles(data, id, lineclass) {//data:数据，对象数组 id:字�
 }
 
 function getString(article) {
-    return String.format(leftOrRight, article.cover,article.headline,article.author_name,article.release_time,article.click_num);
+    return String.format(leftOrRight, article.cover,article.headline,article.author_name,article.release_time,article.click_num,article.article_id);
 }

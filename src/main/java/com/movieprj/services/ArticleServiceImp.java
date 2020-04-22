@@ -383,4 +383,20 @@ public class ArticleServiceImp implements ArticleService {
         }
         return jsonArray.toString();
     }
+
+    @Override
+    public String getSingle(int article_id) {
+        Article a = articleMapper.getSingle(article_id);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("article_id",a.getArticle_id());
+        jsonObject.put("author_name",userPasswordMapper.findNameById(a.getAuthor_id()));
+        jsonObject.put("headline",a.getHeadline());
+        jsonObject.put("click_num",a.getClick_num());
+        jsonObject.put("release_time",a.getRelease_time());
+        String cover = a.getArticle_cover_image();
+        if (cover == null)
+            cover = "images\\articleCoverImages\\default.jpeg";
+        jsonObject.put("cover",cover);
+        return jsonObject.toString();
+    }
 }

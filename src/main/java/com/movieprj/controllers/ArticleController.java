@@ -145,4 +145,10 @@ public class ArticleController {
         String data = articleServiceImp.getData(type,total_per_page,aim);
         return data;
     }
+
+    @GetMapping("article/get_single_article")
+    @ResponseBody
+    public String getSingle(@RequestParam("article_id") int article_id) {
+        return articleServiceImp.getSingle(article_id);
+    }
 }

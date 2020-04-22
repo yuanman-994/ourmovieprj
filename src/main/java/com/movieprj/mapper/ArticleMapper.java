@@ -51,4 +51,7 @@ public interface ArticleMapper {
 
     @Select("SELECT * FROM article WHERE type=#{type} AND check_status=1 ORDER BY release_time DESC limit #{currIndex} , #{pageSize} ")
     public List<Article> getByPage(int currIndex,int pageSize,int type);//分页查询
+
+    @Select("SELECT * FROM article WHERE article_id=#{article_id}")
+    public Article getSingle(int article_id);
 }

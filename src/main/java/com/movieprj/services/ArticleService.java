@@ -19,4 +19,5 @@ public interface ArticleService {
     public String getCover(int article_id);
     public int getTotal(int type,int total_per_page);//总页数
     public String getData(int type,int total_per_page,int aim);//获取某一页对应的数据
+    public String getSingle(int article_id);
 }

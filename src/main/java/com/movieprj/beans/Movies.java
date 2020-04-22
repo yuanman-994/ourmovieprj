@@ -12,7 +12,7 @@ public class Movies {
     private  String director;  //导演
     private String main_actor; //主演
     private String sellpoint; //卖点
-    private String rank; //星级/评分
+    private Integer rank; //星级/评分
     private String release_date; //上映时间
     private boolean top; //置顶状态
     private String duration; //时长
@@ -86,11 +86,11 @@ public class Movies {
         this.sellpoint = sellpoint;
     }
 
-    public String getRank() {
+    public Integer getRank() {
         return rank;
     }
 
-    public void setRank(String rank) {
+    public void setRank(Integer rank) {
         this.rank = rank;
     }
 

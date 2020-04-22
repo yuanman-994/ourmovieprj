@@ -9,7 +9,7 @@ public interface CinemaService {
 
     public List<Cinema> findAllCinema();
     public Cinema findCinemaById(Integer cinema_id);
-    public int addCinema(Map<String,String> cinemaMap);
-    public int deleteCinema(List<Integer> cinema_ids);
-    public int updateCinema(Map<String,String> cinemaMap);
+    public int addCinema(Map<String,Object> cinemaMap);
+    public int deleteCinema(Map<String,List> cinema_ids);
+    public int updateCinema(Map<String,Object> cinemaMap);
 }

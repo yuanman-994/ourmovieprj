@@ -2,10 +2,15 @@ package com.movieprj.services;
 
 
 import com.movieprj.beans.Cinema;
+import com.movieprj.beans.Hall;
 import com.movieprj.mapper.CinemaMapper;
+import com.movieprj.mapper.HallMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +18,13 @@ import java.util.Map;
 public class CinemaServiceImp implements CinemaService{
     @Resource
     private CinemaMapper cinemaMapper;
+
+    @Resource
+    private HallMapper hallMapper;
+
+    @Autowired
+    private HallServiceImp hallServiceImp;
+
 
     @Override
     public List<Cinema> findAllCinema(){return  cinemaMapper.findAllCinema();}
@@ -23,19 +35,10 @@ public class CinemaServiceImp implements CinemaService{
     }
 
     @Override
-    public int addCinema(Map<String,String> cinemaMap) {
+    public int addCinema(Map<String,Object> cinemaMap) {
         try {
             Cinema cinema = new Cinema();
-            Integer cinema_id;
-            String cinema_name, cinema_address, cinema_introduction;
-            cinema_id = Integer.valueOf(cinemaMap.get("cinema_id"));
-            cinema_name = cinemaMap.get("cinema_name");
-            cinema_address = cinemaMap.get("cinema_address");
-            cinema_introduction = cinemaMap.get("cinema_introduction");
-            cinema.setCinema_id(cinema_id);
-            cinema.setCinema_name(cinema_name);
-            cinema.setCinema_address(cinema_address);
-            cinema.setCinema_introduction(cinema_introduction);
+            cinema = (Cinema)cinemaMap.get("cinemaMap");
             cinemaMapper.addCinema(cinema);
         }
         catch (Exception e){
@@ -46,27 +49,30 @@ public class CinemaServiceImp implements CinemaService{
     }
 
     @Override
-    public int deleteCinema(List<Integer> cinema_ids) {
-        for(int i=0 ;i<cinema_ids.size();i++) {
-            cinemaMapper.deleteCinema(cinema_ids.get(i));
+    public int deleteCinema(Map<String,List> cinema_ids) {
+        List ids = cinema_ids.get("cinema_ids");
+        for(int i=0 ;i<ids.size();i++) {
+            Map<String, List> map = new HashMap<String, List>();
+            List<Hall> hallList = new ArrayList<Hall>();
+            Integer cinema_id=Integer.valueOf(ids.get(i).toString());
+            hallList = hallMapper.findHallByCinemaId(cinema_id);
+            List hall_ids = new ArrayList();
+            for(int n=0;n<hallList.size();n++){
+            Integer id = hallList.get(n).getHall_id();
+            hall_ids.add(id);
+            }
+            map.put("hall_ids",hall_ids);
+            hallServiceImp.deleteHall(map);
+            cinemaMapper.deleteCinema(Integer.valueOf(ids.get(i).toString()));
         }
         return 1;
     }
 
     @Override
-    public int updateCinema(Map<String,String> cinemaMap) {
+    public int updateCinema(Map<String,Object> cinemaMap) {
         try {
             Cinema cinema = new Cinema();
-            Integer cinema_id;
-            String cinema_name, cinema_address, cinema_introduction;
-            cinema_id = Integer.valueOf(cinemaMap.get("cinema_id"));
-            cinema_name = cinemaMap.get("cinema_name");
-            cinema_address = cinemaMap.get("cinema_address");
-            cinema_introduction = cinemaMap.get("cinema_introduction");
-            cinema.setCinema_id(cinema_id);
-            cinema.setCinema_name(cinema_name);
-            cinema.setCinema_address(cinema_address);
-            cinema.setCinema_introduction(cinema_introduction);
+            cinema = (Cinema)cinemaMap.get("cinemaMap");
             cinemaMapper.updateCinema(cinema);
         }
         catch (Exception e){

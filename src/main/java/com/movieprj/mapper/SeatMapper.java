@@ -59,7 +59,7 @@ public interface SeatMapper {
         public String batchAdd(Map map) {
             List<Seat> seatList = (List<Seat>) map.get("list");
             StringBuilder sb = new StringBuilder();
-            sb.append("INSERT INTO student (seat_id,hall_id,loc_x,loc_y) VALUES ");
+            sb.append("INSERT INTO seat (seat_id,hall_id,loc_x,loc_y) VALUES ");
             MessageFormat mf = new MessageFormat(
                     "(#'{'list[{0}].seat_id}, #'{'list[{0}].hall_id}, #'{'list[{0}].loc_x}, #'{'list[{0}].loc_y})"
             );
@@ -76,7 +76,7 @@ public interface SeatMapper {
         public String batchDelete(Map map) {
             List<Seat> seatsList = (List<Seat>) map.get("list");
             StringBuilder sb = new StringBuilder();
-            sb.append("DELETE FROM student WHERE id IN (");
+            sb.append("DELETE FROM seat WHERE seat_id IN (");
             for (int i = 0; i < seatsList.size(); i++) {
                 sb.append("'").append(seatsList.get(i).getSeat_id()).append("'");
                 if (i < seatsList.size() - 1)

@@ -152,7 +152,7 @@
 	};
 </script>
 <script>
-	function showMessage(time,movie_name,hall_name) {
+	function showMessage(time,movie_name,hall_name,hall_id) {
 		var m='<h2>'+hall_name+'</h2>' +
 				'<div class="demo">';
 		m+='<div id="seat-map">' +
@@ -174,7 +174,7 @@
 				'</ul>' +
 				'<div class="clear"></div>' +
 				'<ul id="selected-seats" class="scrollbar scrollbar1"></ul>' +
-				'<button class="checkout-button" onclick="decide()">立即购票</button>' +
+				'<button class="checkout-button" onclick="decide(\''+hall_id+'\')">立即购票</button>' +
 				'<div id="legend"></div>' +
 				'</div>' +
 				'<div style="clear:both"></div>'+
@@ -284,10 +284,10 @@
 					schedule = Schedule.getSchedule();
 					price = schedule.price;
                     movie = Movie.getInfo(schedule.movie_id);
-                    showMessage(schedule.end_sell,movie.movie_name,hall.hall_name);
+                    showMessage(schedule.end_sell,movie.movie_name,hall.hall_name,hall.hall_id);
 					selected_seats = seats();
 				});
-				function decide(){
+				function decide(hall_id){
 					console.log(selected_seats.length);
                     if(selected_seats.length<=0){
                     	alert("请选择座位！");
@@ -295,7 +295,7 @@
 					}
                     else if(selected_seats.length>=1&&selected_seats.length<=5){
                     	TicketOrder.addOrder();
-                    	Ticket.getInfo();
+                    	Ticket.getInfo(hall_id);
 					}
                     else{
                     	alert("最多只能同时购买5个座位！");
@@ -304,7 +304,7 @@
 				}
 				var Ticket = {
 
-					getInfo: function () {
+					getInfo: function (hall_id) {
 						//url:表示后台的url，就是 RequestMapping配置的内容
 						// type：http请求的类型
 						var url = document.location.href;
@@ -313,7 +313,7 @@
 						seats = selected_seats;
 						$.ajax({
 							url: "/addTicket",
-							data:JSON.stringify({movie_schedule_id:movie_schedule_id,seats:seats}),
+							data:JSON.stringify({movie_schedule_id:movie_schedule_id,seats:seats,hall_id:hall_id}),
 							type: "post",
 							async:false,
 							// 定义发送请求的数据格式为JSON字符串

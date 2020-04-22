@@ -26,6 +26,9 @@ public interface HallMapper {
     @Delete("DELETE FROM hall WHERE hall_id = #{hall_id}")
     public int deleteHall(Integer hall_id);
 
+    @Delete("DELETE FROM hall WHERE cinema_id = #{cinema_id}")
+    public int deleteHallByCinemaId(Integer cinema_id);
+
     @Update("UPDATE hall set cinema_id = #{cinema_id}," +
             "number_of_seats = #{number_of_seats}," +
             "seat_map = #{seat_map}," +

@@ -1,10 +1,14 @@
 package com.movieprj.services;
 
 import com.movieprj.beans.Hall;
+import com.movieprj.beans.Seat;
 import com.movieprj.mapper.HallMapper;
+import com.movieprj.mapper.SeatMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +17,9 @@ public class HallServiceImp implements HallService{
 
     @Resource
     private HallMapper hallMapper;
+
+    @Resource
+    private SeatMapper seatMapper;
 
     @Override
     public List<Hall> findAllHall() {
@@ -30,22 +37,30 @@ public class HallServiceImp implements HallService{
     }
 
     @Override
-    public int addHall(Map<String,String> hallMap) {
+    public int addHall(Map<String,Object> hallMap) {
         try {
             Hall hall = new Hall();
-            Integer hall_id,cinema_id;
-            int number_of_seats;
-            String hall_name,seat_map ;
-            cinema_id = Integer.valueOf(hallMap.get("cinema_id"));
-            hall_name = hallMap.get("cinema_name");
-            hall_id = Integer.valueOf(hallMap.get("hall_id"));
-            number_of_seats = Integer.valueOf(hallMap.get("number_of_seats"));
-            seat_map = hallMap.get("seat_map");
-            hall.setCinema_id(cinema_id);
-            hall.setHall_name(hall_name);
-            hall.setHall_id(hall_id);
-            hall.setNumber_of_seats(number_of_seats);
-            hall.setSeat_map(seat_map);
+            hall = (Hall)hallMap.get("hallMap");
+            Map<String, Object> map = new HashMap<String, Object>();
+            List<Seat> seatList = new ArrayList<Seat>();
+            Integer hall_id=hall.getHall_id();
+            for(int i=1;i<=100;i++){
+                Seat seat = new Seat();
+                seat.setHall_id(hall_id);
+                if(i%10==0){
+                seat.setLoc_x((i/10));
+                seat.setLoc_y(10);
+                seat.setSeat_id(hall_id*1000+i);
+                seatList.add(seat);
+                }
+                else {
+                    seat.setLoc_x((i/10)+1);
+                    seat.setLoc_y(i%10);
+                    seat.setSeat_id(hall_id*1000+i);
+                    seatList.add(seat);
+                }
+            }
+            seatMapper.batchAddSeats(seatList);//添加影厅的同时添加对应的座位信息（100个），可用座位由hall的seatmap属性来管理
             hallMapper.addHall(hall);
         }
         catch (Exception e){
@@ -56,30 +71,39 @@ public class HallServiceImp implements HallService{
     }
 
     @Override
-    public int deleteHall(List<Integer> hall_ids) {
-        for(int i=0 ;i<hall_ids.size();i++) {
-            hallMapper.deleteHall(hall_ids.get(i));
+    public int deleteHall(Map<String,List> hall_ids) {
+        List ids = hall_ids.get("hall_ids");
+        for(int i=0 ;i<ids.size();i++) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            List<Seat> seatList = new ArrayList<Seat>();
+            Integer hall_id=Integer.valueOf(ids.get(i).toString());
+            for(int n=1;n<=100;n++){
+                Seat seat = new Seat();
+                seat.setHall_id(hall_id);
+                if(n%10==0){
+                    seat.setLoc_x((n/10));
+                    seat.setLoc_y(10);
+                    seat.setSeat_id(hall_id*1000+n);
+                    seatList.add(seat);
+                }
+                else {
+                    seat.setLoc_x((n/10)+1);
+                    seat.setLoc_y(n%10);
+                    seat.setSeat_id(hall_id*1000+n);
+                    seatList.add(seat);
+                }
+            }
+            seatMapper.batchDeleteSeats(seatList);//删除影厅的同时删除对应的座位信息（100个）
+            hallMapper.deleteHall(Integer.valueOf(ids.get(i).toString()));
         }
         return 1;
     }
 
     @Override
-    public int updateHall(Map<String,String> hallMap) {
+    public int updateHall(Map<String,Object> hallMap) {
         try {
             Hall hall = new Hall();
-            Integer hall_id,cinema_id;
-            int number_of_seats;
-            String hall_name,seat_map ;
-            cinema_id = Integer.valueOf(hallMap.get("cinema_id"));
-            hall_name = hallMap.get("cinema_name");
-            hall_id = Integer.valueOf(hallMap.get("hall_id"));
-            number_of_seats = Integer.valueOf(hallMap.get("number_of_seats"));
-            seat_map = hallMap.get("seat_map");
-            hall.setCinema_id(cinema_id);
-            hall.setHall_name(hall_name);
-            hall.setHall_id(hall_id);
-            hall.setNumber_of_seats(number_of_seats);
-            hall.setSeat_map(seat_map);
+            hall = (Hall)hallMap.get("hallMap");
             hallMapper.updateHall(hall);
         }
         catch (Exception e){

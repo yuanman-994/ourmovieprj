@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CommentServiceImp implements CommentService{
@@ -26,6 +27,16 @@ public class CommentServiceImp implements CommentService{
         return commentList;
     }
 
+    public Comment findCommentWithUserByPk(Integer movie_id,Integer user_id){
+        return commentMapper.findCommentWithUserByPk(movie_id,user_id);
+    }
+
+    @Override
+    public List<Comment> findAllCommentWithUser(){
+        List<Comment> commentList = commentMapper.findAllCommentWithUser();
+        return commentList;
+    }
+
     @Override
     public int insertComment(Comment comment) {
         commentMapper.insertComment(comment);
@@ -39,9 +50,13 @@ public class CommentServiceImp implements CommentService{
     }
 
     @Override
-    public int deleteComment(Integer movie_id,Integer user_id) {
-        commentMapper.deleteComment(movie_id,user_id);
-        return 0;
+    public int deleteComment(Map<String,List> mu_ids) {
+        List mids = mu_ids.get("movie_ids");
+        List uids = mu_ids.get("user_ids");
+        for(int i=0 ;i<mids.size();i++) {
+            commentMapper.deleteComment(Integer.valueOf(mids.get(i).toString()),Integer.valueOf(uids.get(i).toString()));
+        }
+        return 1;
     }
 
 }

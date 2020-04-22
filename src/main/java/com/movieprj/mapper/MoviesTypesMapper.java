@@ -28,8 +28,8 @@ public interface MoviesTypesMapper {
     @Update("UPDATE movie_type SET type_name=#{new_type_name} WHERE type_name=#{old_type_name}")
     public int updateMoviesTypes(String new_type_name,String old_type_name);//用于类型管理的更新(所有类型名都同时更新)
 
-    @Update("UPDATE movie_type SET type_name=#{new_type_name} WHERE movie_id=#{movie_id} AND type_name=#{old_type_name}")
-    public int updateMoviesTypes1(String new_type_name,Integer movie_id,String old_type_name);//用于电影信息中类型的更新
+    @Update("UPDATE movie_type SET type_name=#{type_name},movie_id=#{movie_id} WHERE movie_type_id=#{movie_type_id}")
+    public int updateMoviesTypes1(MoviesTypes moviesTypes);//用于电影信息中类型的更新
 
 
     @Delete("DELETE FROM movie_type WHERE type_name=#{type_name}")

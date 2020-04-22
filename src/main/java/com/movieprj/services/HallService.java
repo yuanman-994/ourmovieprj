@@ -13,9 +13,9 @@ public interface HallService {
 
     public List<Hall> findHallByCinemaId(Integer cinema_id);
 
-    public int addHall(Map<String,String> hallMap);
+    public int addHall(Map<String,Object> hallMap);
 
-    public int deleteHall(List<Integer> hall_ids);
+    public int deleteHall(Map<String,List> hall_ids);
 
-    public int updateHall(Map<String,String> hallMap);
+    public int updateHall(Map<String,Object> hallMap);
 }

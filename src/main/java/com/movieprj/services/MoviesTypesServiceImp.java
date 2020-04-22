@@ -2,10 +2,13 @@ package com.movieprj.services;
 
 import com.movieprj.beans.MoviesTypes;
 import com.movieprj.mapper.MoviesTypesMapper;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
+@Service
 public class MoviesTypesServiceImp implements MoviesTypesService {
     @Resource
     private MoviesTypesMapper moviesTypesMapper;
@@ -39,14 +42,17 @@ public class MoviesTypesServiceImp implements MoviesTypesService {
     }
 
     @Override
-    public int updateMoviesTypes1(String new_type_name, Integer movie_id, String old_type_name) {
-        moviesTypesMapper.updateMoviesTypes1(new_type_name, movie_id, old_type_name);
+    public int updateMoviesTypes1(MoviesTypes moviesTypes) {
+        moviesTypesMapper.updateMoviesTypes1(moviesTypes);
         return 1;
     }
 
     @Override
-    public int deleteMoviesTypes(String type_name) {
-        moviesTypesMapper.deleteMoviesTypes(type_name);
+    public int deleteMoviesTypes(Map<String,List> types_names) {
+        List names = types_names.get("types_names");
+        for(int i=0 ;i<names.size();i++) {
+            moviesTypesMapper.deleteMoviesTypes(names.get(i).toString());
+        }
         return 1;
     }
 

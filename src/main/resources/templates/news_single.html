@@ -89,7 +89,7 @@
                 //成功响应的结果
                 success: function (data) {
                     var article = JSON.stringify(data);
-                    var str = String.format(inf, data.headline, data.author_name, data.release_time, 0);
+                    var str = String.format(inf, data.headline, data.author_name, data.release_time, data.comment_num);
                     $("#inf").append(str);
                 }
             });
@@ -424,7 +424,7 @@
 
                         //创建各分页
                         var i;
-                        for (i=0;i<max;i++){
+                        for (i=0;start+i<=end;i++){
                             if (start+i==now)
                                 $("#"+id).append('<li class="active"><a href="#"'+get_string(funcname,start+i)+'>'+(start+i)+'</a></li>');
                             else

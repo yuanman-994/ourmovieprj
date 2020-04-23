@@ -39,7 +39,7 @@ function creat(total,now,max,id,funcname) {//创建分页对象,total:总页数,
 
     //创建各分页
     var i;
-    for (i=0;i<max;i++){
+    for (i=0;start+i<=end;i++){
         if (start+i==now)
             $("#"+id).append('<li class="active"><a href="#"'+get_string(funcname,start+i,max)+'>'+(start+i)+'</a></li>');
         else

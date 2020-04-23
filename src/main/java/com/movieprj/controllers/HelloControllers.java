@@ -29,11 +29,6 @@ public class HelloControllers {
         return "dynamic";
     }
 
-    @RequestMapping("/news_single")
-    public String news_single() {
-        return "news_single";
-    }
-
     @RequestMapping("/see_movie")
     public String see_movie() {
         return "see_movie";

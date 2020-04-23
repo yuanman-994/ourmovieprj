@@ -397,6 +397,7 @@ public class ArticleServiceImp implements ArticleService {
         jsonObject.put("headline",a.getHeadline());
         jsonObject.put("click_num",a.getClick_num());
         jsonObject.put("release_time",a.getRelease_time());
+        jsonObject.put("comment_num",articleCommentMapper.getCommentNumById(article_id));
         String cover = a.getArticle_cover_image();
         if (cover == null)
             cover = "images\\articleCoverImages\\default.jpeg";
@@ -431,5 +432,11 @@ public class ArticleServiceImp implements ArticleService {
         articleComment.setContent(content);
         articleComment.setUser_id(user_id);
         articleCommentMapper.addComment(articleComment);
+    }
+
+    @Override
+    public void addClick(int article_id) {
+        int num = articleMapper.getClickNum(article_id);
+        articleMapper.updateClickNum(article_id,num+1);
     }
 }

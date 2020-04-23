@@ -57,4 +57,10 @@ public interface ArticleMapper {
 
     @Select("SELECT * FROM article WHERE check_status=1 ORDER BY release_time DESC limit 0 , 10")
     public List<Article> getUpdatedNews();
+
+    @Select("SELECT click_num FROM article WHERE article_id=#{article_id}")
+    public int getClickNum(int article_id);
+
+    @Update("UPDATE article SET click_num=#{click_num} WHERE article_id=#{article_id}")
+    public void updateClickNum(int article_id,int click_num);
 }

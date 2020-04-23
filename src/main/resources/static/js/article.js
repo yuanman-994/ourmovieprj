@@ -4,10 +4,10 @@
 var line = '<div class="wthree-news-top-left">{0}{1}{2}</div>'
 var leftOrRight = '<div class="col-md-6 w3-agileits-news-left">\n' +
     '                                        <div class="col-sm-5 wthree-news-img">\n' +
-    '                                            <a href="/news_single?article_id={5}"><img src="{0}" alt="" /></a>\n' +
+    '                                            <a href="/news_single?article_id={5}" onclick="addClick({5})"><img src="{0}" alt="" /></a>\n' +
     '                                        </div>\n' +
     '                                        <div class="col-sm-7 wthree-news-info">\n' +
-    '                                            <h5><a href="/news_single?article_id={5}">{1}</a></h5>\n' +
+    '                                            <h5><a href="/news_single?article_id={5}" onclick="addClick({5})">{1}</a></h5>\n' +
     '                                            <h4>{2}</h4>\n' +
     '                                            <ul>\n' +
     '                                                <li><i class="fa fa-clock-o" aria-hidden="true"></i>{3}</li>\n' +
@@ -20,7 +20,7 @@ var end = '<div class="clearfix"> </div>';
 
 //最新更新文章的样式
 var updated_news = '<div class="date-text">\n' +
-    '                                        <a href="/news_single?article_id={0}">{1}<span class="blinking"><img\n' +
+    '                                        <a href="/news_single?article_id={0}" onclick="addClick({5})">{1}<span class="blinking"><img\n' +
     '                                                src="images/new.png" alt=""/></span></a>\n' +
     '                                        <p>{2}</p>\n' +
     '                                    </div>';
@@ -72,6 +72,9 @@ function loadUpdated(data,id) {//需加载的数据，容器id
     }
 }
 
+function addClick(article_id) {
+    $.post("/article/addClick?article_id="+article_id);
+}
 
 function getString(article) {
     return String.format(leftOrRight, article.cover,article.headline,article.author_name,article.release_time,article.click_num,article.article_id);

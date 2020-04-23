@@ -22,4 +22,5 @@ public interface ArticleService {
     public String getSingle(int article_id);
     public String getUpdatedNews();
     public void submitComment(int article_id,int user_id,String content);
+    public void addClick(int article_id);//增加一次点击量
 }

@@ -52,6 +52,11 @@ public class ArticleController {
         return "self_article_manage";
     }
 
+    @RequestMapping("/news_single")
+    public String news_single() {
+        return "news_single";
+    }
+
     @PostMapping("/add_article")
     @ResponseBody
     public int add_article(@RequestBody Map<String, String> data) {
@@ -191,5 +196,12 @@ public class ArticleController {
     @ResponseBody
     public String getComments(@RequestParam("article_id") int article_id,@RequestParam("aimPage") int aimPage,@RequestParam("pagesize") int pagesize) {//
         return articleCommentServiceImp.getCommentsByPage(article_id,aimPage,pagesize);
+    }
+
+    @PostMapping("/article/addClick")
+    @ResponseBody
+    public int addClick(@RequestParam("article_id") int article_id) {
+        articleServiceImp.addClick(article_id);
+        return 0;
     }
 }

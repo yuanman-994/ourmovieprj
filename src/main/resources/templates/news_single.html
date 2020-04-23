@@ -9,6 +9,7 @@
     <script type="application/x-javascript"> addEventListener("load", function () {
         setTimeout(hideURLbar, 0);
     }, false);
+
     function hideURLbar() {
         window.scrollTo(0, 1);
     } </script>
@@ -51,8 +52,8 @@
         var result = paras.match(/[^\?&]*=[^&]*/g); 	//match是字符串中符合的字段一个一个取出来，result中的值为['login=xx','table=admin']
         paras = {};					//让paras变成没有内容的json对象
         for (i in result) {
-        	var temp = result[i].split('=');	//split()将一个字符串分解成一个数组,两次遍历result中的值分别为['itemId','xx']
-        	paras[temp[0]] = temp[1];
+            var temp = result[i].split('=');	//split()将一个字符串分解成一个数组,两次遍历result中的值分别为['itemId','xx']
+            paras[temp[0]] = temp[1];
         }
         var article_id = paras.article_id;
         var updated_news_id = "cycler";//最新更新文章容器id
@@ -80,7 +81,7 @@
 
         function load_inf() {
             $.ajax({
-                url: "/article/get_single_article?article_id="+article_id,
+                url: "/article/get_single_article?article_id=" + article_id,
                 type: "get",
                 contentType: "application/json;charset=UTF-8",
                 //定义回调响应的数据格式为JSON字符串,该属性可以省略
@@ -88,7 +89,7 @@
                 //成功响应的结果
                 success: function (data) {
                     var article = JSON.stringify(data);
-                    var str = String.format(inf,data.headline,data.author_name,data.release_time,0);
+                    var str = String.format(inf, data.headline, data.author_name, data.release_time, 0);
                     $("#inf").append(str);
                 }
             });
@@ -101,17 +102,18 @@
                 // 定义发送请求的数据格式为JSON字符串
                 contentType: "application/json;charset=UTF-8",
                 success: function (data) {
-                    loadUpdated(JSON.parse(data),updated_news_id);
-                    cycle($('#cycler div:first'),  $('#cycler'));
+                    loadUpdated(JSON.parse(data), updated_news_id);
+                    cycle($('#cycler div:first'), $('#cycler'));
                 }
             });
         }
 
 
         function load() {
-        	load_inf();
+            load_inf();
             load_article();
             load_updated_news();
+            loadCommentAndPageDi();
         }
 
         String.format = function (src) {
@@ -265,7 +267,7 @@
                 <!--			正文内容-->
                 <div class="wthree-news-left">
                     <div class="wthree-news-left-img">
-                        <div id ="inf">
+                        <div id="inf">
                         </div>
                         <div id="fb-root"></div>
                         <!--                        <div class="news-shar-buttons">-->
@@ -364,11 +366,120 @@
                     </div>
                 </div>
                 <!--			评论-->
+                <script>
+                    var commentStr = '<div>\n' +
+                        '<div class="media-left"><a href="#"><img src="images/user.jpg"\n' +
+                        'title="One movies" alt=" "></a><i class="fa fa-user" aria-hidden="true"></i> {0}\n' +
+                        '<i class="fa fa-calendar" aria-hidden="true"></i> {1}</div>\n' +
+                        '<div class="agile-info-wthree-box">\n' +
+                        '<form>\n' +
+                        '<textarea>{2}</textarea>\n' +
+                        '</form>\n' +
+                        '</div>\n' +
+                        '<hr>\n' +
+                        '</div>'
+
+                    function submitCommen() {//提交评论
+                        var commen = $("#mycommen").val()
+                        if (commen.length == 0)
+                            return;
+                        $.post("/article/submit_comment?comment=" + commen + "&article_id=" + article_id, function (result) {
+                            console.log(result);
+                            loadComments(1);
+                        })
+                    }
+
+                    var commontPgaeDiId = "commentPageDi";
+                    var loadFuncName = "loadComments";
+                    var totalPage;//总页数
+                    var pageShow = 5;//显示的页数
+                    var pagesize = 5;//每页记录数
+                    var commmenDivId = "comments";
+
+                    function creat(total,now,max,id,funcname) {//创建分页对象,total:总页数,now:当前在第几页，max:显示多少页，id:对象id funcname:渲染页面的函数名（string）,可自行实现，需包括now,max参数
+                        $("#"+id).empty();
+                        var start,end;//显示的起始，终止页
+                        //计算显示的起始页
+                        if (total<=max){
+                            start = 1;
+                            end = total;
+                        } else {
+                            if (now <= parseInt(max/2)){
+                                start = 1;
+                                end = max;
+                            }
+                            else if (now>=total-parseInt(max/2)){
+                                start = total - max + 1;
+                                end = total;
+                            } else {
+                                start = now - parseInt(max/2) +1;
+                                end = start + max -1;
+                            }
+                        }
+                        //填充html
+                        if(start==1)//创建前一页箭头内容
+                            $("#"+id).append('<li class="disabled"><a href="#"><i class="fa fa-angle-left">«</i></a></li>');
+                        else
+                            $("#"+id).append('<li><a href="#"'+get_string(funcname,now-1)+'><i class="fa fa-angle-left">«</i></a></li>');
+
+                        //创建各分页
+                        var i;
+                        for (i=0;i<max;i++){
+                            if (start+i==now)
+                                $("#"+id).append('<li class="active"><a href="#"'+get_string(funcname,start+i)+'>'+(start+i)+'</a></li>');
+                            else
+                                $("#"+id).append('<li><a href="#"'+get_string(funcname,start+i)+'>'+(start+i)+'</a></li>');
+                        }
+                        if(now==total)//创建后一页箭头内容
+                            $("#"+id).append('<li class="disabled"><a href="#"><i class="fa fa-angle-right">«</i></a></li>');
+                        else
+                            $("#"+id).append('<li><a href="#"'+get_string(funcname,now+1)+'><i class="fa fa-angle-right">«</i></a></li>');
+                    }
+                    function get_string(funcname,aim) {
+                        return 'onclick="'+funcname+'('+aim+')"'
+                    }
+
+                    function loadCommentAndPageDi() {//加载评论区
+                        $.get("/article/get_comment_page_num?article_id=" + article_id +"&pagesize="+ pagesize , function (result) {
+                            totalPage = result;
+                            loadComments(1);
+                        })
+                    }
+
+                    function loadComments(aimPage) {
+                        $.get("/article/get_comments?article_id=" + article_id +"&aimPage="+ aimPage +"&pagesize=" + pagesize, function (data) {
+                            creat(totalPage,aimPage,pageShow,commontPgaeDiId,loadFuncName);
+                            $("#"+commmenDivId).empty();
+                            var i;
+                            var comments = JSON.parse(data);
+                            for (i=0;i<comments.length;i++){
+                                var a_comment = comments[i];
+                                var str = String.format(commentStr,a_comment.name,a_comment.time,a_comment.content);
+                                $("#"+commmenDivId).append(str);
+                            }
+                        })
+                    }
+                </script>
                 <div class="agile-news-comments">
                     <div class="agile-news-comments-info">
                         <h4>Comments</h4>
-                        <div class="fb-comments" data-href="https://w3layouts.com/" data-width="100%"
-                             data-numposts="5"></div>
+                        <div class="agile-info-wthree-box">
+                            <form>
+                                <textarea id="mycommen" name="mycommen" placeholder="评论内容"
+                                          required="required"></textarea>
+                            </form>
+                            <button onclick="submitCommen()">发表评论</button>
+                        </div>
+                        <hr>
+                        <div class="media-grids" id="listTag">
+                            <div class="media">
+                                <div id="comments">
+                                </div>
+                            </div>
+                            <hr>
+                            <ul class="pagination pagination-lg" id="commentPageDi">
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <!-- //agile-comments -->

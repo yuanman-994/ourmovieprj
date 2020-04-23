@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movieprj.beans.Article;
+import com.movieprj.beans.ArticleComment;
+import com.movieprj.mapper.ArticleCommentMapper;
 import com.movieprj.mapper.ArticleMapper;
 import com.movieprj.mapper.UserPasswordMapper;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class ArticleServiceImp implements ArticleService {
     private UserPasswordMapper userPasswordMapper;
     @Resource
     private ArticleMapper articleMapper;
+    @Resource
+    private ArticleCommentMapper articleCommentMapper;
 
     @Override
     public Boolean saveArticle(String author_name, Map<String, String> data) {
@@ -418,5 +422,14 @@ public class ArticleServiceImp implements ArticleService {
             jsonArray.add(jsonObject);
         }
         return jsonArray.toString();
+    }
+
+    @Override
+    public void submitComment(int article_id, int user_id, String content) {
+        ArticleComment articleComment = new ArticleComment();
+        articleComment.setArticle_id(article_id);
+        articleComment.setContent(content);
+        articleComment.setUser_id(user_id);
+        articleCommentMapper.addComment(articleComment);
     }
 }

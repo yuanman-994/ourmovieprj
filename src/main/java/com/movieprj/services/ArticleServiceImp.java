@@ -13,6 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -343,6 +349,11 @@ public class ArticleServiceImp implements ArticleService {
             //图片绝对地址
             String path = basePath + "\\" + imageName;
             image.transferTo(new File(path));
+
+            BufferedImage Bimage=(BufferedImage) ImageIO.read(new File(path));//图片放缩
+            Bimage = this.Thumb(Bimage,182,268,false);
+            ImageIO.write(Bimage,"jpeg",new File(path));
+
             String url = "images\\articleCoverImages\\"+imageName;
             articleMapper.saveArticleCoverById(article_id,url);
         } catch (Exception e) {
@@ -438,5 +449,36 @@ public class ArticleServiceImp implements ArticleService {
     public void addClick(int article_id) {
         int num = articleMapper.getClickNum(article_id);
         articleMapper.updateClickNum(article_id,num+1);
+    }
+
+    public BufferedImage Thumb(BufferedImage source, int width, int height, boolean b) {
+        // targetW，targetH分别表示目标长和宽
+        int type = source.getType();
+        BufferedImage target = null;
+        double sx = (double) width / source.getWidth();
+        double sy = (double) height / source.getHeight();
+
+        if (b) {
+            if (sx > sy) {
+                sx = sy;
+                width = (int) (sx * source.getWidth());
+            } else {
+                sy = sx;
+                height = (int) (sy * source.getHeight());
+            }
+        }
+
+        if (type == BufferedImage.TYPE_CUSTOM) {
+            ColorModel cm = source.getColorModel();
+            WritableRaster raster = cm.createCompatibleWritableRaster(width, height);
+            boolean alphaPremultiplied = cm.isAlphaPremultiplied();
+            target = new BufferedImage(cm, raster, alphaPremultiplied, null);
+        } else
+            target = new BufferedImage(width, height, type);
+        Graphics2D g = target.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.drawRenderedImage(source, AffineTransform.getScaleInstance(sx, sy));
+        g.dispose();
+        return target;
     }
 }

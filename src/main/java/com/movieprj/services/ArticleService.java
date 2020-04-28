@@ -17,10 +17,14 @@ public interface ArticleService {
     public int updateCheck(JSONArray ja);
     public int uploadCover(MultipartFile image, String basePath, int article_id);
     public String getCover(int article_id);
-    public int getTotal(int type,int total_per_page);//总页数
+    public int getTotalPage(int type, int total_per_page);//总页数
     public String getData(int type,int total_per_page,int aim);//获取某一页对应的数据
     public String getSingle(int article_id);
     public String getUpdatedNews();
     public void submitComment(int article_id,int user_id,String content);
     public void addClick(int article_id);//增加一次点击量
+
+    public String getArticleWithLimit(int limit,int offset,String search);
+//    public String getArticleWithLimitAndSearch();
+
 }

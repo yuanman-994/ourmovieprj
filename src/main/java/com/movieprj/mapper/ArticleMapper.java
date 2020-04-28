@@ -47,10 +47,13 @@ public interface ArticleMapper {
     public void deleteById(int id);
 
     @Select("SELECT COUNT(*) FROM article WHERE type=#{type}")
-    public int getTotal(int type);
+    public int getTotalWithType(int type);
+
+    @Select("SELECT COUNT(*) FROM article")
+    public int getTotal();
 
     @Select("SELECT * FROM article WHERE type=#{type} AND check_status=1 ORDER BY release_time DESC limit #{currIndex} , #{pageSize} ")
-    public List<Article> getByPage(int currIndex,int pageSize,int type);//分页查询
+    public List<Article> getByPageOnlyPassCheck(int currIndex, int pageSize, int type);//分页查询
 
     @Select("SELECT * FROM article WHERE article_id=#{article_id}")
     public Article getSingle(int article_id);
@@ -63,4 +66,33 @@ public interface ArticleMapper {
 
     @Update("UPDATE article SET click_num=#{click_num} WHERE article_id=#{article_id}")
     public void updateClickNum(int article_id,int click_num);
+
+    @Select("SELECT * FROM article WHERE article_id in\n" +
+            "(\n" +
+            "SELECT article_id FROM\n" +
+            "(\n" +
+            "\tSELECT a.article_id , a.headline, u.user_name ,a.release_time\n" +
+            "\tFROM article a, user_password u\n" +
+            "\tWHERE a.author_id = u.user_id\n" +
+            ") r\n" +
+            "WHERE r.headline like CONCAT('%',#{search},'%')\n" +
+            "OR r.user_name like CONCAT('%',#{search},'%')\n" +
+            "ORDER BY r.release_time DESC\n" +
+            ") \n" +
+            "LIMIT #{offset} , #{limit}")
+    public List<Article> getByPageWithSearch(int limit,int offset,String search);//分页查询,带有模糊搜索
+
+    @Select("SELECT COUNT(*) FROM\n" +
+            "(\n" +
+            "\tSELECT a.article_id , a.headline, u.user_name ,a.release_time\n" +
+            "\tFROM article a, user_password u\n" +
+            "\tWHERE a.author_id = u.user_id\n" +
+            ") r\n" +
+            "WHERE r.headline like CONCAT('%',#{search},'%')\n" +
+            "OR r.user_name like CONCAT('%',#{search},'%')\n" +
+            "ORDER BY r.release_time DESC")
+    public int getSearchCount(String search);
+
+    @Select("SELECT * FROM article ORDER BY release_time DESC limit #{offset} , #{limit}")
+    public List<Article> getByPage(int limit,int offset);
 }

@@ -1,7 +1,6 @@
 package com.movieprj.services;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movieprj.beans.Article;
@@ -373,15 +372,15 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public int getTotal(int type, int total_per_page) {
-        int total = articleMapper.getTotal(type);
+    public int getTotalPage(int type, int total_per_page) {
+        int total = articleMapper.getTotalWithType(type);
         double result = (double)total/total_per_page;
         return (int)Math.ceil(result);
     }
 
     @Override
     public String getData(int type, int page_size, int currIndex) {
-        List<Article> list = articleMapper.getByPage((currIndex-1)*page_size,page_size,type);
+        List<Article> list = articleMapper.getByPageOnlyPassCheck((currIndex-1)*page_size,page_size,type);
         JSONArray jsonArray = new JSONArray();
         for (Article a : list){
             JSONObject jsonObject = new JSONObject();
@@ -481,4 +480,54 @@ public class ArticleServiceImp implements ArticleService {
         g.dispose();
         return target;
     }
+
+    @Override
+    public String getArticleWithLimit(int limit,int offset,String search) {
+        List<Article> articles;
+        int total;
+        if (search==""){
+            articles = articleMapper.getByPage(limit, offset);
+            total = articleMapper.getTotal();
+        } else {
+            articles = articleMapper.getByPageWithSearch(limit, offset, search);
+            total =articleMapper.getSearchCount(search);
+        }
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < articles.size(); i++) {
+            Article a = articles.get(i);
+            int id = a.getAuthor_id();
+            String name = userPasswordMapper.findNameById(id);
+            JSONObject json = new JSONObject();
+            json.put("article_id", a.getArticle_id());
+            json.put("author_name", name);
+            json.put("headline", a.getHeadline());
+            json.put("click_num", a.getClick_num());
+            json.put("release_time", a.getRelease_time());
+            String type;
+            if (a.getType() == 1)
+                type = "新闻";
+            else
+                type = "影片看点";
+            json.put("type", type);
+            String check = "未通过";
+            switch (a.getCheck_status()) {
+                case 0:
+                    check = "未审核";
+                    break;
+                case 1:
+                    check = "已通过";
+                    break;
+                case -1:
+                    check = "未通过";
+                    break;
+            }
+            json.put("check_status", check);
+            jsonArray.add(json);
+        }
+        JSONObject json = new JSONObject();
+        json.put("total",total);
+        json.put("rows",jsonArray);
+        return json.toString();
+    }
 }
+

@@ -11,11 +11,12 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
 
-    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
 
     <link rel="icon" type="image/png" href="images/i/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="images/i/app-icon72x72@2x.png">
     <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
     <script src="js/adminjs/echarts.min.js"></script>
     <link rel="stylesheet" href="css/admincss/amazeui.min.css"/>
     <link rel="stylesheet" href="css/admincss/amazeui.datatables.min.css"/>
@@ -439,7 +440,7 @@
                         <button id="remove" type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 立即停售</button>
                     </div>
                 </div>
-                <table width="100%" class="am-table am-table-compact tpl-table-black " id="group-buy-table">
+                <table width="100%" class="am-table am-table-compact am-table-bordered am-table-radius am-table-striped tpl-table-black  " id="group-buy-table">
 
                 </table>
             </div>

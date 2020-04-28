@@ -52,6 +52,12 @@ public class ArticleController {
         return "self_article_manage";
     }
 
+    @RequestMapping("/article_comment_manage")
+    public String article_comment_manage() {
+
+        return "article_comment_manage";
+    }
+
     @RequestMapping("/news_single")
     public String news_single() {
         return "news_single";
@@ -149,7 +155,7 @@ public class ArticleController {
     @GetMapping("article/get_total")
     @ResponseBody
     public int getTotal(@RequestParam("type") int type, @RequestParam("total_per_page") int total_per_page) {
-        return articleServiceImp.getTotal(type, total_per_page);
+        return articleServiceImp.getTotalPage(type, total_per_page);
     }
 
     @GetMapping("article/get_data")
@@ -203,5 +209,11 @@ public class ArticleController {
     public int addClick(@RequestParam("article_id") int article_id) {
         articleServiceImp.addClick(article_id);
         return 0;
+    }
+
+    @GetMapping("/article/get_article_data_by_page")
+    @ResponseBody
+    public String getArticleDataByPage(@RequestParam("limit") int limit,@RequestParam("offset") int offset,@RequestParam("search") String search) {//
+        return articleServiceImp.getArticleWithLimit(limit, offset, search);
     }
 }

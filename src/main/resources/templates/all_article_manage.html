@@ -11,30 +11,68 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp" />
 
-    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
+
 
     <link rel="icon" type="image/png" href="images/i/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="images/i/app-icon72x72@2x.png">
     <meta name="apple-mobile-web-app-title" content="Amaze UI" />
     <script src="js/adminjs/echarts.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link type="text/css" th:href="@{/css/bootstrap-table.min.css}">
     <link rel="stylesheet" href="css/admincss/amazeui.min.css" />
     <link rel="stylesheet" href="css/admincss/amazeui.datatables.min.css" />
     <link rel="stylesheet" href="css/admincss/app.css">
     <script src="js/adminjs/jquery.min.js"></script>
     <script>
         function load_article_data() {
+            $('#article-table').bootstrapTable('destroy');
             $("#article-table").bootstrapTable({
-                url: '/article_manage/get_all_article_data',
-                class: 'table table-bordered table-hover table-striped',
+                url: '/article/get_article_data_by_page',
+                method: 'get',
+                dataType: "json",
+                dataField: 'rows',
                 uniqueId: "article_id",
-                striped: true,                      //是否显示行间隔色
+                // striped: true,                      //是否显示行间隔色
                 pagination: true,
                 sortable: true,                     //是否启用排序
                 toolbar: '#toolbar',              //工具按钮用哪个容器
-                pageSize: 10,                     //每页的记录行数（*）
-                pageList: [15, 30, 50],        //可供选择的每页的行数（*）
-                search: true,                      //是否显示表格搜索
-                // showRefresh: true,
+                pageList: [10, 30, 50],        //可供选择的每页的行数（*）
+                // search: true,                      //是否显示表格搜索
+
+                sidePagination:'server',//指定服务器端分页
+                pageSize:10,//单页记录数
+
+                queryParamsType : "limit",//设置为 ‘limit’ 则会发送符合 RESTFul 格式的参数.
+
+                queryParams: function (params) {//自定义参数，这里的参数是传给后台的，我这是是分页用的
+
+//            请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果
+
+//　　　　　　　queryParamsType = 'limit' ,返回参数必须包含limit, offset, search, sort, order
+
+//            queryParamsType = 'undefined', 返回参数必须包含: pageSize, pageNumber, searchText, sortName, sortOrder.
+
+//            返回false将会终止请求。
+
+                    return {//这里的params是table提供的
+
+                        offset: params.offset,//从数据库第几条记录开始
+
+                        limit: params.limit,//找多少条
+
+                        search: $("#search-text").val()
+
+                    };
+
+                },
+
+                responseHandler: function (res) {
+
+                    //如果后台返回的json格式不是{rows:[{...},{...}],total:100},可以在这块处理成这样的格式
+
+                    return res;
+
+                },
                 columns: [{
                     checkbox: true
                 }, {
@@ -478,7 +516,14 @@
                         <button id="remove" type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>
                     </div>
                 </div>
-                <table width="100%" class="am-table am-table-compact tpl-table-black " id="article-table">
+                <form class="am-form tpl-form-line-form" onsubmit="return false;">
+                    <div class="am-form-group">
+                        <div class="am-u-sm-9">
+                            <input type="text" class="tpl-form-input" id="search-text" placeholder="搜索" onkeypress = "load_article_data()">
+                        </div>
+                    </div>
+                </form>
+                <table width="100%" class="am-table am-table-compact am-table-bordered am-table-radius am-table-striped tpl-table-black " id="article-table">
 
                 </table>
             </div>
@@ -491,7 +536,6 @@
 <script src="js/adminjs/dataTables.responsive.min.js"></script>
 <script src="js/adminjs/app.js"></script>
 <script type="text/javascript" th:src="@{js/bootstrap.min.js}"></script>
-
 <script type="text/javascript" th:src="@{js/bootstrap-table.min.js}"></script>
 <script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.min.js}"></script>
 </body>

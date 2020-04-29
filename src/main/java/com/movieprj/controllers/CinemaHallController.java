@@ -127,10 +127,26 @@ public class CinemaHallController {
 
     }
 
+    @RequestMapping("/searchHall")
+    @ResponseBody
+    public Map<String,Object> searchHallByMovies(@RequestBody Map<String,Object> params) {
+        String cinema_name;
+        String search_content = params.get("search_content").toString();
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(search_content!=null){
+            cinema_name = search_content;
+            map = hallService.searchHallByMovies(cinema_name);
+        }
+        return map;
+    }
+
     @RequestMapping("/findHallByCinema")
     @ResponseBody
-    public List<Hall> findHallByCinema(@RequestBody Integer cinema_id) {
-        return hallService.findHallByCinemaId(cinema_id);
+    public Map<String,Object> findHallByCinema(Integer cinema_id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<Hall> hallList = hallService.findHallByCinemaId(cinema_id);
+        map.put("hallList",hallList);
+        return map;
     }
 
     @PostMapping("/addHall")

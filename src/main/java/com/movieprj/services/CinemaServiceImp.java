@@ -81,4 +81,9 @@ public class CinemaServiceImp implements CinemaService{
         }
         return 1;
     }
+
+    @Override
+    public List<Cinema> findCinemaByName(String movie_name){
+        return cinemaMapper.findCinemaByName(movie_name);
+    }
 }

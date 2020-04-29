@@ -29,4 +29,7 @@ public interface CinemaMapper {
 
     @Select("SELECT * FROM cinema")
     public List<Cinema> findAll();
+
+    @Select("SELECT * FROM cinema c WHERE c.cinema_name like CONCAT('%',#{cinema_name},'%') ")
+    public List<Cinema> findCinemaByName(String cinema_name);
 }

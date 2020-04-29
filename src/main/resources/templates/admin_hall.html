@@ -188,7 +188,7 @@
                         '<thead>' +
                         '<tr>' +
                         '<th>影厅ID</th>' +
-                        '<th>所属影城ID</th>' +
+                        '<th>所属影院ID</th>' +
                         '<th>影厅名称</th>' +
                         '<th>影厅座位数</th>' +
                         '<th>座位图</th>' +
@@ -267,9 +267,16 @@
             getAll(page);
             delInit();
             editInit();
-            addInit();
             seatInit();
         }
+
+        function searchInitial(page){
+            search(page);
+            delInit();
+            editInit();
+            seatInit();
+        }
+
         function seats(hall) {
             var i = 0;
             var seats_id = new Array();
@@ -340,6 +347,7 @@
 
         $(function () {
             Initial(1);
+            addInit();
         });
     </script>
 
@@ -613,7 +621,7 @@
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
                                 <div class="am-form-group">
                                     <div class="am-btn-toolbar">
-                                        <div class="am-btn-group am-btn-group-xs" id="setlist">
+                                        <div class="am-btn-group am-btn-group-xs"  style="font-size:1.0rem" id="setlist">
                                             <button type="button" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增</button>
                                             <button type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span> 保存</button>
                                             <button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 审核</button>
@@ -622,7 +630,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                            <!--<div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                                 <div class="am-form-group tpl-table-list-select">
                                     <select data-am-selected="{btnSize: 'sm'}">
                                         <option value="option1">所有类别</option>
@@ -634,12 +642,12 @@
                                         <option value="option3">超极本</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field ">
+                                    <input type="text" class="am-form-field " id="search_content" name="search_content" placeholder="输入影院名称进行查询">
                                     <span class="am-input-group-btn">
-            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button" onclick="searchInitial(1)" style="font-size:1.0rem!important"></button>
           </span>
                                 </div>
                             </div>
@@ -709,8 +717,8 @@
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-2">影城id</label>
-                        <input class="am-u-md-10 form-control"  name="cinema_id" id="doc-ipt-text-2" placeholder="输入影城id">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-2">影院id</label>
+                        <input class="am-u-md-10 form-control"  name="cinema_id" id="doc-ipt-text-2" placeholder="输入影院id">
                     </div>
                 </div>
                 <div class="am-form-group">
@@ -752,8 +760,8 @@
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >影城id</label>
-                        <input class="am-u-md-10 form-control"  name="cinema_id" placeholder="输入影城id">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >影院id</label>
+                        <input class="am-u-md-10 form-control"  name="cinema_id" placeholder="输入影院id">
                     </div>
                 </div>
                 <div class="am-form-group">
@@ -813,6 +821,109 @@
         </div>
     </div>
 </div>
+<script>
+    function  search(page) {
+        var id;
+        var perpage=5;
+        var search_content = $("#search_content").val();
+        $.ajax({
+            url: "/searchHall",
+            data:JSON.stringify({search_content:search_content}),
+            type: "post",
+            async:false,
+            // 定义发送请求的数据格式为JSON字符串
+            contentType: "application/json;charset=UTF-8",
+            //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+            dataType: "json",
+            //成功响应的结果
+            success: function (data) {
+                console.log(data);
+                var hallList = new Array() ;
+                var hallsTotalNum = 0;
+                for(var key in data){  //拼接返回的多个HallList方便分页显示
+                    var List = data[key];
+                    console.log(List);
+                    for(var n=0; n<List.length; n++){
+                        hallList.push(List[n]);
+                    }
+                }
+                console.log(hallList);
+                hallsTotalNum = hallList.length;
+                var pageNum = Math.ceil(hallsTotalNum/perpage);
+                var m='<div class="am-u-sm-12">' +
+                    '<table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>影厅ID</th>' +
+                    '<th>所属影院ID</th>' +
+                    '<th>影厅名称</th>' +
+                    '<th>影厅座位数</th>' +
+                    '<th>座位图</th>' +
+                    '<th>操作</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody id="hall-list">';
+                for(var i=((page-1)*perpage);i<(page*perpage)&&i<hallsTotalNum;i++){
+                 /*   var str = hallList[i].seat_map;
+                    var seat_map = (str || "").split(",");
+                    var seat='';
+                    for(var x=0;x<seat_map.length;x++){
+                        seat+=seat_map[x]+'<br>';
+                    }*/
+                    m+=' <tr class="gradeX">' +
+                        '<td class="am-text-middle">'+hallList[i].hall_id+'</td>' +
+                        '<td class="am-text-middle">'+hallList[i].cinema_id+'</td>' +
+                        '<td class="am-text-middle">'+hallList[i].hall_name+'</td>' +
+                        '<td class="am-text-middle">'+hallList[i].number_of_seats+'</td>' +
+                        '<td class="am-text-middle"><button class="am-btn am-btn-sm">查看</button></td>' +
+                        '<td class="am-text-middle">' +
+                        '<div class="tpl-table-black-operation" data-id="'+hallList[i].hall_id+'">' +
+                        '<a href="javascript:;" class="tpl-table-black-operation">' +
+                        '<i class="am-icon-pencil"></i> 编辑' +
+                        '</a>' +
+                        '<a href="javascript:;" class="tpl-table-black-operation-del">' +
+                        '<i class="am-icon-trash"></i> 删除' +
+                        '</a>' +
+                        '</div>' +
+                        '</td>' +
+                        '</tr>';
+                }
+                m+='</tbody>' +
+                    '</table>' +
+                    '</div>' +
+                    '<div class="am-u-lg-12 am-cf">';
+                m += '<div class="am-cf">' +
+                    '共'+hallsTotalNum+'条记录 /'+pageNum+'页' +
+                    '<div class="am-fr">' +
+                    '<ul class="am-pagination" id="page">';
+                //判断前面是否还有页面
+                if(page == 1){
+                    m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >«</a></li>';
+                }else{
+                    m += '<li><a href="javascript:Initial('+(page-1)+')" rel="external nofollow" >«</a></li>';
+                }
+                for(var i=1;i<=pageNum;i++){
+                    if(i == page){
+                        m += '<li class="am-active"><a href="javascript:showPage('+i+')" rel="external nofollow" rel="external nofollow" >'+i+'</a></li>';
+                    }else{
+                        m += '<li><a href="javascript:Initial('+i+')" rel="external nofollow" rel="external nofollow" >'+i+'</a></li>';
+                    }
+                }
+                //判断后面是否还有页面
+                if(page == pageNum){
+                    m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >»</a></li>';
+                }else{
+                    m += '<li><a href="javascript:Initial('+(page+1)+')" rel="external nofollow" >»</a></li>';
+                }
+                m += '</ul>' +
+                    '</div>' +
+                    '</div><hr>'
+                ;
+                $('#AllHall').empty();
+                $('#AllHall').append(m);
+            }});
+    }
+</script>
 <script th:src="@{js/adminjs/amazeui.min.js}"></script>
 <script th:src="@{js/adminjs/amazeui.datatables.min.js}"></script>
 <script th:src="@{js/adminjs/dataTables.responsive.min.js}"></script>

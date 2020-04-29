@@ -23,4 +23,6 @@ public interface MoviesService {
 
     public int updateMovies(Map<String,Object> moviesMap);
 
+    public Map<String,Object> searchMovies(String search_content,String select_date,String select_status);
+
 }

@@ -12,4 +12,5 @@ public interface CinemaService {
     public int addCinema(Map<String,Object> cinemaMap);
     public int deleteCinema(Map<String,List> cinema_ids);
     public int updateCinema(Map<String,Object> cinemaMap);
+    public List<Cinema> findCinemaByName(String movie_name);
 }

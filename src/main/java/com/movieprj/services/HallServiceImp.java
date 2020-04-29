@@ -1,7 +1,9 @@
 package com.movieprj.services;
 
+import com.movieprj.beans.Cinema;
 import com.movieprj.beans.Hall;
 import com.movieprj.beans.Seat;
+import com.movieprj.mapper.CinemaMapper;
 import com.movieprj.mapper.HallMapper;
 import com.movieprj.mapper.SeatMapper;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ import java.util.Map;
 
 @Service
 public class HallServiceImp implements HallService{
+
+    @Resource
+    private CinemaMapper cinemaMapper;
 
     @Resource
     private HallMapper hallMapper;
@@ -111,5 +116,17 @@ public class HallServiceImp implements HallService{
             return -1;
         }
         return 1;
+    }
+
+    @Override
+    public Map<String,Object> searchHallByMovies(String search_content) {
+        Map<String,Object> map = new HashMap<String,Object>();
+        List<Cinema> cinemaList = cinemaMapper.findCinemaByName(search_content);
+        for(int i = 0;i<cinemaList.size();i++){
+            Integer cinema_id =  cinemaList.get(i).getCinema_id();
+            List<Hall> hallList = hallMapper.findHallByCinemaId(cinema_id);
+            map.put("hallList"+i,hallList);
+        }
+        return map;
     }
 }

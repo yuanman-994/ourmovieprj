@@ -82,5 +82,13 @@ public class MoviesServiceImp implements MoviesService {
         return 1;
     }
 
+    @Override
+    public Map<String, Object> searchMovies(String movie_name,String select_date,String select_status) {
+        Map<String,Object> map = new HashMap<String,Object>();
+        List<Movies> moviesList = moviesMapper.searchMovies(movie_name,select_date,select_status);
+        map.put("moviesList",moviesList);
+        return map;
+    }
+
 
 }

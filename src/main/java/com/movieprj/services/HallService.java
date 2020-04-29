@@ -18,4 +18,6 @@ public interface HallService {
     public int deleteHall(Map<String,List> hall_ids);
 
     public int updateHall(Map<String,Object> hallMap);
+
+    public Map<String,Object> searchHallByMovies(String search_content);
 }

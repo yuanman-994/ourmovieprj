@@ -35,4 +35,6 @@ public interface HallMapper {
             "hall_name = #{hall_name} " +
             "WHERE hall_id = #{hall_id} ")
     public int updateHall(Hall hall);
+
+
 }

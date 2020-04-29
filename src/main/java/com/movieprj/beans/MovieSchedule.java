@@ -9,6 +9,9 @@ public class MovieSchedule {
     private Float price;
     private String start_sell;
     private String end_sell;
+    private Movies movie;
+    private Cinema cinema;
+    private Hall hall;
 
     public Integer getMovie_schedule_id() {
         return movie_schedule_id;
@@ -86,5 +89,29 @@ public class MovieSchedule {
                 ", start_sell='" + start_sell + '\'' +
                 ", end_sell='" + end_sell + '\'' +
                 '}';
+    }
+
+    public Movies getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movies movie) {
+        this.movie = movie;
+    }
+
+    public Cinema getCinema() {
+        return cinema;
+    }
+
+    public void setCinema(Cinema cinema) {
+        this.cinema = cinema;
+    }
+
+    public Hall getHall() {
+        return hall;
+    }
+
+    public void setHall(Hall hall) {
+        this.hall = hall;
     }
 }

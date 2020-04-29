@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>影片管理</title>
+    <title>排片管理</title>
     <meta name="description" content="这是一个 index 页面">
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,7 +19,7 @@
     <script th:src="@{js/adminjs/jquery.min.js}"></script>
     <script>
         function delInit() {
-            $('#movies-list').find('.tpl-table-black-operation-del').
+            $('#schedule-list').find('.tpl-table-black-operation-del').
             on('click', function() {
                 $('#delete-confirm').modal({
                     closeViaDimmer:false,
@@ -27,12 +27,12 @@
                     onConfirm: function(options) {
                         var $link = $(this.relatedTarget).parent('div');
                         var msg = $link.length ? '你要删除的电影ID 为 ' + $link.data('id') : "删除成功!";
-                        var movies_ids = new Array();
-                        movies_ids[0] = $link.data('id');
-                        console.log(movies_ids);
+                        var schedule_ids = new Array();
+                        schedule_ids[0] = $link.data('id');
+                        console.log(schedule_ids);
                         $.ajax({
-                            url: "/deleteMovies",
-                            data: JSON.stringify({movies_ids: movies_ids}),
+                            url: "/deleteSchedules",
+                            data: JSON.stringify({schedule_ids: schedule_ids}),
                             type: "post",
                             async: false,
                             // 定义发送请求的数据格式为JSON字符串
@@ -56,20 +56,19 @@
             });
         }
         function editInit() {
-            $('#movies-list').find('a.tpl-table-black-operation').
+            $('#schedule-list').find('a.tpl-table-black-operation').
             on('click', function() {
                 var id = $(this).parent().data('id');
-                getEditTypes();
+                getEditShowTypes();
                 editBind(id);
                 $('#edit-confirm').modal({
                     closeViaDimmer:false,
                     relatedTarget: this,
                     onConfirm: function(options) {
-                        var $link = $(this.relatedTarget).parent('div');
-                        var movies_ids = new Array();
-                        movies_ids[0] = $link.data('id');
-                        console.log($link.data('id'));
-                        $("#moviesForm").submit();
+                         if(check1()){
+                             $("#scheduleForm").submit();
+                         }
+
                     },
                     // closeOnConfirm: false,
                     onCancel: function() {
@@ -78,10 +77,10 @@
                 });
             });
         }
-        function editBind(movie_id){
+        function editBind(movie_schedule_id){
             var id;
             $.ajax({
-                url: "/findMoviesWithType?movie_id="+movie_id,
+                url: "/findSchedule?movie_schedule_id="+movie_schedule_id,
                 data: {id:id},
                 type: "post",
                 async: false,
@@ -91,24 +90,18 @@
                 dataType: "json",
                 //成功响应的结果
                 success: function (data) {
-                    var movies = data.movies;
-                    var type_id0 = movies.moviesTypesList[0].movie_type_id;
-                    console.log(type_id0);
-                    document.getElementById("doc-ipt-text-1").value = movies.movie_id;
-                    document.getElementById("showcover1").src = movies.cover;
-                    document.getElementById("doc-ipt-text-2").value = movies.movie_name;
-                    document.getElementById("movies-Type0").innerHTML = movies.moviesTypesList[0].type_name;
-                    document.getElementById("type_id0").value =''+type_id0;
-                    document.getElementById("movies-Type1").innerHTML = movies.moviesTypesList[1].type_name;
-                    document.getElementById("type_id1").value = movies.moviesTypesList[1].movie_type_id;
-                    document.getElementById("movies-Type2").innerHTML = movies.moviesTypesList[2].type_name;
-                    document.getElementById("type_id2").value = movies.moviesTypesList[2].movie_type_id;
-                    document.getElementById("doc-ipt-text-4").value = movies.director;
-                    document.getElementById("doc-ipt-text-5").value = movies.main_actor;
-                    document.getElementById("doc-ipt-text-6").value = movies.rank;
-                    document.getElementById("doc-ipt-text-7").value = movies.release_date;
-                    document.getElementById("doc-ipt-text-8").value = movies.onshow;
-                    document.getElementById("doc-ta-1").value = movies.intro;
+                    var movieSchedule = data.movieSchedule;
+                    document.getElementById("doc-ipt-text-1").value = movieSchedule.movie_schedule_id;
+                    document.getElementById("doc-ipt-text-2").value = movieSchedule.cinema.cinema_name;
+                    document.getElementById("cid").value = movieSchedule.cinema_id;
+                    document.getElementById("doc-ipt-text-3").value = movieSchedule.hall.hall_name;
+                    document.getElementById("hid").value = movieSchedule.hall_id;
+                    document.getElementById("doc-ipt-text-4").value = movieSchedule.movie.movie_name;
+                    document.getElementById("mid").value = movieSchedule.movie_id;
+                    document.getElementById("doc-ipt-text-5").value = movieSchedule.price;
+                    document.getElementById("doc-ipt-text-6").value = movieSchedule.start_sell;
+                    document.getElementById("doc-ipt-text-7").value = movieSchedule.end_sell;
+                    document.getElementById("editType").value = movieSchedule.show_type;
                 }
             })
 
@@ -116,13 +109,18 @@
         function addInit() {
             $('#setlist').find('.am-btn-success').
             on('click', function() {
-                getTypes();
+                getShowTypes();
+                getCinema();
+                getOnshowMovies();
+                $('#cinemaSelect').change(function () {
+                    getHall();
+                });
                 $('#add-confirm').modal({
                     closeViaDimmer:false,
                     relatedTarget: this,
                     onConfirm: function(options) {
                         if(check()) {
-                            $("#moviesAddForm").submit();
+                            $("#scheduleAddForm").submit();
                         }
                     },
                     // closeOnConfirm: false,
@@ -132,17 +130,57 @@
                 });
             });
         }
+        /*function searchAddInit() {
+            $('#setlist').find('.am-btn-secondary').
+            on('click', function() {
+                var cinema_id = document.getElementById("select-cinema").value;
+                var cinema_name =  document.getElementById("select-cinema").innerHTML;
+                var hall_id = document.getElementById("select-hall").value;
+                var hall_name =  document.getElementById("select-hall").innerHTML;
+                if(cinema_id!="cinemanone"){
+                    var m='<label class="am-u-md-2 am-md-text-right am-padding-left-0" >影院</label>';
+                    m+=' <select data-am-selected="{btnSize: \'sm\'}" name="selectCinema" id="cinemaSelect" readonly="true">' ;
+                    m+='<option value="'+cinema_id+'">'+cinema_name+'</option>';
+                    m+='</select>';
+                    document.getElementById("selectCinema").innerHTML = "";
+                    document.getElementById("selectCinema").innerHTML = m;
+                }else {
+                    return false;
+                }
+                if(hall_id!="hallnone"){
+                    var html='<option value="'+hall_id+'">'+hall_name+'</option>' ;
+                    document.getElementById("hallSelect").innerHTML = "";
+                    document.getElementById("hallSelect").innerHTML = html;
+                }else{
+                    getHall();
+                }
+                getShowTypes();
+                getOnshowMovies();
+
+                $('#add-confirm').modal({
+                    closeViaDimmer:false,
+                    relatedTarget: this,
+                    onConfirm: function(options) {
+                        if(check()) {
+                            $("#scheduleAddForm").submit();
+                        }
+                    },
+                    // closeOnConfirm: false,
+                    onCancel: function() {
+
+                    }
+                });
+            });
+        }*/
 
     </script>
     <script>
 
-        function getAll(page) { //day表示选择的日期：0：今天，1：明天，2：后天
-            //url:表示后台的url，就是 RequestMapping配置的内容
-            // type：http请求的类型
+        function getAll(page) {
             var id;
             var perpage=5; //一页显示多少条记录
             $.ajax({
-                url: "/getAllWithTypes",
+                url: "/getAllSchedules",
                 data:{id:id},
                 type: "post",
                 async:false,
@@ -152,61 +190,39 @@
                 dataType: "json",
                 //成功响应的结果
                 success: function (data) {
-                    var moviesTotalNum = data.moviesList.length; //评论记录的总条数
-                    var pageNum = Math.ceil(moviesTotalNum/perpage); //分页的总页数
-                    var moviesList = data.moviesList;
-                    console.log(moviesList);
+                    var schedulesTotalNum = data.schedulesList.length; //评论记录的总条数
+                    var pageNum = Math.ceil(schedulesTotalNum/perpage); //分页的总页数
+                    var schedulesList = data.schedulesList;
+                    console.log(schedulesList);
                     var m='<div class="am-u-sm-12" >' +
                         '<table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">' +
                         '<thead>' +
                         '<tr>' +
-                        '<th>影片ID</th>' +
-                        '<th>影片封面</th>' +
-                        '<th>影片名称</th>' +
-                        '<th>类型</th>' +
-                        '<th>导演</th>' +
-                        '<th>主演</th>' +
-                        '<th>评分</th>' +
-                        '<th>上映日期</th>' +
-                        '<th>正在热映/即将上映</th>' +
-                        '<th>简介</th>' +
+                        '<th>排期ID</th>' +
+                        '<th>影院名称</th>' +
+                        '<th>影厅名称</th>' +
+                        '<th>电影封面</th>' +
+                        '<th>电影名称</th>' +
+                        '<th>版本</th>' +
+                        '<th>参考价</th>' +
+                        '<th>开始时间</th>' +
+                        '<th>结束时间</th>' +
                         '</tr>' +
                         '</thead>' +
-                        '<tbody id="movies-list">';
-                    for(var i=((page-1)*perpage);i<(page*perpage)&&i<moviesTotalNum;i++){
-                        var moviesTypesList = moviesList[i].moviesTypesList;
-                        console.log(moviesTypesList);
+                        '<tbody id="schedule-list">';
+                    for(var i=((page-1)*perpage);i<(page*perpage)&&i<schedulesTotalNum;i++){
                         m+=' <tr class="gradeX">' +
-                            '<td class="am-text-middle">'+moviesList[i].movie_id+'</td>' +
-                                '<td>' +'<img src="'+moviesList[i].cover+'" class="tpl-table-line-img" >' +  '</td>'+
-                            '<td class="am-text-middle">'+moviesList[i].movie_name+'</td>' ;
-                        m+='<td class="am-text-middle">';
-                            if(moviesTypesList[0]!=null){
-                                m+=''+moviesTypesList[0].type_name+'/';
-                            }
-                        if(moviesTypesList[1]!=null){
-                            m+=''+moviesTypesList[1].type_name+'/';
-                        }
-                        if(moviesTypesList[2]!=null){
-                            m+=''+moviesTypesList[2].type_name;
-                        }
-                            m+='';
-                            m+='</td>';
-                           m+= '<td class="am-text-middle">'+moviesList[i].director+'</td>' +
-                            '<td class="am-text-middle">'+moviesList[i].main_actor+'</td>' +
-                            '<td class="am-text-middle">'+moviesList[i].rank+'</td>' +
-                            '<td class="am-text-middle">'+moviesList[i].release_date+'</td>' ;
-                            m+='<td class="am-text-middle">';
-                            if(moviesList[i].onshow = 1){
-                                m+='正在热映';
-                            }
-                            else{
-                                m+='即将上映';
-                            }
-                            m+='</td>' ;
-                            m+='<td class="am-text-middle">'+moviesList[i].intro+'</td>' +
+                            '<td class="am-text-middle">'+schedulesList[i].movie_schedule_id+'</td>' +
+                            '<td class="am-text-middle">'+schedulesList[i].cinema.cinema_name+'</td>' +
+                            '<td class="am-text-middle">'+schedulesList[i].hall.hall_name+'</td>'+
+                        '<td>' +'<img src="'+schedulesList[i].movie.cover+'" class="tpl-table-line-img" >' +  '</td>';
+                        m+= '<td class="am-text-middle">'+schedulesList[i].movie.movie_name+'</td>' +
+                            '<td class="am-text-middle">'+schedulesList[i].show_type+'</td>' +
+                            '<td class="am-text-middle">'+schedulesList[i].price+'</td>' +
+                            '<td class="am-text-middle">'+schedulesList[i].start_sell+'</td>' ;
+                        m+='<td class="am-text-middle">'+schedulesList[i].end_sell+'</td>' +
                             '<td class="am-text-middle">' +
-                            '<div class="tpl-table-black-operation" data-id="'+moviesList[i].movie_id+'">' +
+                            '<div class="tpl-table-black-operation" data-id="'+schedulesList[i].movie_schedule_id+'">' +
                             '<a href="javascript:;" class="tpl-table-black-operation">' +
                             '<i class="am-icon-pencil"></i> 编辑' +
                             '</a>' +
@@ -222,7 +238,7 @@
                         '</div>' +
                         '<div class="am-u-lg-12 am-cf">';
                     m += '<div class="am-cf">' +
-                        '共'+moviesTotalNum+'条记录 /'+pageNum+'页' +
+                        '共'+schedulesTotalNum+'条记录 /'+pageNum+'页' +
                         '<div class="am-fr">' +
                         '<ul class="am-pagination" id="page">';
                     //判断前面是否还有页面
@@ -248,8 +264,8 @@
                         '</div>' +
                         '</div><hr>'
                     ;
-                    $('#AllMovies').empty();
-                    $('#AllMovies').append(m);
+                    $('#AllSchedules').empty();
+                    $('#AllSchedules').append(m);
 
 
 
@@ -258,10 +274,10 @@
         }
     </script>
     <script>
-        function getTypes() {
+        function getShowTypes() { //add时用
             var id;
             $.ajax({
-                url: "/getTypes",
+                url: "/getShowType",
                 data: {id: id},
                 type: "post",
                 async: false,
@@ -271,26 +287,24 @@
                 dataType: "json",
                 //成功响应的结果
                 success: function (data) {
-                    var moviesTypesList = data.moviesTypesList;
-                    var m='<label class="am-u-md-2 am-md-text-right am-padding-left-0" >影片类型</label>';
-                    for(var n=0 ; n<3;n++){
-                        m+=' <select data-am-selected="{btnSize: \'sm\'}" name="selectType'+n+'">' ;
-                        m+='<option value="none">--请选择--'+'</option>';
-                        for(var i=0;i<moviesTypesList.length;i++){
-                            m+='<option value="'+moviesTypesList[i]+'">'+moviesTypesList[i]+'</option>' ;
-                        }
-                            m+='</select>';
+                    var showTypesList = data.showTypesList;
+                    var m='<label class="am-u-md-2 am-md-text-right am-padding-left-0" >影片版本</label>';
+                    m+=' <select data-am-selected="{btnSize: \'sm\'}" name="selectType" id="typeSelect">' ;
+                    m+='<option value="none">--请选择--'+'</option>';
+                    for(var i=0;i<showTypesList.length;i++){
+                        m+='<option value="'+showTypesList[i].show_type+'">'+showTypesList[i].show_type+'</option>' ;
                     }
+                    m+='</select>';
                     document.getElementById("selectTypes").innerHTML = m;
 
 
                 }
             })
         }
-        function getEditTypes() {
+        function getOnshowMovies() { //add时用
             var id;
             $.ajax({
-                url: "/getTypes",
+                url: "/onshowMovies",
                 data: {id: id},
                 type: "post",
                 async: false,
@@ -300,20 +314,154 @@
                 dataType: "json",
                 //成功响应的结果
                 success: function (data) {
-                    var moviesTypesList = data.moviesTypesList;
-                    var m='<label class="am-u-md-2 am-md-text-right am-padding-left-0" >影片类型</label>';
-                    for(var n=0 ; n<3;n++){
-                        m+=' <select data-am-selected="{btnSize: \'sm\'}" name="selectType'+n+'">' ;
-                        m+='<option value="none" id="movies-Type'+n+'">'+''+'</option>';
-                        for(var i=0;i<moviesTypesList.length;i++){
-                            m+='<option value="'+moviesTypesList[i]+'">'+moviesTypesList[i]+'</option>' ;
+                    var moviesList = data.moviesList;
+                    var m='<label class="am-u-md-2 am-md-text-right am-padding-left-0" >影片</label>';
+                    m+=' <select data-am-selected="{btnSize: \'sm\'}" name="selectMovie" id="movieSelect">' ;
+                    m+='<option value="none">--请选择--'+'</option>';
+                    for(var i=0;i<moviesList.length;i++){
+                        m+='<option value="'+moviesList[i].movie_id+'">'+moviesList[i].movie_name+'</option>' ;
+                    }
+                    m+='</select>';
+                    document.getElementById("selectMovie").innerHTML = m;
+
+
+                }
+            })
+        }
+        function getCinema() { //add时用
+            var id;
+            $.ajax({
+                url: "/getCinema",
+                data: {id: id},
+                type: "post",
+                async: false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var cinemaList = data.cinemaList;
+                    var m='<label class="am-u-md-2 am-md-text-right am-padding-left-0" >影院</label>';
+                    m+=' <select data-am-selected="{btnSize: \'sm\'}" name="selectCinema" id="cinemaSelect" >' ;
+                    m+='<option value="none">--请选择--'+'</option>';
+                    for(var i=0;i<cinemaList.length;i++){
+                        m+='<option value="'+cinemaList[i].cinema_id+'">'+cinemaList[i].cinema_name+'</option>' ;
+                    }
+                    m+='</select>';
+                    document.getElementById("selectCinema").innerHTML = m;
+
+
+                }
+            })
+        }
+        function getHall() { //add时用
+            var cinema_id = document.getElementById("cinemaSelect").value;
+            console.log(cinema_id);
+            var id;
+            $.ajax({
+                url: "/findHallByCinema?cinema_id="+cinema_id,
+                data: {id: id},
+                type: "post",
+                async: false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var hallList = data.hallList;
+                    console.log(hallList);
+                    var m='';
+                   /* var m='<label class="am-u-md-2 am-md-text-right am-padding-left-0" >影厅</label>';
+                    m+=' <select data-am-selected="{btnSize: \'sm\'}" name="selectHall" id="hallSelect">' ;
+                    m+='<option value="none">--请选择--'+'</option>';*/
+                    for(var i=0;i<hallList.length;i++){
+                        m+='<option value="'+hallList[i].hall_id+'">'+hallList[i].hall_name+'</option>' ;
+                    }
+                    /*m+='</select>';*/
+                    document.getElementById("hallSelect").innerHTML = m;
+
+
+                }
+            })
+        }
+        function getEditShowTypes() {
+            var id;
+            $.ajax({
+                url: "/getShowType",
+                data: {id: id},
+                type: "post",
+                async: false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var showTypesList = data.showTypesList;
+                    var m='<label class="am-u-md-2 am-md-text-right am-padding-left-0" >影片版本</label>';
+                        m+=' <select data-am-selected="{btnSize: \'sm\'}" name="selectType" id="editType">' ;
+                        m+='<option value="none" id="show-Type">'+''+'</option>';
+                        for(var i=0;i<showTypesList.length;i++) {
+                            m += '<option value="' + showTypesList[i].show_type + '">' + showTypesList[i].show_type + '</option>';
                         }
                         m+='</select>';
-                    }
-                    m+='<input type="hidden" id="type_id0" name="type_id0" value="">' +
-                        '<input type="hidden" id="type_id1" name="type_id1" value="">' +
-                        '<input type="hidden" id="type_id2" name="type_id2" value="">';
                     document.getElementById("selectTypesEdit").innerHTML = m;
+
+
+                }
+            })
+        }
+        function selectCinema() { //add时用
+            var id;
+            $.ajax({
+                url: "/getCinema",
+                data: {id: id},
+                type: "post",
+                async: false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var cinemaList = data.cinemaList;
+                    var m='<option value="cinemanone">选择电影院</option>';
+                      for(var i=0;i<cinemaList.length;i++){
+                          m+='<option id="cinema_'+cinemaList[i].cinema_id+'" value="'+cinemaList[i].cinema_id+'">'+cinemaList[i].cinema_name+'</option>'
+                      }
+                    document.getElementById("select-cinema").innerHTML = m;
+                    $('#select-cinema').change(function () {
+                        selectHall();
+                    });
+
+                }
+            })
+        }
+        function selectHall() { //add时用
+            var cinema_id = document.getElementById("select-cinema").value;
+            if(cinema_id=="cinemanone"){document.getElementById("select-hall").innerHTML = "";return false;}
+            console.log(cinema_id);
+            var id;
+            $.ajax({
+                url: "/findHallByCinema?cinema_id="+cinema_id,
+                data: {id: id},
+                type: "post",
+                async: false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var hallList = data.hallList;
+                    console.log(hallList);
+                    var m='<option value="hallnone">选择影厅</option>';
+                    for(var i=0;i<hallList.length;i++){
+                        m+='<option value="'+hallList[i].hall_id+'">'+hallList[i].hall_name+'</option>' ;
+                    }
+                    document.getElementById("select-hall").innerHTML = m;
 
 
                 }
@@ -325,7 +473,7 @@
             getAll(page);
             delInit();
             editInit();
-
+            selectCinema();
         }
         function searchInitial(page){
             search(page);
@@ -599,7 +747,7 @@
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
                         <div class="widget-head am-cf">
-                            <div class="widget-title  am-cf">影片列表</div>
+                            <div class="widget-title  am-cf">排片列表</div>
 
 
                         </div>
@@ -624,10 +772,11 @@
                                         <option value="week">近七天</option>
                                         <option value="month">近一个月</option>
                                     </select>
-                                    <select id="select-status" data-am-selected="{btnSize: 'sm'}">
-                                        <option value="statusnone">正在上映/即将上映</option>
-                                        <option value="onshow">正在上映</option>
-                                        <option value="upcoming">即将上映</option>
+                                    <select id="select-cinema" data-am-selected="{btnSize: 'sm'}">
+
+                                    </select>
+                                    <select id="select-hall" data-am-selected="{btnSize: 'sm'}">
+
                                     </select>
                                 </div>
                             </div>
@@ -639,7 +788,7 @@
           </span>
                                 </div>
                             </div>
-                            <div id="AllMovies">
+                            <div id="AllSchedules">
 
                             </div>
 
@@ -668,31 +817,32 @@
     <div class="am-modal-dialog">
         <div class="am-modal-hd">编辑</div>
         <div class="am-modal-bd" id="form-init">
-            <form id="moviesForm" class="am-form am-text-sm" action="/updateMovies" method="post" enctype="multipart/form-data">
+            <form id="scheduleForm" class="am-form am-text-sm" action="/updateSchedule" method="post" >
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-1">影片id</label>
-                        <input class="am-u-md-10 form-control" id="doc-ipt-text-1" name="movie_id" placeholder="输入影片id">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-1">排片id</label>
+                        <input class="am-u-md-10 form-control" id="doc-ipt-text-1" name="movie_schedule_id"  readonly="true">
                     </div>
                 </div>
                 <div class="am-form-group">
-                    <label  class="am-u-md-2 am-md-text-right am-padding-left-0">封面图</label>
                     <div class="am-g">
-                        <div class="am-form-group am-form-file">
-                            <div class="tpl-form-file-img">
-                                <img id="showcover1" src="" alt="">
-                            </div>
-                            <button type="button" class="am-btn am-btn-danger am-btn-sm">
-                                <i class="am-icon-cloud-upload"></i> 添加封面图片</button>
-                            <input id="cover1" type="file" accept="image/*" name="cover1" multiple="multiple">
-                        </div>
-
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-1">影院id</label>
+                        <input class="am-u-md-10 form-control" id="doc-ipt-text-2"  placeholder="输入影院id" readonly="true">
+                        <input type="hidden" name="cinema_id" id="cid" value="">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <div class="am-g">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-1">影厅id</label>
+                        <input class="am-u-md-10 form-control" id="doc-ipt-text-3"  placeholder="输入影厅id" readonly="true">
+                        <input type="hidden" name="hall_id" id="hid" value="">
                     </div>
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
                         <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-2">影片名称</label>
-                        <input class="am-u-md-10 form-control" id="doc-ipt-text-2" name="movie_name" placeholder="输入影片名称">
+                        <input class="am-u-md-10 form-control" id="doc-ipt-text-4" name="movie_name"  readonly="true">
+                        <input type="hidden" name="movie_id" id="mid" value="">
                     </div>
                 </div>
                 <div class="am-form-group tpl-table-list-select">
@@ -701,38 +851,20 @@
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-4">导演</label>
-                        <input class="am-u-md-10 form-control" id="doc-ipt-text-4" name="director" placeholder="输入导演">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-4">价格</label>
+                        <input class="am-u-md-10 form-control" id="doc-ipt-text-5" name="price" placeholder="输入价格">
                     </div>
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-5">主演</label>
-                        <input class="am-u-md-10 form-control" id="doc-ipt-text-5" name="main_actor" placeholder="输入主演">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-5">开始时间</label>
+                        <input class="am-u-md-10 form-control" id="doc-ipt-text-6" name="start_sell" placeholder="输入开始时间">
                     </div>
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-6">评分</label>
-                        <input class="am-u-md-10 form-control" id="doc-ipt-text-6" name="rank" placeholder="输入评分">
-                    </div>
-                </div>
-                <div class="am-form-group">
-                    <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-7">上映日期</label>
-                        <input class="am-u-md-10 form-control" id="doc-ipt-text-7" name="release_date" placeholder="输入上映日期">
-                    </div>
-                </div>
-                <div class="am-form-group">
-                    <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-8">正在上映/即将上映</label>
-                        <input class="am-u-md-10 form-control" id="doc-ipt-text-8" name="onshow" placeholder="正在上映（1）/即将上映（0）">
-                    </div>
-                </div>
-                <div class="am-form-group">
-                    <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ta-1">简介</label>
-                        <textarea class="am-u-md-10 form-control" rows="5" id="doc-ta-1" name="intro"></textarea>
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-6">结束时间</label>
+                        <input class="am-u-md-10 form-control" id="doc-ipt-text-7" name="end_sell" placeholder="输入结束时间">
                     </div>
                 </div>
             </form>
@@ -747,77 +879,49 @@
     <div class="am-modal-dialog">
         <div class="am-modal-hd">添加</div>
         <div class="am-modal-bd">
-            <form id="moviesAddForm" class="am-form am-text-sm" action="/addMovies" method="post" enctype="multipart/form-data">
+            <form id="scheduleAddForm" class="am-form am-text-sm" action="/addSchedule" method="post" >
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >影片id</label>
-                        <input class="am-u-md-10 form-control" name="movie_id" id="mid" placeholder="输入影片id">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-1">排片id</label>
+                        <input class="am-u-md-10 form-control" id="add_schedule_id" name="movie_schedule_id" placeholder="输入排片id">
                     </div>
                 </div>
-                <div class="am-form-group">
-                    <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >影片名称</label>
-                        <input class="am-u-md-10 form-control" name="movie_name" placeholder="输入影片名称">
+                <div class="am-form-group tpl-table-list-select">
+                    <div class="am-g" id="selectCinema">
                     </div>
                 </div>
-                <div class="am-form-group">
-                    <label  class="am-u-md-2 am-md-text-right am-padding-left-0">封面图</label>
-                    <div class="am-g">
-                        <div class="am-form-group am-form-file">
-                            <div class="tpl-form-file-img">
-                                <img id="showcover" src="" alt="">
-                            </div>
-                            <button type="button" class="am-btn am-btn-danger am-btn-sm">
-                                <i class="am-icon-cloud-upload"></i> 添加封面图片</button>
-                            <input id="cover" type="file" accept="image/*" name="cover" multiple="multiple">
-                        </div>
+                <div class="am-form-group tpl-table-list-select">
+                    <div class="am-g" id="selectHall">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >影厅</label>
+                        <select data-am-selected="{btnSize: 'sm'}" name="selectHall" id="hallSelect">
 
+                        </select>
                     </div>
                 </div>
-                <!--<div class="am-form-group">
-                    <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >影片封面</label>
-                        <input class="am-u-md-10 form-control"  name="movie_type" placeholder="输入影片类型">
+                <div class="am-form-group tpl-table-list-select">
+                    <div class="am-g" id="selectMovie">
                     </div>
-                </div>-->
+                </div>
                 <div class="am-form-group tpl-table-list-select">
                     <div class="am-g" id="selectTypes">
                     </div>
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >导演</label>
-                        <input class="am-u-md-10 form-control"  name="director" placeholder="输入导演">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >价格</label>
+                        <input class="am-u-md-10 form-control" id="add_price" name="price" placeholder="输入价格">
                     </div>
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >主演</label>
-                        <input class="am-u-md-10 form-control" name="main_actor" placeholder="输入主演">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >开始时间</label>
+                        <input class="am-u-md-10 form-control" id="add_start_sell" name="start_sell" placeholder="输入开始时间">
                     </div>
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >评分</label>
-                        <input class="am-u-md-10 form-control"  name="rank" placeholder="输入评分">
-                    </div>
-                </div>
-                <div class="am-form-group">
-                    <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >上映日期</label>
-                        <input class="am-u-md-10 form-control"  name="release_date" placeholder="输入上映日期">
-                    </div>
-                </div>
-                <div class="am-form-group">
-                    <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >正在上映/即将上映</label>
-                        <input class="am-u-md-10 form-control"  name="onshow" placeholder="正在上映（1）/即将上映（0）">
-                    </div>
-                </div>
-                <div class="am-form-group">
-                    <div class="am-g">
-                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >简介</label>
-                        <textarea class="am-u-md-10 form-control" rows="5"  name="intro"></textarea>
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >结束时间</label>
+                        <input class="am-u-md-10 form-control" id="add_end_sell" name="end_sell" placeholder="输入结束时间">
                     </div>
                 </div>
             </form>
@@ -829,67 +933,88 @@
     </div>
 </div>
 <script>
-    //在input file内容改变的时候触发事件
-    $('#cover').change(function(){
-        //获取input file的files文件数组;
-        //$('#filed')获取的是jQuery对象，.get(0)转为原生对象;
-        //这边默认只能选一个，但是存放形式仍然是数组，所以取第一个元素使用[0];
-        var file = $('#cover').get(0).files[0];
-        //创建用来读取此文件的对象
-        var reader = new FileReader();
-        //使用该对象读取file文件
-        reader.readAsDataURL(file);
-        //读取文件成功后执行的方法函数
-        reader.onload=function(e){
-            //读取成功后返回的一个参数e，整个的一个进度事件
-            console.log(e);
-            //选择所要显示图片的img，要赋值给img的src就是e中target下result里面
-            //的base64编码格式的地址
-            $('#showcover').get(0).src = e.target.result;
-        }
-    })
-    $('#cover1').change(function(){
-        //获取input file的files文件数组;
-        //$('#filed')获取的是jQuery对象，.get(0)转为原生对象;
-        //这边默认只能选一个，但是存放形式仍然是数组，所以取第一个元素使用[0];
-        var file = $('#cover1').get(0).files[0];
-        //创建用来读取此文件的对象
-        var reader = new FileReader();
-        //使用该对象读取file文件
-        reader.readAsDataURL(file);
-        //读取文件成功后执行的方法函数
-        reader.onload=function(e){
-            //读取成功后返回的一个参数e，整个的一个进度事件
-            console.log(e);
-            //选择所要显示图片的img，要赋值给img的src就是e中target下result里面
-            //的base64编码格式的地址
-            $('#showcover1').get(0).src = e.target.result;
-        }
-    })
-</script>
-<script>
     function check() {
-        var movie_id = document.getElementById("mid").value
-        var file = document.getElementById("cover").value;
-        if (movie_id == "") {
-            alert("请填写影片id");
+        var schedule_id = document.getElementById("add_schedule_id").value;
+        var cinema_id = document.getElementById("cinemaSelect").value;
+        var hall_id = document.getElementById("hallSelect").value;
+        var movie = document.getElementById("movieSelect").value;
+        var show_type = document.getElementById("typeSelect").value;
+        var price = document.getElementById("add_price").value;
+        var start_sell = document.getElementById("start_price").value;
+        var end_sell = document.getElementById("end_price").value;
+        if (schedule_id == "") {
+            alert("请填写排片id");
             return false;
         }
-        if (file.length == 0 || file == "") {
-            alert("请上传封面图片");
+        if (movie == "none") {
+            alert("请选择影片");
+            return false;
+        }
+        if (cinema_id=="none") {
+            alert("请选择影院");
+            return false;
+        }
+        if (hall_id=="none") {
+            alert("请选择影厅");
+            return false;
+        }
+        if (show_type=="none") {
+            alert("请选择影片版本");
+            return false;
+        }
+        if (price == "") {
+            alert("请填写价格");
+            return false;
+        }
+        if (start_sell == "") {
+            alert("请填写开始时间");
+            return false;
+        }
+        if (end_sell == "") {
+            alert("请填写结束时间");
             return false;
         }
         return true;
     }
     function check1() {
-        var movie_id = document.getElementById("doc-ipt-text-1").value
-        var file = document.getElementById("cover").value;
-        if (movie_id == "") {
-            alert("请填写影片id");
+        var schedule_id = document.getElementById("doc-ipt-text-1").value;
+        var cinema_id = document.getElementById("doc-ipt-text-2").value;
+        var hall_id = document.getElementById("doc-ipt-text-3").value;
+        var movie = document.getElementById("doc-ipt-text-4").value;
+        var price = document.getElementById("doc-ipt-text-5").value;
+        var show_type = document.getElementById("editType").value;
+        var start_sell = document.getElementById("doc-ipt-text-6").value;
+        var end_sell = document.getElementById("doc-ipt-text-7").value;
+        if (schedule_id == "") {
+            alert("请填写排片id");
             return false;
         }
-        if (file.length == 0 || file == "") {
-            alert("请上传封面图片");
+        if (movie == "") {
+            alert("请选择影片");
+            return false;
+        }
+        if (show_type=="none") {
+            alert("请选择影片版本");
+            return false;
+        }
+        if (cinema_id=="none") {
+            alert("请选择影院");
+            return false;
+        }
+        if (hall_id=="none") {
+            alert("请选择影厅");
+            return false;
+        }
+        if (price == "") {
+            alert("请填写价格");
+            return false;
+        }
+        if (start_sell == "") {
+            alert("请填写开始时间");
+            return false;
+        }
+        if (end_sell == "") {
+            alert("请填写结束时间");
             return false;
         }
         return true;
@@ -901,10 +1026,11 @@
         var perpage=5;
         var search_content = $("#search_content").val();
         var search_date = $("#select-time").val();
-        var search_status = $("#select-status").val();
+        var search_cinema = $("#select-cinema").val();
+        var search_hall = $("#select-hall").val();
         $.ajax({
-            url: "/searchMovies",
-            data:JSON.stringify({search_content:search_content,search_date:search_date,search_status:search_status}),
+            url: "/searchSchedules",
+            data:JSON.stringify({search_content:search_content,search_date:search_date,search_cinema:search_cinema,search_hall:search_hall}),
             type: "post",
             async:false,
             // 定义发送请求的数据格式为JSON字符串
@@ -914,68 +1040,46 @@
             //成功响应的结果
             success: function (data) {
                 console.log(data);
-                var moviesList = new Array() ;
-                var moviesTotalNum = 0;
-                for(var key in data){  //拼接返回的多个HallList方便分页显示
+                var schedulesList = new Array() ;
+                var schedulesTotalNum = 0;
+                for(var key in data){  //拼接返回的多个List方便分页显示
                     var List = data[key];
                     console.log(List);
                     for(var n=0; n<List.length; n++){
-                        moviesList.push(List[n]);
+                        schedulesList.push(List[n]);
                     }
                 }
-                moviesTotalNum = moviesList.length;
-                var pageNum = Math.ceil(moviesTotalNum/perpage);
+                schedulesTotalNum = schedulesList.length;
+                var pageNum = Math.ceil(schedulesTotalNum/perpage);
                 var m='<div class="am-u-sm-12" >' +
                     '<table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">' +
                     '<thead>' +
                     '<tr>' +
-                    '<th>影片ID</th>' +
-                    '<th>影片封面</th>' +
-                    '<th>影片名称</th>' +
-                    '<th>类型</th>' +
-                    '<th>导演</th>' +
-                    '<th>主演</th>' +
-                    '<th>评分</th>' +
-                    '<th>上映日期</th>' +
-                    '<th>正在热映/即将上映</th>' +
-                    '<th>简介</th>' +
+                    '<th>排期ID</th>' +
+                    '<th>影院名称</th>' +
+                    '<th>影厅名称</th>' +
+                    '<th>电影封面</th>' +
+                    '<th>电影名称</th>' +
+                    '<th>版本</th>' +
+                    '<th>参考价</th>' +
+                    '<th>开始时间</th>' +
+                    '<th>结束时间</th>' +
                     '</tr>' +
                     '</thead>' +
-                    '<tbody id="movies-list">';
-                for(var i=((page-1)*perpage);i<(page*perpage)&&i<moviesTotalNum;i++){
-                    var moviesTypesList = moviesList[i].moviesTypesList;
-                    console.log(moviesTypesList);
+                    '<tbody id="schedule-list">';
+                for(var i=((page-1)*perpage);i<(page*perpage)&&i<schedulesTotalNum;i++){
                     m+=' <tr class="gradeX">' +
-                        '<td class="am-text-middle">'+moviesList[i].movie_id+'</td>' +
-                        '<td>' +'<img src="'+moviesList[i].cover+'" class="tpl-table-line-img" >' +  '</td>'+
-                        '<td class="am-text-middle">'+moviesList[i].movie_name+'</td>' ;
-                    m+='<td class="am-text-middle">';
-                    if(moviesTypesList[0]!=null){
-                        m+=''+moviesTypesList[0].type_name+'/';
-                    }
-                    if(moviesTypesList[1]!=null){
-                        m+=''+moviesTypesList[1].type_name+'/';
-                    }
-                    if(moviesTypesList[2]!=null){
-                        m+=''+moviesTypesList[2].type_name;
-                    }
-                    m+='';
-                    m+='</td>';
-                    m+= '<td class="am-text-middle">'+moviesList[i].director+'</td>' +
-                        '<td class="am-text-middle">'+moviesList[i].main_actor+'</td>' +
-                        '<td class="am-text-middle">'+moviesList[i].rank+'</td>' +
-                        '<td class="am-text-middle">'+moviesList[i].release_date+'</td>' ;
-                    m+='<td class="am-text-middle">';
-                    if(moviesList[i].onshow = 1){
-                        m+='正在热映';
-                    }
-                    else{
-                        m+='即将上映';
-                    }
-                    m+='</td>' ;
-                    m+='<td class="am-text-middle">'+moviesList[i].intro+'</td>' +
+                        '<td class="am-text-middle">'+schedulesList[i].movie_schedule_id+'</td>' +
+                        '<td class="am-text-middle">'+schedulesList[i].cinema.cinema_name+'</td>' +
+                        '<td class="am-text-middle">'+schedulesList[i].hall.hall_name+'</td>'+
+                        '<td>' +'<img src="'+schedulesList[i].movie.cover+'" class="tpl-table-line-img" >' +  '</td>';
+                    m+= '<td class="am-text-middle">'+schedulesList[i].movie.movie_name+'</td>' +
+                        '<td class="am-text-middle">'+schedulesList[i].show_type+'</td>' +
+                        '<td class="am-text-middle">'+schedulesList[i].price+'</td>' +
+                        '<td class="am-text-middle">'+schedulesList[i].start_sell+'</td>' ;
+                    m+='<td class="am-text-middle">'+schedulesList[i].end_sell+'</td>' +
                         '<td class="am-text-middle">' +
-                        '<div class="tpl-table-black-operation" data-id="'+moviesList[i].movie_id+'">' +
+                        '<div class="tpl-table-black-operation" data-id="'+schedulesList[i].movie_schedule_id+'">' +
                         '<a href="javascript:;" class="tpl-table-black-operation">' +
                         '<i class="am-icon-pencil"></i> 编辑' +
                         '</a>' +
@@ -991,7 +1095,7 @@
                     '</div>' +
                     '<div class="am-u-lg-12 am-cf">';
                 m += '<div class="am-cf">' +
-                    '共'+moviesTotalNum+'条记录 /'+pageNum+'页' +
+                    '共'+schedulesTotalNum+'条记录 /'+pageNum+'页' +
                     '<div class="am-fr">' +
                     '<ul class="am-pagination" id="page">';
                 //判断前面是否还有页面
@@ -1017,8 +1121,8 @@
                     '</div>' +
                     '</div><hr>'
                 ;
-                $('#AllMovies').empty();
-                $('#AllMovies').append(m);
+                $('#AllSchedules').empty();
+                $('#AllSchedules').append(m);
             }});
     }
 </script>

@@ -297,6 +297,17 @@ public class MoviesController {
         return map;
     }
 
+    @RequestMapping("/searchMovies")
+    @ResponseBody
+    public Map<String,Object> searchMovies(@RequestBody Map<String,Object> params) {
+        String movie_name = params.get("search_content").toString();
+        String select_date = params.get("search_date").toString();
+        String select_status = params.get("search_status").toString();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map = moviesService.searchMovies(movie_name,select_date,select_status);
+        return map;
+    }
+
     @RequestMapping("/findMoviesWithType")
     @ResponseBody
     public Map<String,Object> findMovies(Integer movie_id) {
@@ -627,6 +638,134 @@ public class MoviesController {
         return "redirect:/admin_moviecomment";
     }
 
+    @RequestMapping("/admin_movieschedule")
+    public  String admin_schedule(){
+        return "admin_movieschedule";
+    }
 
+    @RequestMapping("/getAllSchedules")
+    @ResponseBody
+    public  Map<String,Object> getAllSchedules(){
+        List<MovieSchedule> schedulesList = scheduleService.findAllSchedule();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("schedulesList",schedulesList);
+        return map;
+    }
+
+    @PostMapping("/addSchedule")
+    public String addSchedule(HttpServletRequest request){
+        MovieSchedule schedule = new MovieSchedule();
+        Integer schedule_id,cinema_id,hall_id,movie_id;
+        String show_type,start_sell,end_sell;
+        Float price;
+        if(request.getParameter("movie_schedule_id")!=null){
+            schedule_id = Integer.valueOf(request.getParameter("movie_schedule_id").toString());
+            schedule.setCinema_id(schedule_id);
+        }
+        if(request.getParameter("selectCinema")!=null){
+            cinema_id = Integer.valueOf(request.getParameter("selectCinema").toString());
+            schedule.setCinema_id(cinema_id);
+        }
+        if(request.getParameter("selectHall")!=null){
+            hall_id = Integer.valueOf(request.getParameter("selectHall").toString());
+            schedule.setHall_id(hall_id);
+        }
+        if(request.getParameter("selectMovie")!=null){
+            movie_id = Integer.valueOf(request.getParameter("selectMovie").toString());
+            schedule.setMovie_id(movie_id);
+        }
+        if(request.getParameter("price")!=null){
+            price = Float.valueOf(request.getParameter("price").toString());
+            schedule.setPrice(price);
+        }
+        if(request.getParameter("selectType")!=null){
+            show_type = request.getParameter("selectType").toString();
+            schedule.setShow_type(show_type);
+        }
+        if(request.getParameter("start_sell")!=null){
+            start_sell = request.getParameter("start_sell").toString();
+            schedule.setStart_sell(start_sell);
+        }
+        if(request.getParameter("end_sell")!=null){
+            end_sell = request.getParameter("end_sell").toString();
+            schedule.setEnd_sell(end_sell);
+        }
+        scheduleService.addSchedule(schedule);
+        return "redirect:/admin_movieschedule";
+    }
+
+    @RequestMapping("/findSchedule")
+    @ResponseBody
+    public  Map<String,Object> findSchedule(Integer movie_schedule_id){
+        MovieSchedule movieSchedule = scheduleService.findScheduleById1(movie_schedule_id);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("movieSchedule",movieSchedule);
+        return map;
+    }
+
+    @PostMapping("/deleteSchedules")
+    @ResponseBody
+    public Map<String,Integer> deleteSchedules(@RequestBody Map<String,List> schedule_ids) {
+        int check;
+        check = scheduleService.deleteSchedules(schedule_ids);
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put("check",check);
+        return map;
+    }
+
+    @PostMapping("/updateSchedule")
+    public String updateSchedule(HttpServletRequest request){
+        MovieSchedule schedule = new MovieSchedule();
+        Integer schedule_id,cinema_id,hall_id,movie_id;
+        String show_type,start_sell,end_sell;
+        Float price;
+        if(request.getParameter("movie_schedule_id")!=null){
+            schedule_id = Integer.valueOf(request.getParameter("movie_schedule_id").toString());
+            schedule.setMovie_schedule_id(schedule_id);
+        }
+        if(request.getParameter("cinema_id")!=null){
+            cinema_id = Integer.valueOf(request.getParameter("cinema_id").toString());
+            schedule.setCinema_id(cinema_id);
+        }
+        if(request.getParameter("hall_id")!=null){
+            hall_id = Integer.valueOf(request.getParameter("hall_id").toString());
+            schedule.setHall_id(hall_id);
+        }
+        if(request.getParameter("movie_id")!=null){
+            movie_id = Integer.valueOf(request.getParameter("movie_id").toString());
+            schedule.setMovie_id(movie_id);
+        }
+        if(request.getParameter("price")!=null){
+            price = Float.valueOf(request.getParameter("price").toString());
+            schedule.setPrice(price);
+        }
+        if(request.getParameter("selectType")!=null){
+            show_type = request.getParameter("selectType").toString();
+            schedule.setShow_type(show_type);
+        }
+        if(request.getParameter("start_sell")!=null){
+            start_sell = request.getParameter("start_sell").toString();
+            schedule.setStart_sell(start_sell);
+        }
+        if(request.getParameter("end_sell")!=null){
+            end_sell = request.getParameter("end_sell").toString();
+            schedule.setEnd_sell(end_sell);
+        }
+        scheduleService.updateSchedule(schedule);
+        return "redirect:/admin_movieschedule";
+    }
+
+
+    @RequestMapping("/searchSchedules")
+    @ResponseBody
+    public Map<String,Object> searchSchedules(@RequestBody Map<String,Object> params) {
+        String movie_name = params.get("search_content").toString();
+        String select_date = params.get("search_date").toString();
+        String select_hall = params.get("search_hall").toString();
+        String select_cinema = params.get("search_cinema").toString();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map = scheduleService.searchSchedule(movie_name,select_date,select_cinema,select_hall);
+        return map;
+    }
 }
 

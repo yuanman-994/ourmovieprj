@@ -16,6 +16,9 @@ public interface ArticleMapper {
     @Select("SELECT * FROM article")
     public List<Article> getArticle();//查询所有文章
 
+    @Select("SELECT headline FROM article WHERE article_id = #{id}")
+    public String getHeadlineById(int id);//查询所有文章
+
     @Update("UPDATE article SET article_url=#{url} WHERE article_id=#{id}")
     public void saveArticleUrlById(int id, String url);//保存article_url
 

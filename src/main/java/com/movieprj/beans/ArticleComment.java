@@ -6,6 +6,8 @@ public class ArticleComment {//文章评论
     private String content;
     private String time;
     private int comment_id;
+    private String user_name;
+    private String headline;
 
     @Override
     public String toString() {
@@ -15,7 +17,25 @@ public class ArticleComment {//文章评论
                 ", content='" + content + '\'' +
                 ", time='" + time + '\'' +
                 ", comment_id=" + comment_id +
+                ", user_name='" + user_name + '\'' +
+                ", headline='" + headline + '\'' +
                 '}';
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getHeadline() {
+        return headline;
+    }
+
+    public void setHeadline(String headline) {
+        this.headline = headline;
     }
 
     public int getComment_id() {

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.movieprj.beans.Article;
 import com.movieprj.beans.ArticleComment;
 import com.movieprj.mapper.ArticleCommentMapper;
+import com.movieprj.mapper.ArticleMapper;
 import com.movieprj.mapper.UserPasswordMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ import java.util.List;
 public class ArticleCommentServiceImp implements ArticleCommentService {
     @Resource
     private ArticleCommentMapper articleCommentMapper;
+
+    @Resource
+    private ArticleMapper articleMapper;
 
     @Resource
     private UserPasswordMapper userPasswordMapper;
@@ -44,5 +48,33 @@ public class ArticleCommentServiceImp implements ArticleCommentService {
             jsonArray.add(jsonObject);
         }
         return jsonArray.toString();
+    }
+
+    @Override
+    public String getCommentsByPageAll(int limit,int offset,String searchArticle,String searchUser) {
+        List<ArticleComment> articleComments;
+        int total;
+        if (searchArticle == "" && searchUser == ""){
+            articleComments = articleCommentMapper.getComments(limit,offset);
+            total = articleCommentMapper.getCommentsCount();
+        } else if (searchArticle != "" && searchUser =="") {
+            articleComments=articleCommentMapper.getCommentsSearchArticle(limit,offset,searchArticle);
+            total = articleCommentMapper.getCommentsSearchArticleCount(searchArticle);
+        } else if (searchArticle == "" && searchUser !=""){
+            articleComments=articleCommentMapper.getCommentsSearchUser(limit,offset,searchUser);
+            total = articleCommentMapper.getCommentsSearchUserCount(searchUser);
+        } else {
+            articleComments=articleCommentMapper.getCommentsSearchBothArticleAndUser(limit, offset, searchArticle, searchUser);
+            total = articleCommentMapper.getCommentsSearchBothArticleAndUserCount(searchArticle,searchUser);
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("rows",articleComments);
+        jsonObject.put("total",total);
+        return jsonObject.toString();
+    }
+
+    @Override
+    public void deleteComment(int comment_id) {
+        articleCommentMapper.deleteCommentById(comment_id);
     }
 }

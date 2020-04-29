@@ -302,7 +302,7 @@ public class ArticleServiceImp implements ArticleService {
             if (article_cover.exists())
                 if (article_cover.isFile())
                     article_cover.delete();
-
+            articleCommentMapper.deleteCommentByArticle(article_id);
             articleMapper.deleteById(article_id);
         } catch (Exception e) {
             e.printStackTrace();

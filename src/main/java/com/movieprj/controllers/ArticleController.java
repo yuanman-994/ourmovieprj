@@ -216,4 +216,17 @@ public class ArticleController {
     public String getArticleDataByPage(@RequestParam("limit") int limit,@RequestParam("offset") int offset,@RequestParam("search") String search) {//
         return articleServiceImp.getArticleWithLimit(limit, offset, search);
     }
+
+    @GetMapping("/article/get_comment")
+    @ResponseBody
+    public String getComment(@RequestParam("limit") int limit,@RequestParam("offset") int offset,@RequestParam("searchArticle") String searchArticle,@RequestParam("searchUser") String searchUser) {//
+        return articleCommentServiceImp.getCommentsByPageAll(limit,offset,searchArticle,searchUser);
+    }
+
+    @PostMapping("/article/delete_article_comment")
+    @ResponseBody
+    public String deleteComment(@RequestParam("comment_id") int comment_id) {//上传评论
+        articleCommentServiceImp.deleteComment(comment_id);
+        return "删除成功";
+    }
 }

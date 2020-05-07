@@ -26,5 +26,7 @@ public interface ArticleService {
 
     public String getArticleWithLimit(int limit,int offset,String search);
 //    public String getArticleWithLimitAndSearch();
+    public String getHotArticle();
+    public int setHot(int id,int article_id);
 
 }

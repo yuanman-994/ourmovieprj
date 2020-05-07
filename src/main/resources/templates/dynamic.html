@@ -104,6 +104,7 @@
             get_total(1,page_size,load1);//得到影片看点总页数,
             get_total(2,page_size,load2);
             load_updated_news();
+            loadHotArticle("hotArticles");
         }
     </script>
     <!-- start-smoth-scrolling -->
@@ -306,7 +307,7 @@
                         <h3>近期热点</h3>
                     </div>
                     <div class="news-right-bottom-bg">
-                        <div class="news-grids-bottom">
+                        <div class="news-grids-bottom" id = "hotArticles">
                             <div class="top-news-grid">
                                 <div class="top-news-grid-heading">
                                     <a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean rutrum ac nulla</a>
@@ -315,61 +316,6 @@
                                     <ul>
                                         <li><a href="#"><i class="fa fa-clock-o"></i> 1h</a></li>
                                         <li><a href="#"><i class="fa fa-user"></i> Vivamus nibh</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="top-news-grid">
-                                <div class="top-news-grid-heading">
-                                    <a th:href="@{/news_single}">Duis orci enim, rutrum vel sodales ut, tincidunt nec turpis.</a>
-                                </div>
-                                <div class="w3ls-news-t-grid top-t-grid">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-clock-o"></i> 3h</a></li>
-                                        <li><a href="#"><i class="fa fa-user"></i> Cras pretium</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="top-news-grid">
-                                <div class="top-news-grid-heading">
-                                    <a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean rutrum ac nulla</a>
-                                </div>
-                                <div class="w3ls-news-t-grid top-t-grid">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-clock-o"></i> 1h</a></li>
-                                        <li><a href="#"><i class="fa fa-user"></i> Vivamus nibh</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="top-news-grid">
-                                <div class="top-news-grid-heading">
-                                    <a th:href="@{/news_single}">Duis orci enim, rutrum vel sodales ut, tincidunt nec turpis.</a>
-                                </div>
-                                <div class="w3ls-news-t-grid top-t-grid">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-clock-o"></i> 3h</a></li>
-                                        <li><a href="#"><i class="fa fa-user"></i> Cras pretium</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="top-news-grid">
-                                <div class="top-news-grid-heading">
-                                    <a th:href="@{/news_single}">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean rutrum ac nulla</a>
-                                </div>
-                                <div class="w3ls-news-t-grid top-t-grid">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-clock-o"></i> 1h</a></li>
-                                        <li><a href="#"><i class="fa fa-user"></i> Vivamus nibh</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="top-news-grid">
-                                <div class="top-news-grid-heading">
-                                    <a th:href="@{/news_single}">Duis orci enim, rutrum vel sodales ut, tincidunt nec turpis.</a>
-                                </div>
-                                <div class="w3ls-news-t-grid top-t-grid">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-clock-o"></i> 3h</a></li>
-                                        <li><a href="#"><i class="fa fa-user"></i> Cras pretium</a></li>
                                     </ul>
                                 </div>
                             </div>

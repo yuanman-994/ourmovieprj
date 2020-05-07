@@ -79,3 +79,29 @@ function addClick(article_id) {
 function getString(article) {
     return String.format(leftOrRight, article.cover,article.headline,article.author_name,article.release_time,article.click_num,article.article_id);
 }
+
+var hotArticle = '<div class="top-news-grid">\n' +
+    '                                <div class="top-news-grid-heading">\n' +
+    '                                    <a href="/news_single?article_id={0}">{1}</a>\n' +
+    '                                </div>\n' +
+    '                                <div class="w3ls-news-t-grid top-t-grid">\n' +
+    '                                    <ul>\n' +
+    '                                        <li><i class="fa fa-clock-o"></i> {2}</a></li>\n' +
+    '                                        <li><i class="fa fa-user"></i> {3}</a></li>\n' +
+    '                                    </ul>\n' +
+    '                                </div>\n' +
+    '                            </div>'
+
+function loadHotArticle(id) {
+    $.get("/article/get_hot_articles",function (data) {
+        var i;
+        var articles = JSON.parse(data);
+        var len = articles.length;
+        $("#" + id).empty();//移除之前的内容
+        for (i = 0; i < len; i ++) {
+            var article = articles[i];
+            var str = String.format(hotArticle,article.article_id,article.headline,article.release_time,article.author_name);
+            $("#" + id).append(str);
+        }
+    })
+}

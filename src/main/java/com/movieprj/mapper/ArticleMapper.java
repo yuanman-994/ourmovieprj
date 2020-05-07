@@ -98,4 +98,11 @@ public interface ArticleMapper {
 
     @Select("SELECT * FROM article ORDER BY release_time DESC limit #{offset} , #{limit}")
     public List<Article> getByPage(int limit,int offset);
+
+    @Select("SELECT article_id FROM article_hot")
+    public List<Integer> getHot();
+
+    @Update("UPDATE article_hot SET article_id=#{article_id} WHERE id=#{id}")
+    public void setHot(int id, int article_id);//保存article_url
+
 }

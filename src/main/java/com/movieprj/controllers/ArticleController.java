@@ -52,9 +52,13 @@ public class ArticleController {
         return "self_article_manage";
     }
 
+    @RequestMapping("/article_manage_hot")
+    public String article_manage_hot() {
+        return "article_manage_hot";
+    }
+
     @RequestMapping("/article_comment_manage")
     public String article_comment_manage() {
-
         return "article_comment_manage";
     }
 
@@ -228,5 +232,17 @@ public class ArticleController {
     public String deleteComment(@RequestParam("comment_id") int comment_id) {//上传评论
         articleCommentServiceImp.deleteComment(comment_id);
         return "删除成功";
+    }
+
+    @GetMapping("/article/get_hot_articles")
+    @ResponseBody
+    public String getHot() {
+        return articleServiceImp.getHotArticle();
+    }
+
+    @PostMapping("/article/set_hot_article")
+    @ResponseBody
+    public int setHot(@RequestParam("id") int id,@RequestParam("article_id") int article_id) {//上传评论
+        return articleServiceImp.setHot(id,article_id);
     }
 }

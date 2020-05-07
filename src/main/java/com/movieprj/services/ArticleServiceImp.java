@@ -285,7 +285,7 @@ public class ArticleServiceImp implements ArticleService {
             String image_dir_path = path + "\\src\\main\\resources\\static\\images\\articleImages";
             String article_to_del = article_dir_path + "\\" + article_url;
             String image_dir_to_del = image_dir_path + "\\" + author_id + "\\" + article_id;
-            String cover_to_del = path + "\\src\\main\\resources\\static\\images\\articleCoverImages\\"+article_id+".jpeg";
+            String cover_to_del = path + "\\src\\main\\resources\\static\\images\\articleCoverImages\\" + article_id + ".jpeg";
 
             File article_file = new File(article_to_del);
             if (article_file.exists())
@@ -349,12 +349,12 @@ public class ArticleServiceImp implements ArticleService {
             String path = basePath + "\\" + imageName;
             image.transferTo(new File(path));
 
-            BufferedImage Bimage=(BufferedImage) ImageIO.read(new File(path));//图片放缩
-            Bimage = this.Thumb(Bimage,182,268,false);
-            ImageIO.write(Bimage,"jpeg",new File(path));
+            BufferedImage Bimage = (BufferedImage) ImageIO.read(new File(path));//图片放缩
+            Bimage = this.Thumb(Bimage, 182, 268, false);
+            ImageIO.write(Bimage, "jpeg", new File(path));
 
-            String url = "images\\articleCoverImages\\"+imageName;
-            articleMapper.saveArticleCoverById(article_id,url);
+            String url = "images\\articleCoverImages\\" + imageName;
+            articleMapper.saveArticleCoverById(article_id, url);
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -365,7 +365,7 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public String getCover(int article_id) {
         String url = articleMapper.getArticleCoverById(article_id);
-        if (url==null)
+        if (url == null)
             return "images\\articleCoverImages\\default.jpeg";
         else
             return url;
@@ -374,25 +374,25 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public int getTotalPage(int type, int total_per_page) {
         int total = articleMapper.getTotalWithType(type);
-        double result = (double)total/total_per_page;
-        return (int)Math.ceil(result);
+        double result = (double) total / total_per_page;
+        return (int) Math.ceil(result);
     }
 
     @Override
     public String getData(int type, int page_size, int currIndex) {
-        List<Article> list = articleMapper.getByPageOnlyPassCheck((currIndex-1)*page_size,page_size,type);
+        List<Article> list = articleMapper.getByPageOnlyPassCheck((currIndex - 1) * page_size, page_size, type);
         JSONArray jsonArray = new JSONArray();
-        for (Article a : list){
+        for (Article a : list) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("article_id",a.getArticle_id());
-            jsonObject.put("author_name",userPasswordMapper.findNameById(a.getAuthor_id()));
-            jsonObject.put("headline",a.getHeadline());
-            jsonObject.put("click_num",a.getClick_num());
-            jsonObject.put("release_time",a.getRelease_time());
+            jsonObject.put("article_id", a.getArticle_id());
+            jsonObject.put("author_name", userPasswordMapper.findNameById(a.getAuthor_id()));
+            jsonObject.put("headline", a.getHeadline());
+            jsonObject.put("click_num", a.getClick_num());
+            jsonObject.put("release_time", a.getRelease_time());
             String cover = a.getArticle_cover_image();
             if (cover == null)
                 cover = "images\\articleCoverImages\\default.jpeg";
-            jsonObject.put("cover",cover);
+            jsonObject.put("cover", cover);
             jsonArray.add(jsonObject);
         }
         return jsonArray.toString();
@@ -402,16 +402,16 @@ public class ArticleServiceImp implements ArticleService {
     public String getSingle(int article_id) {
         Article a = articleMapper.getSingle(article_id);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("article_id",a.getArticle_id());
-        jsonObject.put("author_name",userPasswordMapper.findNameById(a.getAuthor_id()));
-        jsonObject.put("headline",a.getHeadline());
-        jsonObject.put("click_num",a.getClick_num());
-        jsonObject.put("release_time",a.getRelease_time());
-        jsonObject.put("comment_num",articleCommentMapper.getCommentNumById(article_id));
+        jsonObject.put("article_id", a.getArticle_id());
+        jsonObject.put("author_name", userPasswordMapper.findNameById(a.getAuthor_id()));
+        jsonObject.put("headline", a.getHeadline());
+        jsonObject.put("click_num", a.getClick_num());
+        jsonObject.put("release_time", a.getRelease_time());
+        jsonObject.put("comment_num", articleCommentMapper.getCommentNumById(article_id));
         String cover = a.getArticle_cover_image();
         if (cover == null)
             cover = "images\\articleCoverImages\\default.jpeg";
-        jsonObject.put("cover",cover);
+        jsonObject.put("cover", cover);
         return jsonObject.toString();
     }
 
@@ -419,17 +419,17 @@ public class ArticleServiceImp implements ArticleService {
     public String getUpdatedNews() {
         List<Article> list = articleMapper.getUpdatedNews();
         JSONArray jsonArray = new JSONArray();
-        for (Article a : list){
+        for (Article a : list) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("article_id",a.getArticle_id());
-            jsonObject.put("author_name",userPasswordMapper.findNameById(a.getAuthor_id()));
-            jsonObject.put("headline",a.getHeadline());
-            jsonObject.put("click_num",a.getClick_num());
-            jsonObject.put("release_time",a.getRelease_time());
+            jsonObject.put("article_id", a.getArticle_id());
+            jsonObject.put("author_name", userPasswordMapper.findNameById(a.getAuthor_id()));
+            jsonObject.put("headline", a.getHeadline());
+            jsonObject.put("click_num", a.getClick_num());
+            jsonObject.put("release_time", a.getRelease_time());
             String cover = a.getArticle_cover_image();
             if (cover == null)
                 cover = "images\\articleCoverImages\\default.jpeg";
-            jsonObject.put("cover",cover);
+            jsonObject.put("cover", cover);
             jsonArray.add(jsonObject);
         }
         return jsonArray.toString();
@@ -447,7 +447,7 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public void addClick(int article_id) {
         int num = articleMapper.getClickNum(article_id);
-        articleMapper.updateClickNum(article_id,num+1);
+        articleMapper.updateClickNum(article_id, num + 1);
     }
 
     public BufferedImage Thumb(BufferedImage source, int width, int height, boolean b) {
@@ -482,15 +482,15 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public String getArticleWithLimit(int limit,int offset,String search) {
+    public String getArticleWithLimit(int limit, int offset, String search) {
         List<Article> articles;
         int total;
-        if (search==""){
+        if (search == "") {
             articles = articleMapper.getByPage(limit, offset);
             total = articleMapper.getTotal();
         } else {
             articles = articleMapper.getByPageWithSearch(limit, offset, search);
-            total =articleMapper.getSearchCount(search);
+            total = articleMapper.getSearchCount(search);
         }
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < articles.size(); i++) {
@@ -525,9 +525,39 @@ public class ArticleServiceImp implements ArticleService {
             jsonArray.add(json);
         }
         JSONObject json = new JSONObject();
-        json.put("total",total);
-        json.put("rows",jsonArray);
+        json.put("total", total);
+        json.put("rows", jsonArray);
         return json.toString();
+    }
+
+    @Override
+    public String getHotArticle() {
+        List<Integer> idl = articleMapper.getHot();
+        JSONArray jsonArray = new JSONArray();
+        int t = 1;
+        for (int i : idl) {
+            Article a = articleMapper.getSingle(i);
+            int id = a.getAuthor_id();
+            String name = userPasswordMapper.findNameById(id);
+            JSONObject json = new JSONObject();
+            json.put("article_id", a.getArticle_id());
+            json.put("author_name", name);
+            json.put("headline", a.getHeadline());
+            json.put("release_time", a.getRelease_time());
+            json.put("id", t++);
+            jsonArray.add(json);
+        }
+        return jsonArray.toString();
+    }
+
+    @Override
+    public int setHot(int id, int article_id) {
+        Article article = articleMapper.getSingle(article_id);
+        if (article==null)
+           return -1;
+        else
+            articleMapper.setHot(id,article_id);
+        return 0;
     }
 }
 

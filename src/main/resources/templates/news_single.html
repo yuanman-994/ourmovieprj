@@ -114,6 +114,7 @@
             load_article();
             load_updated_news();
             loadCommentAndPageDi();
+            loadHotArticle("hotArticles");
         }
 
         String.format = function (src) {
@@ -326,45 +327,45 @@
                         </div>
                     </div>
                 </div>
-                <!--			相关新闻-->
-                <div class="wthree-related-news-left">
-                    <h4>Related News</h4>
-                    <div class="wthree-news-top-left">
-                        <div class="col-md-6 w3-agileits-news-left">
-                            <div class="col-sm-5 wthree-news-img">
-                                <a href="news_single.html"><img src="images/m1.jpg" alt=""/></a>
-                            </div>
-                            <div class="col-sm-7 wthree-news-info">
-                                <h5><a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                    elit.</a></h5>
-                                <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis
-                                    eget.</p>
-                                <ul>
-                                    <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                    <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                </ul>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="col-md-6 w3-agileits-news-left">
-                            <div class="col-sm-5 wthree-news-img">
-                                <a href="news_single.html"><img src="images/m2.jpg" alt=""/></a>
-                            </div>
-                            <div class="col-sm-7 wthree-news-info">
-                                <h5><a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                    elit.</a></h5>
-                                <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis
-                                    eget.</p>
-                                <ul>
-                                    <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>
-                                    <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>
-                                </ul>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
+<!--                &lt;!&ndash;			相关新闻&ndash;&gt;-->
+<!--                <div class="wthree-related-news-left">-->
+<!--                    <h4>Related News</h4>-->
+<!--                    <div class="wthree-news-top-left">-->
+<!--                        <div class="col-md-6 w3-agileits-news-left">-->
+<!--                            <div class="col-sm-5 wthree-news-img">-->
+<!--                                <a href="news_single.html"><img src="images/m1.jpg" alt=""/></a>-->
+<!--                            </div>-->
+<!--                            <div class="col-sm-7 wthree-news-info">-->
+<!--                                <h5><a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing-->
+<!--                                    elit.</a></h5>-->
+<!--                                <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis-->
+<!--                                    eget.</p>-->
+<!--                                <ul>-->
+<!--                                    <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>-->
+<!--                                    <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>-->
+<!--                                </ul>-->
+<!--                            </div>-->
+<!--                            <div class="clearfix"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6 w3-agileits-news-left">-->
+<!--                            <div class="col-sm-5 wthree-news-img">-->
+<!--                                <a href="news_single.html"><img src="images/m2.jpg" alt=""/></a>-->
+<!--                            </div>-->
+<!--                            <div class="col-sm-7 wthree-news-info">-->
+<!--                                <h5><a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing-->
+<!--                                    elit.</a></h5>-->
+<!--                                <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis-->
+<!--                                    eget.</p>-->
+<!--                                <ul>-->
+<!--                                    <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>-->
+<!--                                    <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>-->
+<!--                                </ul>-->
+<!--                            </div>-->
+<!--                            <div class="clearfix"></div>-->
+<!--                        </div>-->
+<!--                        <div class="clearfix"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <!--			评论-->
                 <script>
                     var commentStr = '<div>\n' +
@@ -526,7 +527,7 @@
                         <h3>Top News</h3>
                     </div>
                     <div class="news-right-bottom-bg">
-                        <div class="news-grids-bottom">
+                        <div class="news-grids-bottom" id = "hotArticles">
                             <div class="top-news-grid">
                                 <div class="top-news-grid-heading">
                                     <a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing elit.

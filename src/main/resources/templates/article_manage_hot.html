@@ -137,10 +137,10 @@
                                     $.post("/article/set_hot_article?id=" + row.id + "&&" + "article_id=" + row.article_id, null, function (data) {
                                         if (data == -1)
                                             alert("文章不存在！！");
+                                        $("#hot-article").bootstrapTable("refresh", {//静态刷新表格
+                                            silent: true
+                                        });
                                     })
-                                    $("#hot-article").bootstrapTable("refresh", {//静态刷新表格
-                                        silent: true
-                                    });
                                 } else {
                                     $("#hot-article").bootstrapTable("refresh", {//静态刷新表格
                                         silent: true
@@ -169,9 +169,6 @@
                 "                                                        <i class=\"am-icon-search\"></i> 查看\n" +
                 "                                                    </a>\n<a href=\"#\" style='color: #1d8dcd' onclick=\"viewImage('" + article_id + "')\">\n" +
                 "                                                        <i class=\"am-icon-eye\"></i> 查看封面\n" +
-                "                                                    </a>\n" +
-                "                                                    </a>\n<a href=\"#\" style='color: #ac2925' onclick=\"setHot('" + article_id + "')\">\n" +
-                "                                                        <i class=\"am-icon-fire\"></i> 设为热门\n" +
                 "                                                    </a>\n"
             "                                                </div>"
             return result;

@@ -56,6 +56,7 @@ public class GroupBuyServiceImp implements GroupBuyService {
             this.loadGroupBuyBeans(groupBuyBeansData.get(i),temp);
             temp.cinema_name=cinema_name;
             temp.cinema_id=cinema_id;
+            temp.group_buy_id=groupBuyBeansData.get(i).getGroup_buy_id();
             finalData.add(temp);
         }
     }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Dynamic</title>
+    <title>团购</title>
     <!-- for-mobile-apps -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -62,6 +62,10 @@
                     //团购购票
                 },
                 columns: [{
+                    field: 'group_buy_id',
+                    title: '团购id',
+                    sortable: true
+                }, {
                     field: 'cinema_name',
                     title: '影院名',
                     sortable: true
@@ -91,10 +95,34 @@
                     field: 'price',
                     title: '价格',
                     sortable: true
-                },
+                }, {
+                    field: 'operate',
+                    title: '操作',
+                    formatter: actionFormatter,
+                }
                 ],
             })
         };
+
+        function actionFormatter(value, row, index) {
+            var result = "";
+            var data = JSON.stringify(row);
+            result += '<a href="#" data-toggle="modal" data-target="#pay" onclick="loadInf(this)">购票</a>';
+            return result;
+        }
+        function loadInf(obj) {
+            var cells = obj.parentNode.parentNode.childNodes;
+            // console.log(cells[0].innerHTML);
+
+            $('#inf-group-buy-id').val(cells[0].innerHTML);
+            $('#inf-cinema-name').val(cells[1].innerHTML);
+            $('#inf-start-time').val(cells[2].innerHTML);
+            $('#inf-end-time').val(cells[3].innerHTML);
+            $('#inf-price').val(cells[8].innerHTML);
+        }
+        function pay() {
+            //支付相关未完成
+        }
 
         function load_group_buy_data_past() {//请求当期团购数据,并动态创建页面对象。
             $("#group-buy-data-past-table").bootstrapTable({
@@ -149,6 +177,50 @@
 
 <body onload="load_group_buy_data_now()">
 <!-- header -->
+<div class="modal video-modal fade" id="pay" tabindex="-1" role="dialog" aria-labelledby="pay">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                团购购票
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3 class="bars">订单信息:</h3>
+                <div class="input-group w3_w3layouts">
+                    <span class="input-group-addon">团购id</span>
+                    <input type="text" id="inf-group-buy-id" class="form-control" aria-describedby="basic-addon1" disabled>
+                </div>
+                <div class="input-group w3_w3layouts">
+                    <span class="input-group-addon">影院名</span>
+                    <input type="text" id="inf-cinema-name" class="form-control" aria-describedby="basic-addon1" disabled>
+                </div>
+                <div class="input-group w3_w3layouts">
+                    <span class="input-group-addon" >开始时间</span>
+                    <input type="text" id="inf-start-time" class="form-control" aria-describedby="basic-addon1" disabled>
+                </div>
+                <div class="input-group w3_w3layouts">
+                    <span class="input-group-addon" >结束时间</span>
+                    <input type="text" id="inf-end-time" class="form-control" aria-describedby="basic-addon1" disabled>
+                </div>
+                <div class="input-group w3_w3layouts">
+                    <span class="input-group-addon" >价格</span>
+                    <input type="text" id="inf-price" class="form-control" aria-describedby="basic-addon1" disabled>
+                </div>
+                <div class="input-group w3_w3layouts">
+                    <span class="input-group-addon" >购买数量</span>
+                    <input type="text" id="inf-num" class="form-control" placeholder="请输入" aria-describedby="basic-addon1">
+                </div>
+                <a onclick="pay()" href="#"><span class="label label-success">立即支付</span></a>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="header">
     <div class="container">
         <div class="w3layouts_logo">
@@ -370,7 +442,6 @@
 </div>
 <!-- //footer -->
 <!-- Bootstrap Core JavaScript -->
-<script th:src="@{js/bootstrap.min.js}"></script>
 <script>
     $(document).ready(function () {
         $(".dropdown").hover(

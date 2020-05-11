@@ -1,13 +1,12 @@
 package com.movieprj.services;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.movieprj.beans.Article;
 import com.movieprj.beans.ArticleComment;
 import com.movieprj.mapper.ArticleCommentMapper;
 import com.movieprj.mapper.ArticleMapper;
 import com.movieprj.mapper.UserPasswordMapper;
+import com.movieprj.services.dfa.SensitiveWordUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,7 +42,18 @@ public class ArticleCommentServiceImp implements ArticleCommentService {
         for (ArticleComment articleComment : list){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("time",articleComment.getTime());
-            jsonObject.put("content",articleComment.getContent());
+
+            String content = articleComment.getContent();
+//            System.out.println(content);
+//            System.out.println(SensitiveWordUtils.sensitiveWordMap);
+//            System.out.println(SensitiveWordUtils.isContaintSensitiveWord(content,2));
+//            System.out.println(SensitiveWordUtils.getSensitiveWord(content,2));
+//            System.out.println(SensitiveWordUtils.getSensitiveWordSum(content,2));
+//            System.out.println(SensitiveWordUtils.replaceSensitiveWord(content,2,"*"));
+//            System.out.println("\n");
+            content = SensitiveWordUtils.replaceSensitiveWord(content,2,"*");
+
+            jsonObject.put("content",content);
             jsonObject.put("name",userPasswordMapper.findNameById(articleComment.getUser_id()));
             jsonArray.add(jsonObject);
         }

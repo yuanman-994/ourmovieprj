@@ -12,6 +12,8 @@ public interface ScheduleService {
 
     public List<MovieSchedule> findScheduleByMovieIdAndCinemaIdAndDate(Integer cinema_id, Integer movie_id, String date_time);
 
+    public List<Cinema> findCinemaByMovieIdAndDateAndName(Integer movie_id,String date_time,String cinema_name);
+
     public MovieSchedule findScheduleById(Integer movie_schedule_id);
 
     public List<MovieSchedule> findAllSchedule();

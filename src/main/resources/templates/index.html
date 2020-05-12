@@ -223,7 +223,7 @@
                         m='';
                         m+=
                             '<div class="w3l-movie-gride-agile w3l-movie-gride-agile1">' +
-                            '<a href="/movie_single?movie_id='+moviesList[i].movie_id+'" class="hvr-shutter-out-horizontal"><img src="images/m13.jpg" title="album-name" class="img-responsive" alt=" " />' +
+                            '<a href="/movie_single?movie_id='+moviesList[i].movie_id+'" class="hvr-shutter-out-horizontal"><img src="'+moviesList[i].cover+'" title="album-name" class="img-responsive" alt=" " />' +
                             '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
                             '</a>' +
                             '<div class="mid-1 agileits_w3layouts_mid_1_home">' +
@@ -231,7 +231,7 @@
                             '<h6><a href="/movie_single?movie_id='+moviesList[i].movie_id+'">'+moviesList[i].movie_name+'</a></h6>' +
                             '</div>' +
                             '<div class="mid-2 agile_mid_2_home">' +
-                            '<p>2016</p>' +
+                            '<p>'+moviesList[i].release_date+'</p>' +
                             '<div class="block-stars">' +
                             '<ul class="w3l-ratings">' +
                             '<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>' +
@@ -248,7 +248,7 @@
                             '<p>NEW</p>' +
                             '</div>' +
                             '</div>' +
-                            '</div>'
+                            '</div>';
                         $('#onshowMovies'+i).html(m);
                     }
                     /*  var html='';

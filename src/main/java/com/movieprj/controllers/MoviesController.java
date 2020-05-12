@@ -38,6 +38,9 @@ public class MoviesController {
     private HallServiceImp hallService;
 
     @Autowired
+    private CinemaServiceImp cinemaService;
+
+    @Autowired
     private SeatServiceImp seatService;
 
     @Autowired
@@ -108,6 +111,38 @@ public class MoviesController {
             date_time=simpleDate.format(date2);
         }
         List<Cinema> cinemaList = scheduleService.findCinemaByMovieIdAndDate(movie_id,date_time);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("cinemaList",cinemaList);
+        return map;
+    }
+
+    @RequestMapping("/search_schedule_cinema")
+    @ResponseBody
+    public Map<String,Object>findCinemaByName(@RequestBody Map<String,Object> params){
+        Integer movie_id = Integer.parseInt(params.get("movie_id").toString());
+        int day = Integer.parseInt(params.get("day").toString());
+        String cinema_name = params.get("cinema_name").toString();
+        String date_time;
+        Date date=new Date();
+        Date date1,date2;
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.HOUR_OF_DAY,0);
+        c.set(Calendar.MINUTE,0);
+        c.set(Calendar.SECOND,0);
+        c.add(Calendar.DAY_OF_MONTH,1);//利用Calendar 实现 Date日期+1天  
+        date1 = c.getTime();
+        c.add(Calendar.DAY_OF_MONTH,1);//利用Calendar 实现 Date日期+2天  
+        date2 = c.getTime();
+        if(day==0){//当前时间
+            date_time=simpleDate.format(date);
+        }else if (day==1){//明天
+            date_time=simpleDate.format(date1);
+        } else{//后天
+            date_time=simpleDate.format(date2);
+        }
+        List<Cinema> cinemaList = scheduleService.findCinemaByMovieIdAndDateAndName(movie_id,date_time,cinema_name);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("cinemaList",cinemaList);
         return map;
@@ -357,6 +392,9 @@ public class MoviesController {
         if(request.getParameter("onshow")!=null){
             Integer onshow = Integer.valueOf(request.getParameter("onshow"));
             movies.setOnshow(onshow);}
+        if(request.getParameter("comment_permission")!=null){
+            Integer comment_permission = Integer.valueOf(request.getParameter("comment_permission"));
+            movies.setComment_permission(comment_permission);}
 
         if (!uploadfile.isEmpty() && uploadfile.size()>0) {
             //循环输出上传的文件  MultipartFile 支持传输多个文件
@@ -480,6 +518,9 @@ public class MoviesController {
         if(request.getParameter("onshow")!=null){
             Integer onshow = Integer.valueOf(request.getParameter("onshow"));
             movies.setOnshow(onshow);}
+        if(request.getParameter("comment_permission")!=null){
+            Integer comment_permission = Integer.valueOf(request.getParameter("comment_permission"));
+            movies.setComment_permission(comment_permission);}
         for(int i =0;i<3;i++){
             if(request.getParameter("selectType"+i)!=null && !request.getParameter("selectType"+i).equals("none")){
                 MoviesTypes moviesTypes = new MoviesTypes();

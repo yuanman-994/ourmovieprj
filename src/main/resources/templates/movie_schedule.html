@@ -80,10 +80,48 @@
 
                     document.getElementById("cinemaListRegion").innerHTML = "";
                     document.getElementById("cinemaListRegion").innerHTML = m;
+                    document.getElementById("buttonCinameKeyword").onclick = function(){searchCinema(d)};
                 }});
 
         }
     };
+    function searchCinema(d) {
+        var url = document.location.href;
+        var movie_id = getParam(url,'movie_id');
+        var cinema_name = document.getElementById("inputCinameKeyword").value;
+        var day=d;
+        $.ajax({
+            url: "/search_schedule_cinema",
+            data:JSON.stringify({movie_id:movie_id,day:day,cinema_name:cinema_name}),
+            type: "post",
+            async:false,
+            // 定义发送请求的数据格式为JSON字符串
+            contentType: "application/json;charset=UTF-8",
+            //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+            dataType: "json",
+            //成功响应的结果
+            success: function (data) {
+                var cinemaList = data.cinemaList;
+                console.log(data.cinemaList);
+                var m='';
+                for(var i=0 ; i<data.cinemaList.length;i++){
+                    m+='<dl class="movieinfobox">';
+                    m+=' <dt><a href=""target="_blank">'+cinemaList[i].cinema_name+'</a>' +
+                        '</dt>'
+                        +'<dd class="infotxt filmicon">' +
+                        '<p>'+cinemaList[i].cinema_address+'</p>' +
+                        '<div  class="ticketselect"  style="">'+
+                        '<a  class="ico_c_ticket" onclick="Schedule.getInfo(\''+day+'\',\''+cinemaList[i].cinema_id+'\',\''+i+'\');">查影讯<span>∨</span></a>' +
+                        '</div>' +
+                        '</dd>'+
+                        '<dd class="tickettime" id="tickettime'+i+'" style="display: none;">';
+                    m+='</dl>';
+                }
+
+                document.getElementById("cinemaListRegion").innerHTML = "";
+                document.getElementById("cinemaListRegion").innerHTML = m;
+            }});
+    }
 </script>
 <script>
     var Movie = {
@@ -108,7 +146,7 @@
                     //拼接html语句
                     var m='<div class="filminfo">'+
                         '<a href="" target="_blank" title="'+movie.movie_name+'">' +
-                        '<img src="images/boy7.png"' +
+                        '<img src="'+movie.cover+'"' +
                         'alt="'+movie.movie_name+'">' +
                         '<span class="icon_type">' +
                         '</span>' +
@@ -186,7 +224,7 @@
     function Getdate() {
         var date = new Date();
         var month = date.getMonth()+1;
-        var day = date.getDay()+5;
+        var day = date.getDate();
         var tomorrow = day+1;
         var aftertomorrow= day+2;
         var html='';
@@ -474,7 +512,8 @@
                                                                                        v="5"></i> <label class="v_m notcheck" v="5"> 4DX</label> </li>
                             </ul>-->
                             <div class="citysearch"> <input id="inputCinameKeyword" type="text" class="text c_a5"
-                                                            value="搜索影院" autocomplete="off"> <input id="buttonCinameKeyword" type="button"
+                                                            value="搜索影院" autocomplete="off">
+                                <input id="buttonCinameKeyword" type="button" onclick=""
                                                                                                     class="button"> </div>
                             <dl id="cinemaSearchTip" class="showsearch searchcity" style="display: none;"> </dl>
                             <div id="areaAndSubwayfilterBox" class="showcitybox clearfix" style="display: none;">

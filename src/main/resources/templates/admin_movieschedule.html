@@ -16,7 +16,10 @@
     <link rel="stylesheet" th:href="@{/css/admincss/amazeui.min.css}" />
     <link rel="stylesheet" th:href="@{/css/admincss/amazeui.datatables.min.css}" />
     <link rel="stylesheet" th:href="@{/css/admincss/app.css}">
+    <link rel="stylesheet" th:href="@{/css/admincss/jquery.datetimepicker.css}">
     <script th:src="@{js/adminjs/jquery.min.js}"></script>
+    <script th:src="@{js/adminjs/jquery.datetimepicker.js}"></script>
+
     <script>
         function delInit() {
             $('#schedule-list').find('.tpl-table-black-operation-del').
@@ -56,6 +59,8 @@
             });
         }
         function editInit() {
+            $('#doc-ipt-text-6').datetimepicker();
+            $('#doc-ipt-text-7').datetimepicker();
             $('#schedule-list').find('a.tpl-table-black-operation').
             on('click', function() {
                 var id = $(this).parent().data('id');
@@ -107,6 +112,8 @@
 
         }
         function addInit() {
+            $('#add_start_sell').datetimepicker();
+            $('#add_end_sell').datetimepicker();
             $('#setlist').find('.am-btn-success').
             on('click', function() {
                 getShowTypes();
@@ -207,6 +214,7 @@
                         '<th>参考价</th>' +
                         '<th>开始时间</th>' +
                         '<th>结束时间</th>' +
+                        '<th>操作</th>' +
                         '</tr>' +
                         '</thead>' +
                         '<tbody id="schedule-list">';
@@ -441,7 +449,10 @@
         }
         function selectHall() { //add时用
             var cinema_id = document.getElementById("select-cinema").value;
-            if(cinema_id=="cinemanone"){document.getElementById("select-hall").innerHTML = "";return false;}
+            if(cinema_id=="cinemanone"){
+                document.getElementById("select-hall").innerHTML = "";
+                document.getElementById("select-hall").innerHTML = "<option value=\"hallnone\">选择影厅</option>";
+            return false;}
             console.log(cinema_id);
             var id;
             $.ajax({
@@ -457,7 +468,8 @@
                 success: function (data) {
                     var hallList = data.hallList;
                     console.log(hallList);
-                    var m='<option value="hallnone">选择影厅</option>';
+                    var m='';
+                    //var m='<option value="hallnone">选择影厅</option>';
                     for(var i=0;i<hallList.length;i++){
                         m+='<option value="'+hallList[i].hall_id+'">'+hallList[i].hall_name+'</option>' ;
                     }
@@ -776,7 +788,7 @@
 
                                     </select>
                                     <select id="select-hall" data-am-selected="{btnSize: 'sm'}">
-
+                                        <option value="hallnone">选择影厅</option>
                                     </select>
                                 </div>
                             </div>
@@ -940,8 +952,8 @@
         var movie = document.getElementById("movieSelect").value;
         var show_type = document.getElementById("typeSelect").value;
         var price = document.getElementById("add_price").value;
-        var start_sell = document.getElementById("start_price").value;
-        var end_sell = document.getElementById("end_price").value;
+        var start_sell = document.getElementById("add_start_sell").value;
+        var end_sell = document.getElementById("add_end_sell").value;
         if (schedule_id == "") {
             alert("请填写排片id");
             return false;
@@ -1064,6 +1076,7 @@
                     '<th>参考价</th>' +
                     '<th>开始时间</th>' +
                     '<th>结束时间</th>' +
+                    '<th>操作</th>' +
                     '</tr>' +
                     '</thead>' +
                     '<tbody id="schedule-list">';

@@ -33,6 +33,7 @@ public interface MoviesMapper {
             @Result(property = "rank",column = "rank"),
             @Result(property = "release_date",column = "release_date"),
             @Result(property = "onshow",column = "onshow"),
+            @Result(property = "comment_permission",column = "comment_permission"),
             @Result(property = "moviesTypesList",column = "movie_id",many=@Many(select="com.movieprj.mapper.MoviesTypesMapper.findTypesByMovieId",fetchType = FetchType.EAGER)),
     })
     public Movies selectMoviesWithTypesById(Integer movie_id);
@@ -48,6 +49,7 @@ public interface MoviesMapper {
             @Result(property = "rank",column = "rank"),
             @Result(property = "release_date",column = "release_date"),
             @Result(property = "onshow",column = "onshow"),
+            @Result(property = "comment_permission",column = "comment_permission"),
             @Result(property = "moviesTypesList",column = "movie_id",many=@Many(select="com.movieprj.mapper.MoviesTypesMapper.findTypesByMovieId",fetchType = FetchType.EAGER)),
     })
     public List<Movies> findAllWithTypes();
@@ -64,6 +66,7 @@ public interface MoviesMapper {
             @Result(property = "rank",column = "rank"),
             @Result(property = "release_date",column = "release_date"),
             @Result(property = "onshow",column = "onshow"),
+            @Result(property = "comment_permission",column = "comment_permission"),
             @Result(property = "moviesTypesList",column = "movie_id",many=@Many(select="com.movieprj.mapper.MoviesTypesMapper.findTypesByMovieId",fetchType = FetchType.EAGER)),
     })
     public List<Movies> searchMovies(@Param(value = "movie_name") String movie_name,@Param(value = "select_date") String select_date,@Param(value = "select_status") String select_status);
@@ -71,8 +74,8 @@ public interface MoviesMapper {
     @Select("SELECT * FROM movie WHERE onshow =1")
     public  List<Movies> selectMoviesByOnshow(Integer onshow);
 
-    @Insert("INSERT INTO movie (movie_id,cover,movie_name,director,main_actor,intro,rank,release_date,onshow) " +
-            "VALUES (#{movie_id},#{cover},#{movie_name},#{director},#{main_actor},#{intro},#{rank},#{release_date},#{onshow})")
+    @Insert("INSERT INTO movie (movie_id,cover,movie_name,director,main_actor,intro,rank,release_date,onshow,comment_permission) " +
+            "VALUES (#{movie_id},#{cover},#{movie_name},#{director},#{main_actor},#{intro},#{rank},#{release_date},#{onshow},#{comment_permission})")
     public int addMovies(Movies movies);
 
     @Delete("DELETE FROM movie WHERE movie_id = #{movie_id}")
@@ -85,7 +88,8 @@ public interface MoviesMapper {
             "intro = #{intro},"+
             "rank = #{rank},"+
             "release_date = #{release_date},"+
-            "onshow = #{onshow} "+
+            "onshow = #{onshow}, "+
+            "comment_permission = #{comment_permission} "+
             "WHERE movie_id = #{movie_id} ")
     public int updateMovies(Movies movies);
 

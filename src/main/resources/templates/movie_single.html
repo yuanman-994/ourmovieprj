@@ -215,7 +215,7 @@
                 var commentsTotalNum = data.commentList.length; //评论记录的总条数
                 var comment = data.commentList;
                 var pageNum = Math.ceil(commentsTotalNum/perpage); //分页的总页数
-                var html ='';
+                var html ='<div><h2>用户评论</h2></div>';
                 for(var i=((page-1)*perpage);i<(page*perpage)&&i<commentsTotalNum;i++){
                     var movieid=comment[i].movie_id;
                     var content=comment[i].content;
@@ -295,7 +295,6 @@
                         var m= '' +
                             '<ul>' +
                             '<li><p>电影名: <a href="#">'+movie.movie_name+'</a></p></li>' +
-                            '<li><p>简介: <a href="#">'+movie.intro+'</a></p></li>' +
                             '<li><p>主演: <a href="#">'+movie.main_actor+'</a></p></li>' +
                             '<li><p>导演: <a href="#">'+movie.director+'</a></p></li>' +
                             '<li><p>评分: <a href="#">'+movie.rank+'</a></p></li>' +
@@ -305,6 +304,12 @@
                             '</ul>';
                              //document.getElementById("moviestest").innerHTML = m;
                         $('#moviesInfo').html(m);
+                        document.getElementById("movie-cover").src=movie.cover;
+                        document.getElementById("introduce").innerHTML = '<h2>电影简介</h2><br>'+'<p>'+movie.intro+'</p>';
+                        if(movie.comment_permission == 0){
+                            document.getElementById("produce-comment").style.display = "none";
+                            document.getElementById("warn-comment").innerHTML = '<h1>此影片已禁止评论！请联系网站管理员！</h1>';
+                        }
 
                 }});
 
@@ -344,7 +349,7 @@
                     <div class="art-header">
                         <div class="col-1-3">
                             <div class="wrap-col">
-                                <img src="images/boy7.png" />
+                                <img id="movie-cover" src="" />
                             </div>
                         </div>
                         <div class="col-2-3">
@@ -357,25 +362,8 @@
                                     </div>
                             </div>
                         </div>
-                    <div class="art-content">
-                        <p>电影介绍1</p>
-                        <img src="images/0.jpg" />
-                        <p>电影介绍2</p>
-                        <blockquote><p>电影介绍3</p></blockquote>
-                        <img src="images/17.jpg" />
-                        <p>电影介绍4</p>
-                        <div class="note">
-                            <ol>
-                                <li>Lorem ipsum</li>
-                                <li>Sit amet vultatup nonumy</li>
-                                <li>Duista sed diam</li>
-                            </ol>
-                            <div class="clear"></div>
-                        </div>
-                        <img src="images/16.jpg" />
-                        <p>电影介绍5</p>
-                        <p>电影介绍6</p>
-                        <div class="clear"></div>
+                    <div class="art-content" id="introduce">
+
                     </div>
                   <!--  <div class="song">
                         <div class="song-info">
@@ -466,7 +454,7 @@
                         </div>-->
 
                     </div>
-                    <div class="all-comments">
+                    <div class="all-comments" id="produce-comment">
                         <div class="all-comments-info">
                             <a href="#">Comments</a>
                             <div class="agile-info-wthree-box">
@@ -480,6 +468,7 @@
                             </div>
                         </div>
                     </div>
+                    <div id="warn-comment"></div>
                 </div>
                 <div class="col-md-4 single-right">
                     <h3>Up Next</h3>

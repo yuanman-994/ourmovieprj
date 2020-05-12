@@ -23,6 +23,15 @@ public interface ScheduleMapper {
             ")")
     public List<Cinema> findCinemaByMovieIdAndDate(Integer movie_id,String date_time);
 
+
+    @Select("SELECT * FROM cinema WHERE cinema_id in(" +
+            "SELECT distinct cinema_id FROM movie_schedule " +
+            "WHERE movie_id =#{movie_id} " +
+            "AND (#{date_time} BETWEEN start_sell AND end_sell)"+") "+
+            "AND cinema_name like CONCAT('%',#{cinema_name},'%')"
+            )
+    public List<Cinema> findCinemaByMovieIdAndDateAndName(Integer movie_id,String date_time,String cinema_name);
+
     @Select("SELECT * FROM movie_schedule WHERE cinema_id = #{cinema_id} " +
             "AND movie_id = #{movie_id} " +
             "AND #{date_time} BETWEEN start_sell AND end_sell")
@@ -46,6 +55,7 @@ public interface ScheduleMapper {
             @Result(property = "hall",column = "hall_id",one=@One(select="com.movieprj.mapper.HallMapper.findHallById",fetchType = FetchType.EAGER)),
     })
     public List<MovieSchedule> findAllSchedule();
+
 
     @Select("SELECT * FROM movie_schedule WHERE movie_schedule_id = #{movie_schedule_id}")
     @Results({
@@ -156,7 +166,7 @@ public interface ScheduleMapper {
                 sb.append(" AND ");
                }
                 else {
-                sb.append("1=1 AND");
+                sb.append("1=1 AND ");
             }
 
             if(!select_hall.equals("hallnone")&&!select_hall.equals("")){

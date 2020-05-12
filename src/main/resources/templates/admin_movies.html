@@ -94,6 +94,10 @@
                     var movies = data.movies;
                     var type_id0 = movies.moviesTypesList[0].movie_type_id;
                     console.log(type_id0);
+                    var a = new Array();
+                    a = movies.release_date.split("-");
+                    var date = new Date(a[0],a[1]-1,a[2]);
+
                     document.getElementById("doc-ipt-text-1").value = movies.movie_id;
                     document.getElementById("showcover1").src = movies.cover;
                     document.getElementById("doc-ipt-text-2").value = movies.movie_name;
@@ -106,7 +110,7 @@
                     document.getElementById("doc-ipt-text-4").value = movies.director;
                     document.getElementById("doc-ipt-text-5").value = movies.main_actor;
                     document.getElementById("doc-ipt-text-6").value = movies.rank;
-                    document.getElementById("doc-ipt-text-7").value = movies.release_date;
+                    $("#doc-ipt-text-7").datepicker("setValue",date);
                     document.getElementById("doc-ipt-text-8").value = movies.onshow;
                     document.getElementById("doc-ta-1").value = movies.intro;
                 }
@@ -169,7 +173,9 @@
                         '<th>评分</th>' +
                         '<th>上映日期</th>' +
                         '<th>正在热映/即将上映</th>' +
+                        '<th>评论权限</th>' +
                         '<th>简介</th>' +
+                        '<th>操作</th>' +
                         '</tr>' +
                         '</thead>' +
                         '<tbody id="movies-list">';
@@ -204,6 +210,14 @@
                                 m+='即将上映';
                             }
                             m+='</td>' ;
+                        m+='<td class="am-text-middle">';
+                        if(moviesList[i].comment_permission == 1){
+                            m+='允许评论';
+                        }
+                        else{
+                            m+='禁止评论';
+                        }
+                        m+='</td>' ;
                             m+='<td class="am-text-middle">'+moviesList[i].intro+'</td>' +
                             '<td class="am-text-middle">' +
                             '<div class="tpl-table-black-operation" data-id="'+moviesList[i].movie_id+'">' +
@@ -720,13 +734,20 @@
                 <div class="am-form-group">
                     <div class="am-g">
                         <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-7">上映日期</label>
-                        <input class="am-u-md-10 form-control" id="doc-ipt-text-7" name="release_date" placeholder="输入上映日期">
+                        <!--<input class="am-u-md-10 form-control" id="doc-ipt-text-7" name="release_date" placeholder="输入上映日期">-->
+                        <input type="text" class="am-form-field tpl-form-no-bg"  id="doc-ipt-text-7" name="release_date" placeholder="输入上映日期" data-am-datepicker=""  value="">
                     </div>
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
                         <label class="am-u-md-2 am-md-text-right am-padding-left-0" for="doc-ipt-text-8">正在上映/即将上映</label>
                         <input class="am-u-md-10 form-control" id="doc-ipt-text-8" name="onshow" placeholder="正在上映（1）/即将上映（0）">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <div class="am-g">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >评论权限</label>
+                        <input class="am-u-md-10 form-control"  name="comment_permission" placeholder="评论权限">
                     </div>
                 </div>
                 <div class="am-form-group">
@@ -805,13 +826,20 @@
                 <div class="am-form-group">
                     <div class="am-g">
                         <label class="am-u-md-2 am-md-text-right am-padding-left-0" >上映日期</label>
-                        <input class="am-u-md-10 form-control"  name="release_date" placeholder="输入上映日期">
+                        <!--<input class="am-u-md-10 form-control"  name="release_date" placeholder="输入上映日期">-->
+                        <input type="text" class="am-form-field tpl-form-no-bg"  name="release_date" placeholder="输入上映日期" data-am-datepicker=""  value="">
                     </div>
                 </div>
                 <div class="am-form-group">
                     <div class="am-g">
                         <label class="am-u-md-2 am-md-text-right am-padding-left-0" >正在上映/即将上映</label>
                         <input class="am-u-md-10 form-control"  name="onshow" placeholder="正在上映（1）/即将上映（0）">
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <div class="am-g">
+                        <label class="am-u-md-2 am-md-text-right am-padding-left-0" >评论权限</label>
+                        <input class="am-u-md-10 form-control"   name="comment_permission" placeholder="评论权限">
                     </div>
                 </div>
                 <div class="am-form-group">
@@ -938,7 +966,9 @@
                     '<th>评分</th>' +
                     '<th>上映日期</th>' +
                     '<th>正在热映/即将上映</th>' +
+                    '<th>评论权限</th>' +
                     '<th>简介</th>' +
+                    '<th>操作</th>' +
                     '</tr>' +
                     '</thead>' +
                     '<tbody id="movies-list">';
@@ -971,6 +1001,13 @@
                     }
                     else{
                         m+='即将上映';
+                    }
+                    m+='</td>' ;
+                    if(moviesList[i].comment_permission == 1){
+                        m+='允许评论';
+                    }
+                    else{
+                        m+='禁止评论';
                     }
                     m+='</td>' ;
                     m+='<td class="am-text-middle">'+moviesList[i].intro+'</td>' +

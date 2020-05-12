@@ -18,6 +18,7 @@ public class Movies {
     private String duration; //时长
     private String countryAndreligion; //国家和地区
     private Integer onshow;  //正在上映or即将上映
+    private Integer comment_permission; //是否可以评论（1：可以评论 0：禁止评论）
     private List<Comment> commentList; //评论(一对多）
 
 
@@ -171,5 +172,13 @@ public class Movies {
                 ", onshow=" + onshow +
                 ", commentList=" + commentList +
                 '}';
+    }
+
+    public Integer getComment_permission() {
+        return comment_permission;
+    }
+
+    public void setComment_permission(Integer comment_permission) {
+        this.comment_permission = comment_permission;
     }
 }

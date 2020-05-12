@@ -33,6 +33,11 @@ public class ScheduleServiceImp implements ScheduleService {
     }
 
     @Override
+    public List<Cinema> findCinemaByMovieIdAndDateAndName(Integer movie_id, String date_time, String cinema_name) {
+        return scheduleMapper.findCinemaByMovieIdAndDateAndName(movie_id, date_time, cinema_name);
+    }
+
+    @Override
     public MovieSchedule findScheduleById(Integer movie_schedule_id) {
         return scheduleMapper.findScheduleById(movie_schedule_id);
     }

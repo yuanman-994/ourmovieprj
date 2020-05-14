@@ -23,4 +23,10 @@ public class TicketServiceImp implements TicketService {
     public List<Ticket> findTicketsByOrderId(Integer order_id) {
         return ticketMapper.findTicketsByOrderId(order_id);
     }
+
+    @Override
+    public int deleteTicket(Integer order_id) {
+        ticketMapper.deleteTicket(order_id);
+        return 1;
+    }
 }

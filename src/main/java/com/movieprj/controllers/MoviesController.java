@@ -3,6 +3,7 @@ package com.movieprj.controllers;
 import com.movieprj.beans.*;
 import com.movieprj.mapper.ScheduleMapper;
 import com.movieprj.services.*;
+import com.movieprj.services.dfa.SensitiveWordUtils;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -268,7 +269,7 @@ public class MoviesController {
         Date date=new Date();
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyyMMdd");
         Integer order_id ;
-        order_id = Integer.parseInt(simpleDate.format(date))*100+movie_schedule_id;
+        order_id = Integer.parseInt(simpleDate.format(date))*100+movie_schedule_id+8;
         ticket.setMovie_schedule_id(movie_schedule_id);
         ticket.setOrder_id(order_id);
         int[] seat_id={0,0,0,0,0};
@@ -287,7 +288,7 @@ public class MoviesController {
 
     @RequestMapping("/addTicketOrder")
     @ResponseBody
-    public Map<String,Object>addTicketOrder(@RequestBody Map<String,Object> params){
+    public Map<String,Object> addTicketOrder(@RequestBody Map<String,Object> params){
         Integer movie_schedule_id = Integer.parseInt(params.get("movie_schedule_id").toString());
         Integer user_id = Integer.parseInt(params.get("user_id").toString());
         Float total = Float.parseFloat(params.get("total").toString());
@@ -295,19 +296,55 @@ public class MoviesController {
         Date date=new Date();
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat simpleDate1 = new SimpleDateFormat("yyyyMMdd");
-        Integer order_id = Integer.parseInt(simpleDate1.format(date))*100+movie_schedule_id;
+        Integer order_id = Integer.parseInt(simpleDate1.format(date))*100+movie_schedule_id+8;
         ticketOrder.setMovie_schedule_id(movie_schedule_id);
         ticketOrder.setUser_id(user_id);
         ticketOrder.setPrice(total);
-        ticketOrder.setPay_way("alipay");
+        //ticketOrder.setPay_way("alipay");
+        ticketOrder.setPay_way(null);
         ticketOrder.setTime(simpleDate.format(date));
         ticketOrder.setOrder_id(order_id);
         ticketOrderService.addTicketOrder(ticketOrder);
+        //定时检测支付状态，超时则删除订单
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MINUTE,10);
+        Date chaoshi = c.getTime();
+        class Task extends TimerTask {
+            private Integer param;
+
+            public Task(Integer param) {
+                this.param = param;
+            }
+
+            @Override
+            public void run() {
+                //判断订单支付状态
+                if(ticketOrderService.findTicketOrderWithTicketsById(param).getPay_way()==null) {
+                    ticketOrderService.deleteTicketOrder(param);
+                    ticketService.deleteTicket(param);
+                    System.out.println("-----支付超时删除订单-----");
+                }
+            }
+
+        }
+        Timer timer = new Timer();
+        timer.schedule(new Task(order_id),chaoshi);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("order",ticketOrder);
         return map;
     }
 
+
+    @RequestMapping("/deleteOrderAndTicket")
+    @ResponseBody
+    public Map<String,Object> deleteTicketAndOrder(Integer order_id){
+        ticketService.deleteTicket(order_id);
+        ticketOrderService.deleteTicketOrder(order_id);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("result","success");
+        return map;
+    }
 
     @RequestMapping("/admin_movies")
     public  String admin_movies(){
@@ -669,6 +706,7 @@ public class MoviesController {
         }
         if(request.getParameter("content")!=null){
             content = request.getParameter("content").toString();
+            content = SensitiveWordUtils.replaceSensitiveWord(content,2,"*");//过滤敏感词
             comment.setContent(content);
         }
         if(request.getParameter("comment_time")!=null){

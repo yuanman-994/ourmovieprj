@@ -25,4 +25,10 @@ public interface TicketOrderMapper {
     @Insert("INSERT INTO ticket_order (order_id,user_id,movie_schedule_id,time,price,pay_way) " +
             "VALUES (#{order_id},#{user_id},#{movie_schedule_id},#{time},#{price},#{pay_way})")
     public int addTicketOrder(TicketOrder ticketOrder);
+
+    @Delete("DELETE FROM ticket_order WHERE order_id = #{order_id}")
+    public int deleteTicketOrder(Integer order_id);
+
+    @Update("UPDATE ticket_order set pay_way = #{pay_way} WHERE order_id = #{order_id}")
+    public int updateTicketOrderStatus(Integer order_id,String pay_way);
 }

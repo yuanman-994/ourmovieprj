@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+    function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- //for-mobile-apps -->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all" />
+    <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all" />
+    <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css' />
+    <link th:href="@{/css/medile.css}" rel='stylesheet' type='text/css' />
+    <link th:href="@{/css/paycss/base.css}" rel='stylesheet' type='text/css' />
+    <link th:href="@{/css/paycss/buyConfirm.css}" rel='stylesheet' type='text/css' />
+    <link th:href="@{/css/paycss/public.css}" rel='stylesheet' type='text/css' />
+    <link type="text/css" href="http://img1.tuniucdn.com/ui/v2/common.css?v=20111123" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="http://img1.tuniucdn.com/u/user/order/quick_book.css?v=112714">
+    <link rel="stylesheet" href="http://img.tuniucdn.com/s/201602031730/pay/paySuccess.css">
+    <!-- banner-slider -->
+    <link th:href="@{/css/jquery.slidey.min.css}" rel="stylesheet">
+    <!-- //banner-slider -->
+    <!-- pop-up -->
+    <link th:href="@{/css/popuo-box.css}" rel="stylesheet" type="text/css" media="all" />
+    <!-- //pop-up -->
+    <!-- font-awesome icons -->
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+    <!-- //font-awesome icons -->
+    <!-- js -->
+    <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
+    <!-- //js -->
+    <!-- banner-bottom-plugin -->
+    <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
+    <script th:src="@{js/owl.carousel.js}"></script>
+    <script th:src="@{js/login.js}"></script>
+    <script th:src="@{js/getParam.js}"></script>
+    <script>
+        $(document).ready(function() {
+            $("#owl-demo").owlCarousel({
+
+                autoPlay: 3000, //Set AutoPlay to 3 seconds
+
+                items : 5,
+                itemsDesktop : [640,4],
+                itemsDesktopSmall : [414,3]
+
+            });
+
+        });
+    </script>
+    <!-- //banner-bottom-plugin -->
+    <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
+    <!-- start-smoth-scrolling -->
+    <script type="text/javascript" th:src="@{js/move-top.js}"></script>
+    <script type="text/javascript" th:src="@{js/easing.js}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $(".scroll").click(function(event){
+                event.preventDefault();
+                $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+            });
+        });
+    </script>
+    <!-- start-smoth-scrolling -->
+</head>
+<script>
+    window.onload = function(){
+        new tab('test4-input-input_tab1-input_tab2', '-');
+    }
+    function tab(o, s, cb, ev){ //tab换类
+        var $ = function(o){return document.getElementById(o)};
+        var css = o.split((s||'_'));
+        if(css.length!=4)return;
+        this.event = ev || 'onclick';
+        o = $(o);
+        if(o){
+            this.ITEM = [];
+            o.id = css[0];
+            var item = o.getElementsByTagName(css[1]);
+            var j=1;
+            for(var i=0;i<item.length;i++){
+                if(item[i].className.indexOf(css[2])>=0 || item[i].className.indexOf(css[3])>=0){
+                    if(item[i].className == css[2])o['cur'] = item[i];
+                    item[i].callBack = cb||function(){};
+                    item[i]['css'] = css;
+                    item[i]['link'] = o;
+                    this.ITEM[j] = item[i];
+                    item[i]['Index'] = j++;
+                    item[i][this.event] = this.ACTIVE;
+                }
+            }
+            return o;
+        }
+    }
+    tab.prototype = {
+        ACTIVE:function(){
+            var $ = function(o){return document.getElementById(o)};
+            this['link']['cur'].className = this['css'][3];
+            this.className = this['css'][2];
+            try{
+                $(this['link']['id']+'_'+this['link']['cur']['Index']).style.display = 'none';
+                $(this['link']['id']+'_'+this['Index']).style.display = 'block';
+            }catch(e){}
+            this.callBack.call(this);
+            this['link']['cur'] = this;
+        }
+    }
+</script>
+<script>
+    function chaoshi() {
+        /*$.ajax({
+            url:'/shiliu/deleteorder?id='+[[${orderid}]],
+            type:'get',
+        })
+        window.location.href='./payfailed.html'*/
+    }
+</script>
+
+
+<body onload="get_user_inf()">
+<!-- header -->
+<div class="header">
+    <div class="container">
+        <div class="w3layouts_logo">
+            <a href="index.html"><h1>One<span>Movies</span></h1></a>
+        </div>
+        <div class="w3_search">
+            <form action="#" method="post">
+                <input type="text" name="Search" placeholder="Search" required="">
+                <input type="submit" value="Go">
+            </form>
+        </div>
+
+        <div class="w3l_sign_in_register">
+            <ul>
+                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) R 345 653</li>
+                <li><a href="#" data-toggle="modal" data-target="#myModal" id = "login-button">Login</a></li>
+                <li><a href="/logout" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- //header -->
+<!-- bootstrap-pop-up -->
+<div class="modal video-modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                Sign In & Sign Up
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <section>
+                <div class="modal-body">
+                    <div class="w3_login_module">
+                        <div class="module form-module">
+                            <div class="toggle"><i class="fa fa-times fa-pencil"></i>
+                                <div class="tooltip">Click Me</div>
+                            </div>
+                            <div class="form">
+                                <h3>Login to your account</h3>
+                                <form>
+                                    <input type="text" name="user_name" placeholder="user_name" required="" >
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <ul>
+                                        <input type="button" value="Login" onclick="try_login()">
+                                        <a name="tips"></a>
+                                    </ul>
+                                </form>
+                            </div>
+                            <div class="form">
+                                <h3>Create an account</h3>
+                                <form th:action="@{/user/register}" method="post">
+                                    <input type="text" name="user_name" placeholder="user_name" required="">
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <input type="email" name="user_email" placeholder="Email Address" required="">
+                                    <input type="text" name="phone_number" placeholder="phone_number" required="">
+                                    <input type="submit" value="Register">
+                                </form>
+                            </div>
+                            <div class="cta"><a th:href="@{/lost_password}">Forgot your password?</a></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<script>
+    $('.toggle').click(function(){
+        // Switches the Icon
+        $(this).children('i').toggleClass('fa-pencil');
+        // Switches the forms
+        $('.form').animate({
+            height: "toggle",
+            'padding-top': 'toggle',
+            'padding-bottom': 'toggle',
+            opacity: "toggle"
+        }, "slow");
+    });
+</script>
+
+
+<div class="movies_nav">
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header navbar-left">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+                <nav>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a th:href="@{/index}">首页</a></li>
+                        <li ><a th:href="@{/dynamic}" >影城动态</a></li>
+                        <li><a th:href="@{/see_movie}">看电影</a></li>
+                        <li><a th:href="@{/group_buy}">团购</a></li>
+                        <li ><a href="#" >商城 </a></li>
+                        <li><a th:href="@{/cooperation}">商务合作信息</a></li>
+                        <li><a th:href="@{/about_us}">关于企业信息</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div class="T_container">
+    <div class="T_title_panel">
+        <div class="icon-box" style="text-align: center;background: rgba(255, 255, 255, .15)">
+            <a><img src="images/yes_ok.png"></a>
+        </div>
+        <div class="T_title">
+            恭喜，付款成功！
+
+        </div>
+    </div>
+
+    <div class="T_main_panel">
+        <div class="T_content">
+            <div class="T_sub_title"></div>
+            <p>
+                <span class="T_label"></span>
+                <span class="T_text"></span>
+            </p>
+            <p>
+                <span class="T_label"></span>
+                <span class="T_text"></span>
+            </p>
+        </div>
+    </div>
+
+    <div class="T_main_panel">
+        <div class="T_content">
+            <div class="T_sub_title">提醒信息：</div>
+            <p>
+                <span class="T_message">系统处理收款仍需3-5分钟，您可以前往</span><a href="person" class="T_text">会员中心</a><span class="T_message">查看订单详情</span>
+            </p>
+
+        </div>
+    </div>
+
+
+</div>
+
+<!-- 底部 -->
+<div class="footer">
+    <div class="container">
+        <div class="w3ls_footer_grid">
+            <div class="col-md-6 w3ls_footer_grid_left">
+                <div class="w3ls_footer_grid_left1">
+                    <h2>Subscribe to us</h2>
+                    <div class="w3ls_footer_grid_left1_pos">
+                        <form action="#" method="post">
+                            <input type="email" name="email" placeholder="Your email..." required="">
+                            <input type="submit" value="Send">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 w3ls_footer_grid_right">
+                <a href="index.html"><h2>One<span>Movies</span></h2></a>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+        <div class="col-md-5 w3ls_footer_grid1_left">
+            <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+        </div>
+        <div class="col-md-7 w3ls_footer_grid1_right">
+            <ul>
+                <li>
+                    <a href="genres.html">Movies</a>
+                </li>
+                <li>
+                    <a th:href="@{/faq}">网站指南</a>
+                </li>
+                <li>
+                    <a href="horror.html">Action</a>
+                </li>
+                <li>
+                    <a href="genres.html">Adventure</a>
+                </li>
+                <li>
+                    <a href="comedy.html">Comedy</a>
+                </li>
+                <li>
+                    <a href="icons.html">Icons</a>
+                </li>
+                <li>
+                    <a href="contact.html">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+
+<script th:src="@{js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function(){
+        $(".dropdown").hover(
+            function() {
+                $('.dropdown-menu', this).stop( true, true ).slideDown("fast");
+                $(this).toggleClass('open');
+            },
+            function() {
+                $('.dropdown-menu', this).stop( true, true ).slideUp("fast");
+                $(this).toggleClass('open');
+            }
+        );
+    });
+</script>
+<!-- //Bootstrap Core JavaScript -->
+<!-- here stars scrolling icon -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        /*
+            var defaults = {
+            containerID: 'toTop', // fading element id
+            containerHoverID: 'toTopHover', // fading element hover id
+            scrollSpeed: 1200,
+            easingType: 'linear'
+            };
+        */
+
+        $().UItoTop({ easingType: 'easeOutQuart' });
+
+    });
+</script>
+<!-- //here ends scrolling icon -->
+
+
+
+</body>
+</html>

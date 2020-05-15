@@ -25,4 +25,16 @@ public class TicketOrderServiceImp implements TicketOrderService {
         ticketOrderMapper.addTicketOrder(ticketOrder);
         return 1;
     }
+
+    @Override
+    public int deleteTicketOrder(Integer order_id) {
+        ticketOrderMapper.deleteTicketOrder(order_id);
+        return 1;
+    }
+
+    @Override
+    public int updateTicketOrderStatus(Integer order_id, String pay_way) {
+        ticketOrderMapper.updateTicketOrderStatus(order_id,pay_way);
+        return 1;
+    }
 }

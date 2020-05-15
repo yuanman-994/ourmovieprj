@@ -294,8 +294,8 @@
                     	window.location.reload();
 					}
                     else if(selected_seats.length>=1&&selected_seats.length<=5){
-                    	TicketOrder.addOrder();
                     	Ticket.getInfo(hall_id);
+                    	TicketOrder.addOrder();
 					}
                     else{
                     	alert("最多只能同时购买5个座位！");
@@ -324,7 +324,6 @@
 							success: function (data) {
 								if(data!=null)
 									alert("购票成功！");
-                                    window.location.reload();
 							}});
 
 					}
@@ -352,7 +351,9 @@
 							//成功响应的结果
 							success: function (data) {
 								if(data!=null)
-								console.log(data.order);
+									var order = data.order;
+								   var order_id = order.order_id;
+								window.location.href="/pay?order_id="+order_id;
 							}});
 
 					}

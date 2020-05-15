@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 //团购页面的服务函数
@@ -151,9 +152,12 @@ public class GroupBuyServiceImp implements GroupBuyService {
         groupBuyOrderTemp.setNum(num);
         groupBuyOrderTemp.setPrice(groupBuyBeans.getPrice());
         groupBuyOrderTemp.setTotal_price(total_price);
-        int tempOrderId = groupBuyMapper.insertTempGroupBuyOrder(groupBuyOrderTemp);
+        groupBuyOrderTemp.setUuid(UUID.randomUUID().toString());
+//        System.out.println("生成的uuid:"+groupBuyOrderTemp.getUuid());
+        groupBuyMapper.insertTempGroupBuyOrder(groupBuyOrderTemp);
+//        System.out.println(groupBuyOrderTemp.getId());
         jsonObject.put("status",0);
-        jsonObject.put("order_id",tempOrderId);
+        jsonObject.put("order_id",groupBuyOrderTemp.getId());
         return jsonObject.toJSONString();
     }
 }

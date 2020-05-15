@@ -21,5 +21,5 @@ public class AlipayConfig {
     public final static String RETURN_URL = "http://localhost:8080";
     //  public final static String RETURN_URL = "http://localhost:28089/alipay/alipayReturnNotice";//本地回调
 
-    public final static String GROUP_BUY_RETURN_URL = "http://localhost:8080/groupBuy/groupBuyPay/alipay_return";//团购支付宝支付回调
+    public final static String GROUP_BUY_RETURN_URL = "http://localhost:8080/group_buy";//团购支付宝支付回调
 }

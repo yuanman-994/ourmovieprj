@@ -193,8 +193,9 @@
                     alert("超出售票上限或没有余量！！");
                     $("#submit-order").attr("disabled", false);
                 } else if (t.status == 0) {
-                    // var pay_url = '/groupBuy/groupBuyPay/alipay?order_id='+t.order_id;
-                    var pay_url = '/groupBuy/groupBuyPay/alipay';
+                    console.log(t);
+                    console.log(t.order_id);
+                    var pay_url = '/groupBuy/groupBuyPay/alipay?order_id='+t.order_id;
                     $("#submit-order").after('<a id="ali-pay" href="'+pay_url+'">前往支付宝支付</a>');
                 }
             })

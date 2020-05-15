@@ -1,114 +1,189 @@
 package com.movieprj.controllers;
 
+import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.movieprj.beans.GroupBuyBeans;
+import com.movieprj.beans.GroupBuyOrder;
+import com.movieprj.beans.GroupBuyOrderTemp;
 import com.movieprj.mapper.GroupBuyMapper;
 import com.movieprj.util.AlipayConfig;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 public class PayController {
     @Resource
     private GroupBuyMapper groupBuyMapper;
 
-    @RequestMapping("/groupBuy/groupBuyPay/alipay")//团购，支付宝支付
-    public void GroupBuyPayAli(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        //获得初始化的AlipayClient
-        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.GATEWAY_URL, AlipayConfig.APP_ID, AlipayConfig.APP_PRIVATE_KEY, AlipayConfig.FORMAT, AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGN_TYPE);
-        //设置请求参数
-        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
+    @RequestMapping(value = "/groupBuy/groupBuyPay/alipay",method = RequestMethod.GET)
+    @ResponseBody
+    public  String   Alipay(@RequestParam("order_id") int order_id){
+        // 获得一个支付宝请求的客户端(它并不是一个链接，而是一个封装好的http的表单请求)
+        String form = null;
+        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();//创建API对应的request
+
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.GATEWAY_URL, AlipayConfig.APP_ID, AlipayConfig.APP_PRIVATE_KEY, "json", AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGN_TYPE);
+
+        // 回调函数
         alipayRequest.setReturnUrl(AlipayConfig.GROUP_BUY_RETURN_URL);
         alipayRequest.setNotifyUrl(AlipayConfig.NOTIFY_URL);
 
-        //商户订单号必填
-        //商户订单号，商户网站订单系统中唯一订单号，必填
-        String out_trade_no = String.valueOf(3);
-//        System.out.println("out_trade_no=" + out_trade_no);
-        //付款金额，必填
-        String total_amount = String.valueOf(200);
-        //订单名称，必填
-        String subject = "233";
-        //商品描述，可空
-        String body = "233";
+        GroupBuyOrderTemp groupBuyOrderTemp = groupBuyMapper.getGroupBuyOrderTempBuyId(order_id);
+        if (groupBuyOrderTemp==null)
+            return form;
 
-        alipayRequest.setBizContent("{\"out_trade_no\":\"" + out_trade_no + "\","
-                + "\"total_amount\":\"" + total_amount + "\","
-                + "\"subject\":\"" + subject + "\","
-                + "\"body\":\"" + body + "\","
-                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
+        String orderCreatTime = groupBuyOrderTemp.getTime();//交易创建时间
+//        System.out.println(orderCreatTime);
+        long time = Timestamp.valueOf(orderCreatTime).getTime();
+        time += 300000;//设置绝对超时时间为交易创建时间5分钟后（360000毫秒）但是数据库时间似乎慢了2分钟，实际超时时间是三分钟
+//        System.out.println(time);
+        Timestamp timestamp = new Timestamp(time);
+//        System.out.println(timestamp);
+        String time_expire = timestamp.toString();
+//        System.out.println(time_expire);
 
-        //若想给BizContent增加其他可选请求参数，以增加自定义超时时间参数timeout_express来举例说明
-        //alipayRequest.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\","
-        //		+ "\"total_amount\":\""+ total_amount +"\","
-        //		+ "\"subject\":\""+ subject +"\","
-        //		+ "\"body\":\""+ body +"\","
-        //		+ "\"timeout_express\":\"10m\","
-        //		+ "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
-        //请求参数可查阅【电脑网站支付的API文档-alipay.trade.page.pay-请求参数】章节
+//        System.out.println("uuid"+groupBuyOrderTemp.getUuid());
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("out_trade_no", groupBuyOrderTemp.getUuid());
+        map.put("product_code","FAST_INSTANT_TRADE_PAY");
+        map.put("total_amount",groupBuyOrderTemp.getTotal_price());
 
-        //请求
+        map.put("time_expire",time_expire);
 
-        String result = "";
+        map.put("subject","华莱坞影城团购票");
+
+        String param = JSON.toJSONString(map);
+
+        alipayRequest.setBizContent(param);
+
         try {
-            result = alipayClient.pageExecute(alipayRequest).getBody();
+
+            form = alipayClient.pageExecute(alipayRequest).getBody(); //调用SDK生成表单
+//            System.out.println(form);
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
-
-        response.setContentType("text/html;charset=" + AlipayConfig.CHARSET);
-        response.getWriter().write(result);// 直接将完整的表单html输出到页面
-        response.getWriter().flush();
-        response.getWriter().close();
+        return form;
     }
 
-    @RequestMapping("/groupBuy/groupBuyPay/alipay_return")//团购支付宝支付回调
-    public String groupBuyPayAlireturn(HttpServletRequest request) throws UnsupportedEncodingException, AlipayApiException{
-        Map<String,String> params = new HashMap<String,String>();
-        Map<String,String[]> requestParams = request.getParameterMap();
-        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
-            String name = (String) iter.next();
-            String[] values = (String[]) requestParams.get(name);
-            String valueStr = "";
-            for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i]
-                        : valueStr + values[i] + ",";
+    /*
+      统一收单线下交易查询
+      */
+    @RequestMapping(value = "/alipayQuery",method = RequestMethod.GET)
+    @ResponseBody
+    public  String  AlipayQuery() throws AlipayApiException {
+        // 获得一个支付宝请求的客户端(它并不是一个链接，而是一个封装好的http的表单请求)
+        String form = null;
+        AlipayTradeQueryRequest alipayRequest = new AlipayTradeQueryRequest();//创建API对应的request
+
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.GATEWAY_URL, AlipayConfig.APP_ID, AlipayConfig.APP_PRIVATE_KEY, "json", AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGN_TYPE);
+
+        // 回调函数
+        alipayRequest.setReturnUrl(AlipayConfig.GROUP_BUY_RETURN_URL);
+        alipayRequest.setNotifyUrl(AlipayConfig.NOTIFY_URL);
+
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("out_trade_no","c55c1b07-dea7-4066-920f-c56239a5e946");
+        String param = JSON.toJSONString(map);
+        alipayRequest.setBizContent(param);
+        AlipayTradeQueryResponse response = alipayClient.execute(alipayRequest);
+        String msg = response.getMsg();
+//        System.out.println(msg);
+//        System.out.println(response);
+        return  msg;
+    }
+
+
+    @Scheduled(fixedDelay=10*1000)
+    public void QueryOrder(){//定时查询订单状态
+        List<GroupBuyOrderTemp> groupBuyOrderTemps = groupBuyMapper.getAllGroupBuyOrderTemp();
+//        System.out.println(groupBuyOrderTemps);
+        long now = System.currentTimeMillis();//当前系统时间（毫秒）
+        for (GroupBuyOrderTemp groupBuyOrderTemp : groupBuyOrderTemps){
+            String time = groupBuyOrderTemp.getTime();//订单创建时间
+            long time_expire = Timestamp.valueOf(time).getTime()+600*1000;//该订单的绝对超时时间（毫秒） 10分钟
+            if (time_expire<now){
+//                System.out.println("检测到临时订单"+groupBuyOrderTemp.getId()+"已超时");
+                if (IsPaySuccess(groupBuyOrderTemp)){//检测已超时的订单检查是否已完成支付
+                    System.out.println("订单"+groupBuyOrderTemp.getId()+"已完成支付,删除临时订单，转存正式订单数据库");
+                    MoveOrder(groupBuyOrderTemp);
+                } else {
+                    System.out.println("订单"+groupBuyOrderTemp.getId()+"已超时且未完成支付，现取消，并将重设票余量");
+                    cancelOrder(groupBuyOrderTemp);
+                }
             }
-            //乱码解决，这段代码在出现乱码时使用
-            valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
-            params.put(name, valueStr);
-        }
-        System.out.println("params:"+params);
-        boolean signVerified = AlipaySignature.rsaCheckV1(params,AlipayConfig.ALIPAY_PUBLIC_KEY,AlipayConfig.CHARSET,AlipayConfig.SIGN_TYPE); //调用SDK验证签名
-
-        //——请在这里编写您的程序（以下代码仅作参考）——
-        if(signVerified) {
-            //验证成功，订单存数据库
-            //商户订单号
-            String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
-            //支付宝交易号
-            String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
-            //付款金额
-            String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"),"UTF-8");
-
-            System.out.println(out_trade_no);
-            //存入数据库
-            return "/group_buy";
-        }else {
-            return "验签失败";
         }
     }
 
+    public boolean IsPaySuccess(GroupBuyOrderTemp groupBuyOrderTemp) {
+
+        // 获得一个支付宝请求的客户端(它并不是一个链接，而是一个封装好的http的表单请求)
+        String form = null;
+        AlipayTradeQueryRequest alipayRequest = new AlipayTradeQueryRequest();//创建API对应的request
+
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.GATEWAY_URL, AlipayConfig.APP_ID, AlipayConfig.APP_PRIVATE_KEY, "json", AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGN_TYPE);
+
+        // 回调函数
+        alipayRequest.setReturnUrl(AlipayConfig.GROUP_BUY_RETURN_URL);
+        alipayRequest.setNotifyUrl(AlipayConfig.NOTIFY_URL);
+
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("out_trade_no",groupBuyOrderTemp.getUuid());
+        String param = JSON.toJSONString(map);
+        alipayRequest.setBizContent(param);
+        String code;
+        try {
+            AlipayTradeQueryResponse response = alipayClient.execute(alipayRequest);
+            code = response.getCode();
+//            System.out.println("订单"+groupBuyOrderTemp.getId()+":"+msg);
+        } catch (Exception e){
+            return false;
+        }
+//        System.out.println(code);
+        if (Integer.parseInt(code)==10000)//支付成功
+            return true;
+        else
+            return false;
+    }
+
+    @Transactional(isolation= Isolation.REPEATABLE_READ )
+    public void MoveOrder(GroupBuyOrderTemp groupBuyOrderTemp){//转存已完成支付的临时订单至订单表
+        GroupBuyOrder groupBuyOrder = new GroupBuyOrder();
+        groupBuyOrder.setGroup_buy_id(groupBuyOrderTemp.getGroup_buy_id());
+        groupBuyOrder.setPrice(groupBuyOrderTemp.getPrice());
+        groupBuyOrder.setTicket_num(groupBuyOrderTemp.getNum());
+        groupBuyOrder.setTotal_price(groupBuyOrder.getTotal_price());
+        groupBuyOrder.setUser_id(groupBuyOrderTemp.getUser_id());
+        groupBuyOrder.setUuid(groupBuyOrderTemp.getUuid());
+        groupBuyOrder.setVerification_code("验证码未完成");
+        groupBuyMapper.insertGroupBuyOrder(groupBuyOrder);
+        groupBuyMapper.deleteGroupBuyOrderTempBuyId(groupBuyOrderTemp.getId());
+    }
+
+    @Transactional(isolation= Isolation.REPEATABLE_READ )
+    public void cancelOrder(GroupBuyOrderTemp groupBuyOrderTemp){
+        int num = groupBuyOrderTemp.getNum();
+        GroupBuyBeans groupBuyBeans = groupBuyMapper.findById(groupBuyOrderTemp.getGroup_buy_id());
+        groupBuyBeans.setNow_sales(groupBuyBeans.getNow_sales()-num);
+        groupBuyMapper.updateNowSales(groupBuyBeans);
+        groupBuyMapper.deleteGroupBuyOrderTempBuyId(groupBuyOrderTemp.getId());
+    }
 }

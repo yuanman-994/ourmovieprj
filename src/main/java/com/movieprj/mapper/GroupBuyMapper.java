@@ -3,6 +3,7 @@ package com.movieprj.mapper;
 import com.movieprj.beans.Article;
 import com.movieprj.beans.GroupBuyBeans;
 
+import com.movieprj.beans.GroupBuyOrder;
 import com.movieprj.beans.GroupBuyOrderTemp;
 import org.apache.ibatis.annotations.*;
 
@@ -40,11 +41,22 @@ public interface GroupBuyMapper {
     @Update("UPDATE group_buy SET now_sales = #{now_sales} WHERE group_buy_id=#{group_buy_id}")
     public void updateNowSales(GroupBuyBeans groupBuyBeans);
 
-    @Insert("INSERT INTO group_buy_order_temp(group_buy_id,user_id,num,price,total_price,time)" +
-            "VALUES (#{group_buy_id},#{user_id},#{num},#{price},#{total_price},CURRENT_TIMESTAMP())")
+    @Insert("INSERT INTO group_buy_order_temp(group_buy_id,user_id,num,price,total_price,time,uuid)" +
+            "VALUES (#{group_buy_id},#{user_id},#{num},#{price},#{total_price},CURRENT_TIMESTAMP(),#{uuid})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    public int insertTempGroupBuyOrder(GroupBuyOrderTemp groupBuyOrderTemp);
+    public void insertTempGroupBuyOrder(GroupBuyOrderTemp groupBuyOrderTemp);
 
     @Select("SELECT * FROM group_buy_order_temp WHERE id =#{id}")
     public GroupBuyOrderTemp getGroupBuyOrderTempBuyId(int id);
+
+    @Select("SELECT * FROM group_buy_order_temp")
+    public List<GroupBuyOrderTemp> getAllGroupBuyOrderTemp();
+
+    @Insert("INSERT INTO group_buy_order(group_buy_id,user_id,ticket_num,price,total_price,time,uuid,verification_code)" +
+            "VALUES (#{group_buy_id},#{user_id},#{ticket_num},#{price},#{total_price},CURRENT_TIMESTAMP(),#{uuid},#{verification_code})")
+    @Options(useGeneratedKeys = true, keyProperty = "order_id", keyColumn = "order_id")
+    public void insertGroupBuyOrder(GroupBuyOrder groupBuyOrder);
+
+    @Delete("DELETE FROM group_buy_order_temp WHERE id =#{id}")
+    public void deleteGroupBuyOrderTempBuyId(int id);
 }

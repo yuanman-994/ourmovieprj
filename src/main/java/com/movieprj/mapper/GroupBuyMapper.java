@@ -3,6 +3,7 @@ package com.movieprj.mapper;
 import com.movieprj.beans.Article;
 import com.movieprj.beans.GroupBuyBeans;
 
+import com.movieprj.beans.GroupBuyOrderTemp;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -35,4 +36,15 @@ public interface GroupBuyMapper {
 
     @Update("UPDATE group_buy SET end_sell = CURRENT_TIMESTAMP() WHERE group_buy_id=#{id}")
     public void stopSellById(int id);
+
+    @Update("UPDATE group_buy SET now_sales = #{now_sales} WHERE group_buy_id=#{group_buy_id}")
+    public void updateNowSales(GroupBuyBeans groupBuyBeans);
+
+    @Insert("INSERT INTO group_buy_order_temp(group_buy_id,user_id,num,price,total_price,time)" +
+            "VALUES (#{group_buy_id},#{user_id},#{num},#{price},#{total_price},CURRENT_TIMESTAMP())")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    public int insertTempGroupBuyOrder(GroupBuyOrderTemp groupBuyOrderTemp);
+
+    @Select("SELECT * FROM group_buy_order_temp WHERE id =#{id}")
+    public GroupBuyOrderTemp getGroupBuyOrderTempBuyId(int id);
 }

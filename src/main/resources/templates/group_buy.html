@@ -110,18 +110,14 @@
             result += '<a href="#" data-toggle="modal" data-target="#pay" onclick="loadInf(this)">购票</a>';
             return result;
         }
+
         function loadInf(obj) {
             var cells = obj.parentNode.parentNode.childNodes;
-            // console.log(cells[0].innerHTML);
-
             $('#inf-group-buy-id').val(cells[0].innerHTML);
             $('#inf-cinema-name').val(cells[1].innerHTML);
             $('#inf-start-time').val(cells[2].innerHTML);
             $('#inf-end-time').val(cells[3].innerHTML);
             $('#inf-price').val(cells[8].innerHTML);
-        }
-        function pay() {
-            //支付相关未完成
         }
 
         function load_group_buy_data_past() {//请求当期团购数据,并动态创建页面对象。
@@ -171,6 +167,44 @@
                 ],
             })
         };
+
+        function submit_order() {//先提交订单，保存在临时订单数据表中，支付成功后生成最终订单。超时后移除临时订单。
+            var group_buy_id = $('#inf-group-buy-id').val();
+            var num = $('#inf-num').val();
+            if (num == null || num == 0) {
+                alert("请输入购买数量！！");
+                return;
+            }
+            if (!/^[0-9]*$/.test(num)) {
+                alert("只能输入数字！！")
+                return;
+            }
+            if (num > 5) {
+                alert("不能一次性买多于五张！！")
+                return;
+            }
+            $("#submit-order").attr("disabled", true);
+            $.get("/group_buy/add_temp_order?group_buy_id=" + group_buy_id + "&num=" + num, function (data) {//返回0：成功 -1：失败
+                var t = JSON.parse(data);//{"order_id":生成的临时订单id,"status":状态，0正常，-1，-2异常}
+                if (t.status == -1) {
+                    alert("登录异常,生成订单失败！！！");
+                    $("#submit-order").attr("disabled", false);
+                } else if (t.status == -2) {
+                    alert("超出售票上限或没有余量！！");
+                    $("#submit-order").attr("disabled", false);
+                } else if (t.status == 0) {
+                    // var pay_url = '/groupBuy/groupBuyPay/alipay?order_id='+t.order_id;
+                    var pay_url = '/groupBuy/groupBuyPay/alipay';
+                    $("#submit-order").after('<a id="ali-pay" href="'+pay_url+'">前往支付宝支付</a>');
+                }
+            })
+        }
+
+        $(function () {
+            $("#submit-order").on("click", function () {
+                submit_order();
+            })
+        })
     </script>
     <!-- start-smoth-scrolling -->
 </head>
@@ -189,30 +223,33 @@
                 <h3 class="bars">订单信息:</h3>
                 <div class="input-group w3_w3layouts">
                     <span class="input-group-addon">团购id</span>
-                    <input type="text" id="inf-group-buy-id" class="form-control" aria-describedby="basic-addon1" disabled>
+                    <input type="text" id="inf-group-buy-id" class="form-control" aria-describedby="basic-addon1"
+                           disabled>
                 </div>
                 <div class="input-group w3_w3layouts">
                     <span class="input-group-addon">影院名</span>
-                    <input type="text" id="inf-cinema-name" class="form-control" aria-describedby="basic-addon1" disabled>
+                    <input type="text" id="inf-cinema-name" class="form-control" aria-describedby="basic-addon1"
+                           disabled>
                 </div>
                 <div class="input-group w3_w3layouts">
-                    <span class="input-group-addon" >开始时间</span>
-                    <input type="text" id="inf-start-time" class="form-control" aria-describedby="basic-addon1" disabled>
+                    <span class="input-group-addon">开始时间</span>
+                    <input type="text" id="inf-start-time" class="form-control" aria-describedby="basic-addon1"
+                           disabled>
                 </div>
                 <div class="input-group w3_w3layouts">
-                    <span class="input-group-addon" >结束时间</span>
+                    <span class="input-group-addon">结束时间</span>
                     <input type="text" id="inf-end-time" class="form-control" aria-describedby="basic-addon1" disabled>
                 </div>
                 <div class="input-group w3_w3layouts">
-                    <span class="input-group-addon" >价格</span>
+                    <span class="input-group-addon">价格</span>
                     <input type="text" id="inf-price" class="form-control" aria-describedby="basic-addon1" disabled>
                 </div>
                 <div class="input-group w3_w3layouts">
-                    <span class="input-group-addon" >购买数量</span>
-                    <input type="text" id="inf-num" class="form-control" placeholder="请输入" aria-describedby="basic-addon1">
+                    <span class="input-group-addon">购买数量</span>
+                    <input type="text" id="inf-num" class="form-control" placeholder="请输入"
+                           aria-describedby="basic-addon1">
                 </div>
-                <a onclick="pay()" href="#"><span class="label label-success">立即支付</span></a>
-
+                <button id="submit-order">提交订单</button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>

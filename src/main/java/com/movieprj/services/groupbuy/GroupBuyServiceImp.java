@@ -5,9 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movieprj.beans.Cinema;
 import com.movieprj.beans.GroupBuyBeans;
+import com.movieprj.beans.GroupBuyOrderTemp;
 import com.movieprj.mapper.CinemaMapper;
 import com.movieprj.mapper.GroupBuyMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -119,5 +122,38 @@ public class GroupBuyServiceImp implements GroupBuyService {
             return -1;
         }
         return 0;
+    }
+
+    @Override
+    @Transactional(isolation= Isolation.REPEATABLE_READ )
+    public String addTempOrder(int id, int num, int user_id) {
+        GroupBuyBeans groupBuyBeans = groupBuyMapper.findById(id);
+        float total_price = groupBuyBeans.getPrice()*num;
+        int now = groupBuyBeans.getNow_sales();
+        int max = groupBuyBeans.getMax_sales();
+
+        JSONObject jsonObject = new JSONObject();
+
+
+        if (now+num>max){
+            jsonObject.put("status",-2);
+            jsonObject.put("order_id",-1);
+            return jsonObject.toString();//超上限
+        }
+        else{
+            groupBuyBeans.setNow_sales(now+num);
+            groupBuyMapper.updateNowSales(groupBuyBeans);
+        }
+
+        GroupBuyOrderTemp groupBuyOrderTemp = new GroupBuyOrderTemp();
+        groupBuyOrderTemp.setGroup_buy_id(id);
+        groupBuyOrderTemp.setUser_id(user_id);
+        groupBuyOrderTemp.setNum(num);
+        groupBuyOrderTemp.setPrice(groupBuyBeans.getPrice());
+        groupBuyOrderTemp.setTotal_price(total_price);
+        int tempOrderId = groupBuyMapper.insertTempGroupBuyOrder(groupBuyOrderTemp);
+        jsonObject.put("status",0);
+        jsonObject.put("order_id",tempOrderId);
+        return jsonObject.toJSONString();
     }
 }

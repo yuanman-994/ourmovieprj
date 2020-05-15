@@ -9,4 +9,5 @@ public interface GroupBuyService {
     public int saveGroupBuy(GroupBuyBeans groupBuyBeans);
     public int updateGroupBuy(GroupBuyBeans groupBuyBeans);
     public int stopSell(int[] ids);
+    public String addTempOrder(int id,int num,int user_id);
 }

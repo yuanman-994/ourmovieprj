@@ -1,7 +1,11 @@
 package com.movieprj.controllers;
 
+import com.alibaba.fastjson.JSONObject;
 import com.movieprj.beans.GroupBuyBeans;
+import com.movieprj.services.LoginServiceImpl;
 import com.movieprj.services.groupbuy.GroupBuyServiceImp;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 public class GroupBuyController {
     @Autowired
     private GroupBuyServiceImp groupBuyServiceImp;
+
+    @Autowired
+    private LoginServiceImpl loginServiceImp;
 
     //前台部分
     @RequestMapping("/group_buy")
@@ -71,5 +78,21 @@ public class GroupBuyController {
     @ResponseBody
     public int stopSell(int[] ids){
         return groupBuyServiceImp.stopSell(ids);
+    }
+
+    @GetMapping("/group_buy/add_temp_order")
+    @ResponseBody
+    public String addOrder(@RequestParam("group_buy_id") int group_buy_id,@RequestParam("num") int num){
+        Subject currentSubject = SecurityUtils.getSubject();
+
+        if (!currentSubject.isAuthenticated()){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("status",-1);
+            jsonObject.put("order_id",-1);
+            return  jsonObject.toJSONString();//登录异常
+        }
+        String user_name = (String) currentSubject.getPrincipal();
+        int user_id = loginServiceImp.getUserByName(user_name).getUser_id();
+        return groupBuyServiceImp.addTempOrder(group_buy_id,num,user_id);
     }
 }

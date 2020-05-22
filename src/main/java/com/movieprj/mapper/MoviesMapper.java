@@ -71,8 +71,9 @@ public interface MoviesMapper {
     })
     public List<Movies> searchMovies(@Param(value = "movie_name") String movie_name,@Param(value = "select_date") String select_date,@Param(value = "select_status") String select_status);
 
-    @Select("SELECT * FROM movie WHERE onshow =1")
+    @Select("SELECT * FROM movie WHERE onshow =#{onshow}")
     public  List<Movies> selectMoviesByOnshow(Integer onshow);
+
 
     @Insert("INSERT INTO movie (movie_id,cover,movie_name,director,main_actor,intro,rank,release_date,onshow,comment_permission) " +
             "VALUES (#{movie_id},#{cover},#{movie_name},#{director},#{main_actor},#{intro},#{rank},#{release_date},#{onshow},#{comment_permission})")

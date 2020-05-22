@@ -24,6 +24,7 @@ public interface TicketOrderMapper {
 
     @Insert("INSERT INTO ticket_order (order_id,user_id,movie_schedule_id,time,price,pay_way) " +
             "VALUES (#{order_id},#{user_id},#{movie_schedule_id},#{time},#{price},#{pay_way})")
+    @Options(useGeneratedKeys=true, keyProperty="order_id", keyColumn="order_id")
     public int addTicketOrder(TicketOrder ticketOrder);
 
     @Delete("DELETE FROM ticket_order WHERE order_id = #{order_id}")

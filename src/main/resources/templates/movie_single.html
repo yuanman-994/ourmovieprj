@@ -35,6 +35,7 @@
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
     <script type="text/javascript" th:src="@{js/easing.js}"></script>
     <script th:src="@{js/login.js}"></script>
+    <script th:src="@{js/jquery.raty.js}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($) {
             $(".scroll").click(function(event){
@@ -47,7 +48,7 @@
     <link th:href="@{css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
     <script th:src="@{js/owl.carousel.js}"></script>
     <script>
-        $(document).ready(function() {
+        /*$(document).ready(function() {
             $("#owl-demo").owlCarousel({
 
                 autoPlay: 3000, //Set AutoPlay to 3 seconds
@@ -58,7 +59,7 @@
 
             });
 
-        });
+        });*/
     </script>
     <script th:src="@{js/simplePlayer.js}"></script>
     <script>
@@ -230,7 +231,7 @@
                     html+='</div>';
                     html+='<div class="media-body">';
                     html+='<p>'+content+'</p>';
-                    html+='<span>View all posts by :<a href="#"> Admin </a></span>'
+                    html+='<span>View all posts by :<a href="#">'+username+'</a></span>'
                     html+='</div>';
                     html+='</div>';
                 }
@@ -277,7 +278,7 @@
             var url = document.location.href;
             var movie_id = getParam(url,'movie_id');
             document.getElementById("movie_id").value=movie_id;
-            document.getElementById("user_id").value=8;
+            document.getElementById("user_id").value=15;
             var id;
             $.ajax({
                 url: "/moviesInfo?movie_id="+movie_id,
@@ -297,12 +298,11 @@
                             '<li><p>电影名: <a href="#">'+movie.movie_name+'</a></p></li>' +
                             '<li><p>主演: <a href="#">'+movie.main_actor+'</a></p></li>' +
                             '<li><p>导演: <a href="#">'+movie.director+'</a></p></li>' +
-                            '<li><p>评分: <a href="#">'+movie.rank+'</a></p></li>' +
+                            '<li><p>评分: <a id="stars"></a></p></li>' +
                             '<li><p>上映日期: <a href="#">'+movie.release_date+'</a></p></li>' +
                             '<li><a class="button bt1" href="/movie_schedule?movie_id='+movie_id+'">立即购票</a><a class="button bt1" href="#">Trailer</a></li>' +
-                            '<li class="star"><a href="#"><img src="images/star.png" /></a></li>' +
                             '</ul>';
-                             //document.getElementById("moviestest").innerHTML = m;
+
                         $('#moviesInfo').html(m);
                         document.getElementById("movie-cover").src=movie.cover;
                         document.getElementById("introduce").innerHTML = '<h2>电影简介</h2><br>'+'<p>'+movie.intro+'</p>';
@@ -310,16 +310,141 @@
                             document.getElementById("produce-comment").style.display = "none";
                             document.getElementById("warn-comment").innerHTML = '<h1>此影片已禁止评论！请联系网站管理员！</h1>';
                         }
+                    $('#stars').raty({
+                        path:"images"
+                    });
+                    $('#stars').raty('score', movie.rank/2);
+                    $('#stars').raty('readOnly', 1);
 
                 }});
 
         }
     };
+    var OnshowMovies = {
+        getInfo: function () {
+            //url:表示后台的url，就是 RequestMapping配置的内容
+            // type：http请求的类型
+            var id;
+            $.ajax({
+                url: "/onshowMovies",
+                data:{id:id},
+                type: "post",
+                async:false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var moviesList = data.moviesList;
+                    //拼接html语句
+                    var html='';
+                    for(var n=0; n<moviesList.length;n++){
+                        html+='<div class="item" id="onshowMovies'+n+'"></div>';
+                    }
+                    document.getElementById("owl-demo").innerHTML = html;
+                    var m='';
+                    for(var i=0; i<moviesList.length;i++){
+                        console.log(moviesList[i].movie_id);
+                        m='';
+                        m+=
+                            '<div class="w3l-movie-gride-agile w3l-movie-gride-agile1">' +
+                            '<a href="/movie_single?movie_id='+moviesList[i].movie_id+'" class="hvr-shutter-out-horizontal"><img src="'+moviesList[i].cover+'" title="album-name" class="img-responsive" alt=" " />' +
+                            '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
+                            '</a>' +
+                            '<div class="mid-1 agileits_w3layouts_mid_1_home">' +
+                            '<div class="w3l-movie-text">' +
+                            '<h6><a style="font-size:1.1em;" href="/movie_single?movie_id='+moviesList[i].movie_id+'">'+moviesList[i].movie_name+'</a></h6>' +
+                            '</div>' +
+                            '<div class="mid-2 agile_mid_2_home">' +
+                            '<p style="float:none">'+moviesList[i].release_date+'</p>' +
+                            '<div class="block-stars" id="stars'+i+'" style="float:none">' +
+                            '</div>' +
+                            '<div class="clearfix"></div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="ribben">' +
+                            '<p>NEW</p>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+                        $('#onshowMovies'+i).html(m);
+                        $('#stars'+i).raty({
+                            path:"images"
+                        });
+                        $('#stars'+i).raty('score', moviesList[i].rank/2);
+                        $('#o-stars'+i).raty('readOnly', 1);
+                    }
+                    $("#owl-demo").owlCarousel({
+
+                        autoPlay: 3000, //Set AutoPlay to 3 seconds
+
+                        items : 5,
+                        itemsDesktop : [640,5],
+                        itemsDesktopSmall : [414,4]
+
+                    });
+
+                }});
+
+        }
+    };
+    function SoonMovies() {
+        var id;
+        $.ajax({
+            url: "/soonMovies",
+            data:{id:id},
+            type: "post",
+            async:false,
+            // 定义发送请求的数据格式为JSON字符串
+            contentType: "application/json;charset=UTF-8",
+            //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+            dataType: "json",
+            //成功响应的结果
+            success: function (data) {
+                var moviesList = data.moviesList;
+                //拼接html语句
+                var m='';
+                for(var i=0; i<moviesList.length;i++){
+                    m+='<div class="single-right-grids">' +
+                        '<div class="col-md-4 single-right-grid-left">\n' +
+                        '<a href="/movie_single?movie_id=' + moviesList[i].movie_id + '"><img src="'+moviesList[i].cover+'" alt="" /></a>' +
+                        '</div>' +
+                        '<div class="col-md-8 single-right-grid-right">' +
+                        '<a href="/movie_single?movie_id=' + moviesList[i].movie_id + '" class="title">'+moviesList[i].movie_name+'</a>' +
+                        '<p class="author"><a href="#" class="author">'+moviesList[i].director+'</a></p>' +
+                        '<p class="views">'+moviesList[i].release_date+'</p>' +
+                        '</div>' +
+                        '<div class="clearfix"> </div>' +
+                        '</div>'
+                }
+                document.getElementById("right").innerHTML = m;
+
+
+
+            }});
+
+    }
+
+    function submit() {
+        var score = $('#score-stars').raty('score');
+        var score1= score*2;
+        document.getElementById("score").value = score1;
+        console.log(score);
+        $("#addComment").submit();
+        alert("评论成功！");
+        window.location.reload();
+    }
 </script>
 <script>
     $(function () {
         showPage(1);
         Movies.getInfo();
+        OnshowMovies.getInfo();
+        SoonMovies();
+        $('#score-stars').raty({
+            path:"images"
+        });
     });
 
     function success(){
@@ -354,6 +479,8 @@
                         </div>
                         <div class="col-2-3">
                             <div id="moviesInfo" class="wrap-col">
+                                <div id="stars">
+                                </div>
                             </div>
                         </div>
                         <div class="clear"></div>
@@ -457,108 +584,24 @@
                     <div class="all-comments" id="produce-comment">
                         <div class="all-comments-info">
                             <a href="#">Comments</a>
+                            <p>评分: <a id="score-stars"></a></p>
                             <div class="agile-info-wthree-box">
-                                <form action="/addMComment" method="post">
+                                <form id="addComment" action="/addMComment" method="post">
                                     <input type="hidden" id="movie_id" name="movie_id" value="">
                                     <input type="hidden" id="user_id" name="user_id" value="">
+                                    <input type="hidden" id="score" name="score" value="">
                                     <textarea id="content" name="content" placeholder="评论内容" required="required"></textarea>
-                                    <input type="submit" value="发表评论" onclick="success()">
-                                    <!--<div class="clearfix"> </div>-->
                                 </form>
+                                <a class="button bt1" style="font-size:15px" onclick="submit()">发表评论</a>
                             </div>
                         </div>
                     </div>
                     <div id="warn-comment"></div>
                 </div>
                 <div class="col-md-4 single-right">
-                    <h3>Up Next</h3>
-                    <div class="single-grid-right">
-                        <div class="single-right-grids">
-                            <div class="col-md-4 single-right-grid-left">
-                                <a th:href="@{/movie_single}"><img src="images/m1.jpg" alt="" /></a>
-                            </div>
-                            <div class="col-md-8 single-right-grid-right">
-                                <a th:href="@{/movie_single}" class="title"> Nullam interdum metus</a>
-                                <p class="author"><a href="#" class="author">John Maniya</a></p>
-                                <p class="views">2,114,200 views</p>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <div class="single-right-grids">
-                            <div class="col-md-4 single-right-grid-left"><a th:href="@{/movie_single}"><img src="images/m2.jpg" alt="" /></a></div>
-                            <div class="col-md-8 single-right-grid-right">
-                                <a th:href="@{/movie_single}" class="title"> Nullam interdum metus</a>
-                                <p class="author"><a href="#" class="author">John Maniya</a></p>
-                                <p class="views">2,114,200 views </p>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <div class="single-right-grids">
-                            <div class="col-md-4 single-right-grid-left">
-                                <a th:href="@{/movie_single}"><img src="images/m3.jpg" alt="" /></a>
-                            </div>
-                            <div class="col-md-8 single-right-grid-right">
-                                <a th:href="@{/movie_single}" class="title"> Nullam interdum metus</a>
-                                <p class="author"><a href="#" class="author">John Maniya</a></p>
-                                <p class="views">2,114,200 views</p>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <div class="single-right-grids">
-                            <div class="col-md-4 single-right-grid-left">
-                                <a th:href="@{/movie_single}"><img src="images/m4.jpg" alt="" /></a>
-                            </div>
-                            <div class="col-md-8 single-right-grid-right">
-                                <a th:href="@{/movie_single}" class="title"> Nullam interdum metus</a>
-                                <p class="author"><a href="#" class="author">John Maniya</a></p>
-                                <p class="views">2,114,200 views</p>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <div class="single-right-grids">
-                            <div class="col-md-4 single-right-grid-left">
-                                <a th:href="@{/movie_single}"><img src="images/m5.jpg" alt="" /></a>
-                            </div>
-                            <div class="col-md-8 single-right-grid-right">
-                                <a th:href="@{/movie_single}" class="title"> Nullam interdum metus</a>
-                                <p class="author"><a href="#" class="author">John Maniya</a></p>
-                                <p class="views">2,114,200 views</p>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <div class="single-right-grids">
-                            <div class="col-md-4 single-right-grid-left">
-                                <a th:href="@{/movie_single}"><img src="images/c5.jpg" alt="" /></a>
-                            </div>
-                            <div class="col-md-8 single-right-grid-right">
-                                <a th:href="@{/movie_single}" class="title"> Nullam interdum metus</a>
-                                <p class="author"><a href="#" class="author">John Maniya</a></p>
-                                <p class="views">2,114,200 views</p>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <div class="single-right-grids">
-                            <div class="col-md-4 single-right-grid-left">
-                                <a th:href="@{/movie_single}"><img src="images/m6.jpg" alt="" /></a>
-                            </div>
-                            <div class="col-md-8 single-right-grid-right">
-                                <a th:href="@{/movie_single}" class="title"> Nullam interdum metus</a>
-                                <p class="author">By <a href="#" class="author">John Maniya</a></p>
-                                <p class="views">2,114,200 views</p>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <div class="single-right-grids">
-                            <div class="col-md-4 single-right-grid-left">
-                                <a th:href="@{/movie_single}"><img src="images/m15.jpg" alt="" /></a>
-                            </div>
-                            <div class="col-md-8 single-right-grid-right">
-                                <a th:href="@{/movie_single}" class="title"> Nullam interdum metus</a>
-                                <p class="author">By <a href="#" class="author">John Maniya</a></p>
-                                <p class="views">2,114,200 views</p>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
+                    <h3>Comming Soon</h3>
+                    <div class="single-grid-right" id="right">
+
 
                     </div>
                 </div>
@@ -571,7 +614,7 @@
             <!--body wrapper start-->
             <div class="w3_agile_banner_bottom_grid">
                 <div id="owl-demo" class="owl-carousel owl-theme">
-                    <div class="item">
+              <!--      <div class="item">
                         <div class="w3l-movie-gride-agile w3l-movie-gride-agile1">
                             <a th:href="@{/movie_single}" class="hvr-shutter-out-horizontal"><img src="images/m13.jpg" title="album-name" class="img-responsive" alt=" " />
                                 <div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>
@@ -822,7 +865,7 @@
                                 <p>NEW</p>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <!--body wrapper end-->

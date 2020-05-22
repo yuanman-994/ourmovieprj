@@ -6,6 +6,7 @@ public class Comment {
     private Integer movie_id;  //评论电影id
     private Integer user_id;//发表用户id
     private User user;
+    private Movies movies;
 
     public User getUser() {
         return user;
@@ -58,5 +59,13 @@ public class Comment {
                 ", user_id=" + user_id +
                 ", user=" + user +
                 '}';
+    }
+
+    public Movies getMovies() {
+        return movies;
+    }
+
+    public void setMovies(Movies movies) {
+        this.movies = movies;
     }
 }

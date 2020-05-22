@@ -35,6 +35,10 @@
     <!-- banner-bottom-plugin -->
     <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
     <script th:src="@{js/owl.carousel.js}"></script>
+    <script th:src="@{js/getParam.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/amazeui.min.css}" />
+    <script th:src="@{js/amazeui.min.js}"></script>
+    <script th:src="@{js/jquery.raty.js}"></script>
     <script>
         $(document).ready(function () {
             $("#owl-demo").owlCarousel({
@@ -64,7 +68,199 @@
     </script>
     <!-- start-smoth-scrolling -->
 </head>
+<script>
+    $(function () {
+        OnshowInitial(1);
+        SoonInitial(1);
+    });
+        function  OnshowInitial(page) {
+            var id;
+            $.ajax({
+                url: "/onshowMovies",
+                data:{id:id},
+                type: "post",
+                async:false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var perpage = 24;
+                    var moviesList = data.moviesList;
+                    var moviesTotalNum = data.moviesList.length; //评论记录的总条数
+                    var pageNum = Math.ceil(moviesTotalNum/perpage); //分页的总页数
+                    var modeNum = Math.ceil(moviesTotalNum/6); //模块数
+                    console.log(moviesList);
+                    console.log(modeNum);
+                    //拼接html语句
+                    var m='';
+                    var n;
 
+                        for (var p = 0; p < 4&&p<(modeNum-4*(page-1)); p++) {
+                            m += '<div class="browse-inner">';
+                            for ( n = perpage*(page - 1) + p * 6; n < (perpage*(page - 1) + 6 * (p + 1))&&n<moviesTotalNum; n++) {
+                                console.log(n);
+                                m += '<div class="col-md-2 w3l-movie-gride-agile">' +
+                                    '<a href="/movie_single?movie_id=' + moviesList[n].movie_id + '" class="hvr-shutter-out-horizontal"><img src="' + moviesList[n].cover + '"' +
+                                    'title="album-name" alt=" ">' +
+                                    '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
+                                    '</a>' +
+                                    '<div class="mid-1">' +
+                                    '<div class="w3l-movie-text"' +
+                                    '<h6><a href="/movie_single?movie_id=' + moviesList[n].movie_id + '">' + moviesList[n].movie_name + '</a></h6>' +
+                                    '</div>' +
+                                    '<div class="mid-2">' +
+                                    '<p style="float:none">' + moviesList[n].release_date + '</p>' +
+                                    '<div class="block-stars" style="float:none" id="o-stars'+n+'">' +
+                                    '</div>' +
+                                    '<div class="clearfix"></div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="ribben two">' +
+                                    '<p>NEW</p>' +
+                                    '</div>' +
+                                    '</div>';
+                            }
+                            m += '<div class="clearfix"></div>' +
+                                '</div>';
+                        }
+                            m += '<div class="am-u-lg-12 am-cf">';
+                            m += '<div class="am-cf">' +
+                                '共' + moviesTotalNum + '条记录 /' + pageNum + '页' +
+                                '<div class="am-fr">' +
+                                '<ul class="am-pagination" id="page">';
+                            //判断前面是否还有页面
+                            if (page == 1) {
+                                m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >«</a></li>';
+                            } else {
+                                m += '<li><a href="javascript:OnshowInitial(' + (page - 1) + ')" rel="external nofollow" >«</a></li>';
+                            }
+                            for (var i = 1; i <= pageNum; i++) {
+                                if (i == page) {
+                                    m += '<li class="am-active"><a href="javascript:OnshowInitial(' + i + ')" rel="external nofollow" rel="external nofollow" >' + i + '</a></li>';
+                                } else {
+                                    m += '<li><a href="javascript:OnshowInitial(' + i + ')" rel="external nofollow" rel="external nofollow" >' + i + '</a></li>';
+                                }
+                            }
+                            //判断后面是否还有页面
+                            if (page == pageNum) {
+                                m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >»</a></li>';
+                            } else {
+                                m += '<li><a href="javascript:OnshowInitial(' + (page + 1) + ')" rel="external nofollow" >»</a></li>';
+                            }
+                            m += '</ul>' +
+                                '</div>' +
+                                '</div><hr>'
+                            ;
+
+                        document.getElementById("onshowMovies").innerHTML = m;
+                    for(var x=(page-1)*perpage;x<moviesList.length&&x<page*perpage;x++){
+                        $('#o-stars'+x).raty({
+                            path:"images"
+                        });
+                        $('#o-stars'+x).raty('score', moviesList[x].rank/2);
+                        $('#o-stars'+x).raty('readOnly', 1);}
+
+                }});
+
+        }
+    function  SoonInitial(page) {
+        var id;
+        $.ajax({
+            url: "/soonMovies",
+            data:{id:id},
+            type: "post",
+            async:false,
+            // 定义发送请求的数据格式为JSON字符串
+            contentType: "application/json;charset=UTF-8",
+            //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+            dataType: "json",
+            //成功响应的结果
+            success: function (data) {
+                var perpage = 24;
+                var moviesList = data.moviesList;
+                var moviesTotalNum = data.moviesList.length; //评论记录的总条数
+                var pageNum = Math.ceil(moviesTotalNum/perpage); //分页的总页数
+                var modeNum = Math.ceil(moviesTotalNum/6); //模块数
+                console.log(moviesList);
+                console.log(modeNum);
+                //拼接html语句
+                var m='';
+                var n;
+
+                for (var p = 0; p < 4&&p<(modeNum-4*(page-1)); p++) {
+                    m += '<div class="browse-inner">';
+                    for ( n = perpage*(page - 1) + p * 6; n < (perpage*(page - 1) + 6 * (p + 1))&&n<moviesTotalNum; n++) {
+                        console.log(n);
+                        m += '<div class="col-md-2 w3l-movie-gride-agile">' +
+                            '<a href="/movie_single?movie_id=' + moviesList[n].movie_id + '" class="hvr-shutter-out-horizontal"><img src="' + moviesList[n].cover + '" ' +
+                            'title="album-name" alt=" ">' +
+                            '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
+                            '</a>' +
+                            '<div class="mid-1">' +
+                            '<div class="w3l-movie-text"' +
+                            '<h6><a href="/movie_single?movie_id=' + moviesList[n].movie_id + '">' + moviesList[n].movie_name + '</a></h6>' +
+                            '</div>' +
+                            '<div class="mid-2" >' +
+                            '<p style="float:none">' + moviesList[n].release_date + '</p>' +
+                            '<div class="block-stars" style="float:none" id="s-stars'+n+'">' +
+                            '</div>' +
+                            '<div class="clearfix"></div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="ribben two">' +
+                            '<p>NEW</p>' +
+                            '</div>' +
+                            '</div>';
+                    }
+                    m += '<div class="clearfix"></div>' +
+                        '</div>';
+                }
+                m += '<div class="am-u-lg-12 am-cf">';
+                m += '<div class="am-cf">' +
+                    '共' + moviesTotalNum + '条记录 /' + pageNum + '页' +
+                    '<div class="am-fr">' +
+                    '<ul class="am-pagination" id="page">';
+                //判断前面是否还有页面
+                if (page == 1) {
+                    m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >«</a></li>';
+                } else {
+                    m += '<li><a href="javascript:SoonInitial(' + (page - 1) + ')" rel="external nofollow" >«</a></li>';
+                }
+                for (var i = 1; i <= pageNum; i++) {
+                    if (i == page) {
+                        m += '<li class="am-active"><a href="javascript:SoonInitial(' + i + ')" rel="external nofollow" rel="external nofollow" >' + i + '</a></li>';
+                    } else {
+                        m += '<li><a href="javascript:SoonInitial(' + i + ')" rel="external nofollow" rel="external nofollow" >' + i + '</a></li>';
+                    }
+                }
+                //判断后面是否还有页面
+                if (page == pageNum) {
+                    m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >»</a></li>';
+                } else {
+                    m += '<li><a href="javascript:SoonInitial(' + (page + 1) + ')" rel="external nofollow" >»</a></li>';
+                }
+                m += '</ul>' +
+                    '</div>' +
+                    '</div><hr>'
+                ;
+
+                document.getElementById("soonMovies").innerHTML = m;
+                for(var x=(page-1)*perpage;x<moviesList.length&&x<page*perpage;x++){
+                    $('#s-stars'+x).raty({
+                        path:"images"
+                    });
+                    $('#s-stars'+x).raty('score', moviesList[x].rank/2);
+                    $('#s-stars'+x).raty('readOnly', 1);
+                }
+
+
+            }});
+
+    }
+
+</script>
 <body>
 <div class="header">
     <div class="container">
@@ -204,11 +400,11 @@
                     <div id="myTabContent" class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
                             <!--默认栏内容-->
-                            <div class="movie-on-show">
+                            <div class="movie-on-show" >
                                 <!--/browse-agile-w3ls -->
                                 <div class="browse-agile-w3ls general-w3ls">
-                                    <div class="container">
-                                        <div class="browse-inner">
+                                    <div class="container" id="onshowMovies">
+                                      <!--  <div class="browse-inner">
                                             <div class="col-md-2 w3l-movie-gride-agile">
                                                 <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img src="images/m7.jpg"
                                                                                                               title="album-name" alt=" ">
@@ -400,8 +596,8 @@
 
                                             <div class="clearfix"></div>
                                         </div>
-                                        <!-- /latest-movies1 -->
-                                        <div class="browse-inner-come-agile-w3">
+                                        &lt;!&ndash; /latest-movies1 &ndash;&gt;
+                                        <div class="browse-inner">
                                             <div class="col-md-2 w3l-movie-gride-agile">
                                                 <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img src="images/c7.jpg"
                                                                                                               title="album-name" alt=" ">
@@ -593,8 +789,8 @@
 
                                             <div class="clearfix"></div>
                                         </div>
-                                        <!-- //latest-movies1 -->
-                                        <!-- /latest-movies1 -->
+                                        &lt;!&ndash; //latest-movies1 &ndash;&gt;
+                                        &lt;!&ndash; /latest-movies1 &ndash;&gt;
                                         <div class="browse-inner">
                                             <div class="col-md-2 w3l-movie-gride-agile">
                                                 <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img src="images/m7.jpg"
@@ -788,8 +984,8 @@
                                             <div class="clearfix"></div>
                                         </div>
 
-                                        <!-- //latest-movies1 -->
-                                        <div class="browse-inner-come-agile-w3">
+                                        &lt;!&ndash; //latest-movies1 &ndash;&gt;
+                                        <div class="browse-inner">
                                             <div class="col-md-2 w3l-movie-gride-agile">
                                                 <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img src="images/c10.jpg"
                                                                                                               title="album-name" alt=" ">
@@ -978,11 +1174,11 @@
                                             </div>
 
                                             <div class="clearfix"></div>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                                 <!--//browse-agile-w3ls -->
-                                <div class="blog-pagenat-wthree">
+                                <!--<div class="blog-pagenat-wthree">
                                     <ul>
                                         <li><a class="frist" href="#">前一页</a></li>
                                         <li><a href="#">1</a></li>
@@ -992,15 +1188,15 @@
                                         <li><a href="#">5</a></li>
                                         <li><a class="last" href="#">后一页</a></li>
                                     </ul>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
                             <div class="movie-prepare-to-show">
                                 <!--/browse-agile-w3ls -->
                                 <div class="browse-agile-w3ls general-w3ls">
-                                    <div class="container">
-                                        <div class="browse-inner">
+                                    <div class="container" id="soonMovies">
+                                      <!--  <div class="browse-inner">
                                             <div class="col-md-2 w3l-movie-gride-agile">
                                                 <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img src="images/m7.jpg"
                                                                                                               title="album-name" alt=" ">
@@ -1192,7 +1388,7 @@
 
                                             <div class="clearfix"></div>
                                         </div>
-                                        <!-- /latest-movies1 -->
+                                        &lt;!&ndash; /latest-movies1 &ndash;&gt;
                                         <div class="browse-inner-come-agile-w3">
                                             <div class="col-md-2 w3l-movie-gride-agile">
                                                 <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img src="images/c7.jpg"
@@ -1385,8 +1581,8 @@
 
                                             <div class="clearfix"></div>
                                         </div>
-                                        <!-- //latest-movies1 -->
-                                        <!-- /latest-movies1 -->
+                                        &lt;!&ndash; //latest-movies1 &ndash;&gt;
+                                        &lt;!&ndash; /latest-movies1 &ndash;&gt;
                                         <div class="browse-inner">
                                             <div class="col-md-2 w3l-movie-gride-agile">
                                                 <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img src="images/m7.jpg"
@@ -1580,7 +1776,7 @@
                                             <div class="clearfix"></div>
                                         </div>
 
-                                        <!-- //latest-movies1 -->
+                                        &lt;!&ndash; //latest-movies1 &ndash;&gt;
                                         <div class="browse-inner-come-agile-w3">
                                             <div class="col-md-2 w3l-movie-gride-agile">
                                                 <a th:href="@{/movie_detail_page}" class="hvr-shutter-out-horizontal"><img src="images/c10.jpg"
@@ -1770,11 +1966,11 @@
                                             </div>
 
                                             <div class="clearfix"></div>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                                 <!--//browse-agile-w3ls -->
-                                <div class="blog-pagenat-wthree">
+                                <!--<div class="blog-pagenat-wthree">
                                     <ul>
                                         <li><a class="frist" href="#">前一页</a></li>
                                         <li><a href="#">1</a></li>
@@ -1784,7 +1980,7 @@
                                         <li><a href="#">5</a></li>
                                         <li><a class="last" href="#">后一页</a></li>
                                     </ul>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>

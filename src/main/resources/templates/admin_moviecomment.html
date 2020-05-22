@@ -122,9 +122,7 @@
     </script>
     <script>
 
-        function getAll(page) { //day表示选择的日期：0：今天，1：明天，2：后天
-            //url:表示后台的url，就是 RequestMapping配置的内容
-            // type：http请求的类型
+        function getAll(page) {
             var id;
             var perpage=5; //一页显示多少条记录
             $.ajax({
@@ -146,8 +144,7 @@
                         '<table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">' +
                         '<thead>' +
                         '<tr>' +
-                        '<th>电影ID</th>' +
-                        '<th>用户ID</th>' +
+                        '<th>电影名称</th>' +
                         '<th>用户名称</th>' +
                         '<th>评论时间</th>' +
                         '<th>评论内容</th>'+
@@ -157,8 +154,7 @@
                         '<tbody id="comment-list">';
                     for(var i=((page-1)*perpage);i<(page*perpage)&&i<commentsTotalNum;i++){
                         m+=' <tr class="gradeX">' +
-                            '<td class="am-text-middle">'+commentList[i].movie_id+'</td>' +
-                            '<td class="am-text-middle">'+commentList[i].user_id+'</td>' +
+                            '<td class="am-text-middle">'+commentList[i].movies.movie_name+'</td>' +
                             '<td class="am-text-middle">'+commentList[i].user.user_name+'</td>' +
                             '<td class="am-text-middle">'+commentList[i].comment_time+'</td>' +
                             '<td class="am-text-middle">'+commentList[i].content+'</td>' +
@@ -217,6 +213,11 @@
     <script>
         function Initial(page){
             getAll(page);
+            delInit();
+            editInit();
+        }
+        function searchInitial(page){
+            search(page);
             delInit();
             editInit();
         }
@@ -506,23 +507,14 @@
                                 </div>
                             </div>
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
-                                <div class="am-form-group tpl-table-list-select">
-                                    <select data-am-selected="{btnSize: 'sm'}">
-                                        <option value="option1">所有类别</option>
-                                        <option value="option2">IT业界</option>
-                                        <option value="option3">数码产品</option>
-                                        <option value="option3">笔记本电脑</option>
-                                        <option value="option3">平板电脑</option>
-                                        <option value="option3">只能手机</option>
-                                        <option value="option3">超极本</option>
-                                    </select>
-                                </div>
+                                <input type="text" class="am-form-field " id="movie_name" placeholder="请输入电影名进行搜索">
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field ">
+
+                                    <input type="text" class="am-form-field " id="user_name" placeholder="请输入用户名进行搜索">
                                     <span class="am-input-group-btn">
-            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button" onclick="searchInitial(1)"></button>
           </span>
                                 </div>
                             </div>
@@ -625,7 +617,96 @@
         </div>
     </div>
 </div>
+<script>
+    function search(page) {
+        var search_user = $("#user_name").val();
+        var search_movie = $("#movie_name").val();
+        var perpage=5; //一页显示多少条记录
+        $.ajax({
+            url: "/searchMovieComment",
+            data:JSON.stringify({search_user:search_user,search_movie:search_movie}),
+            type: "post",
+            async:false,
+            // 定义发送请求的数据格式为JSON字符串
+            contentType: "application/json;charset=UTF-8",
+            //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+            dataType: "json",
+            //成功响应的结果
+            success: function (data) {
+                var commentsTotalNum = data.commentList.length; //评论记录的总条数
+                var pageNum = Math.ceil(commentsTotalNum/perpage); //分页的总页数
+                var commentList = data.commentList;
+                console.log(commentList);
+                var m='<div class="am-u-sm-12" >' +
+                    '<table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>电影名称</th>' +
+                    '<th>用户名称</th>' +
+                    '<th>评论时间</th>' +
+                    '<th>评论内容</th>'+
+                    '<th>操作</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody id="comment-list">';
+                for(var i=((page-1)*perpage);i<(page*perpage)&&i<commentsTotalNum;i++){
+                    m+=' <tr class="gradeX">' +
+                        '<td class="am-text-middle">'+commentList[i].movies.movie_name+'</td>' +
+                        '<td class="am-text-middle">'+commentList[i].user.user_name+'</td>' +
+                        '<td class="am-text-middle">'+commentList[i].comment_time+'</td>' +
+                        '<td class="am-text-middle">'+commentList[i].content+'</td>' +
+                        '<td class="am-text-middle">' +
+                        '<div class="tpl-table-black-operation" data-id="'+commentList[i].movie_id+','+commentList[i].user_id+'">' +
+                        '<a href="javascript:;" class="tpl-table-black-operation">' +
+                        '<i class="am-icon-pencil"></i> 编辑' +
+                        '</a>' +
+                        '<a href="javascript:;" class="tpl-table-black-operation-del">' +
+                        '<i class="am-icon-trash"></i> 删除' +
+                        '</a>' +
+                        '</div>' +
+                        '</td>' +
+                        '</tr>';
+                }
+                m+='</tbody>' +
+                    '</table>' +
+                    '</div>' +
+                    '<div class="am-u-lg-12 am-cf">';
+                m += '<div class="am-cf">' +
+                    '共'+commentsTotalNum+'条记录 /'+pageNum+'页' +
+                    '<div class="am-fr">' +
+                    '<ul class="am-pagination" id="page">';
+                //判断前面是否还有页面
+                if(page == 1){
+                    m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >«</a></li>';
+                }else{
+                    m += '<li><a href="javascript:searchInitial('+(page-1)+')" rel="external nofollow" >«</a></li>';
+                }
+                for(var i=1;i<=pageNum;i++){
+                    if(i == page){
+                        m += '<li class="am-active"><a href="javascript:searchInitial('+i+')" rel="external nofollow" rel="external nofollow" >'+i+'</a></li>';
+                    }else{
+                        m += '<li><a href="javascript:searchInitial('+i+')" rel="external nofollow" rel="external nofollow" >'+i+'</a></li>';
+                    }
+                }
+                //判断后面是否还有页面
+                if(page == pageNum){
+                    m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >»</a></li>';
+                }else{
+                    m += '<li><a href="javascript:searchInitial('+(page+1)+')" rel="external nofollow" >»</a></li>';
+                }
+                m += '</ul>' +
+                    '</div>' +
+                    '</div><hr>'
+                ;
+                $('#AllComment').empty();
+                $('#AllComment').append(m);
 
+
+
+            }});
+
+    }
+</script>
 <script th:src="@{js/adminjs/amazeui.min.js}"></script>
 <script th:src="@{js/adminjs/amazeui.datatables.min.js}"></script>
 <script th:src="@{js/adminjs/dataTables.responsive.min.js}"></script>

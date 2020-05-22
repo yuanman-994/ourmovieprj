@@ -59,4 +59,10 @@ public class CommentServiceImp implements CommentService{
         return 1;
     }
 
+    @Override
+    public List<Comment> searchComment(String movie_name, String user_name) {
+        List<Comment> commentList = commentMapper.searchComment(movie_name,user_name);
+        return commentList;
+    }
+
 }

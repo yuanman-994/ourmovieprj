@@ -19,4 +19,6 @@ public interface CommentService {
     public int updateComment(Comment comment);
 
     public int deleteComment(Map<String,List> mu_ids);
+
+    public List<Comment> searchComment(String movie_name,String user_name);
 }

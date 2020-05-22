@@ -196,6 +196,7 @@
 				var schedule;
 				var movie;
 				var hall;
+				var order_id;
 				function seats() {
 					var i = 0;
 					var seats_id = new Array();
@@ -294,8 +295,8 @@
                     	window.location.reload();
 					}
                     else if(selected_seats.length>=1&&selected_seats.length<=5){
-                    	Ticket.getInfo(hall_id);
-                    	TicketOrder.addOrder();
+                    	order_id = TicketOrder.addOrder();
+                    	Ticket.getInfo(hall_id,order_id);
 					}
                     else{
                     	alert("最多只能同时购买5个座位！");
@@ -304,7 +305,7 @@
 				}
 				var Ticket = {
 
-					getInfo: function (hall_id) {
+					getInfo: function (hall_id,order_id) {
 						//url:表示后台的url，就是 RequestMapping配置的内容
 						// type：http请求的类型
 						var url = document.location.href;
@@ -313,7 +314,7 @@
 						seats = selected_seats;
 						$.ajax({
 							url: "/addTicket",
-							data:JSON.stringify({movie_schedule_id:movie_schedule_id,seats:seats,hall_id:hall_id}),
+							data:JSON.stringify({movie_schedule_id:movie_schedule_id,seats:seats,hall_id:hall_id,order_id:order_id}),
 							type: "post",
 							async:false,
 							// 定义发送请求的数据格式为JSON字符串
@@ -322,8 +323,13 @@
 							dataType: "json",
 							//成功响应的结果
 							success: function (data) {
-								if(data!=null)
-									alert("购票成功！");
+								if(data!=null){
+									var ticket = data.ticket;
+									var id = ticket.order_id;
+									alert("下单成功！");
+									window.location.href="/pay?order_id="+id;
+								}
+
 							}});
 
 					}
@@ -333,6 +339,7 @@
 					addOrder: function () {
 						//url:表示后台的url，就是 RequestMapping配置的内容
 						// type：http请求的类型
+						var order_id ;
 						var url = document.location.href;
 						var movie_schedule_id = getParam(url,'movie_schedule_id');
 						var seats ;
@@ -352,9 +359,9 @@
 							success: function (data) {
 								if(data!=null)
 									var order = data.order;
-								   var order_id = order.order_id;
-								window.location.href="/pay?order_id="+order_id;
+								   order_id = order.order_id;
 							}});
+						return order_id;
 
 					}
 				};

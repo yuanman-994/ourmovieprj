@@ -31,7 +31,8 @@
     <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
     <script th:src="@{js/owl.carousel.js}"></script>
     <script th:src="@{js/login.js}"></script>
-    <script>
+    <script th:src="@{js/jquery.raty.js}"></script>
+    <!--<script>
         $(document).ready(function() {
             $("#owl-demo").owlCarousel({
 
@@ -44,7 +45,7 @@
             });
 
         });
-    </script>
+    </script>-->
     <!-- //banner-bottom-plugin -->
     <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
     <!-- start-smoth-scrolling -->
@@ -217,6 +218,11 @@
                 success: function (data) {
                     var moviesList = data.moviesList;
                     //拼接html语句
+                    var html='';
+                    for(var n=0; n<moviesList.length;n++){
+                        html+='<div class="item" id="onshowMovies'+n+'"></div>';
+                    }
+                    document.getElementById("owl-demo").innerHTML = html;
                     var m='';
                     for(var i=0; i<moviesList.length;i++){
                         console.log(moviesList[i].movie_id);
@@ -231,15 +237,8 @@
                             '<h6><a href="/movie_single?movie_id='+moviesList[i].movie_id+'">'+moviesList[i].movie_name+'</a></h6>' +
                             '</div>' +
                             '<div class="mid-2 agile_mid_2_home">' +
-                            '<p>'+moviesList[i].release_date+'</p>' +
-                            '<div class="block-stars">' +
-                            '<ul class="w3l-ratings">' +
-                            '<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>' +
-                            '<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>' +
-                            '<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>' +
-                            '<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>' +
-                            '<li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a></li>' +
-                            '</ul>' +
+                            '<p style="float:none">'+moviesList[i].release_date+'</p>' +
+                            '<div class="block-stars" id="stars'+i+'" style="float:none">' +
                             '</div>' +
                             '<div class="clearfix"></div>' +
                             '</div>' +
@@ -250,12 +249,21 @@
                             '</div>' +
                             '</div>';
                         $('#onshowMovies'+i).html(m);
+                        $('#stars'+i).raty({
+                            path:"images"
+                        });
+                        $('#stars'+i).raty('score', moviesList[i].rank/2);
+                        $('#o-stars'+i).raty('readOnly', 1);
                     }
-                    /*  var html='';
-                      for(var n=0; n<moviesList.length;n++){
-                          html+='<div class="item" id="onshowMovies'+n+'"></div>';
-                      }
-                      document.getElementById("owl-demo").innerHTML = html;*/
+                    $("#owl-demo").owlCarousel({
+
+                        autoPlay: 3000, //Set AutoPlay to 3 seconds
+
+                        items : 5,
+                        itemsDesktop : [640,4],
+                        itemsDesktopSmall : [414,3]
+
+                    });
 
                 }});
 

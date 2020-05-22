@@ -37,6 +37,7 @@ public interface CommentMapper {
             @Result(property = "content",column = "content"),
             @Result(property = "comment_time",column = "comment_time"),
             @Result(property = "user",column = "user_id",one=@One(select="com.movieprj.mapper.UserMapper.findUserById",fetchType = FetchType.EAGER)),
+            @Result(property = "movies",column = "movie_id",one=@One(select="com.movieprj.mapper.MoviesMapper.selectMoviesById",fetchType = FetchType.EAGER)),
     })
     public List<Comment> findAllCommentWithUser();
 
@@ -51,4 +52,17 @@ public interface CommentMapper {
     @Delete("DELETE FROM movie_commen WHERE movie_id=#{movie_id} AND user_id=#{user_id}")
     public int deleteComment(Integer movie_id,Integer user_id);
 
+
+    @Select("SELECT * FROM movie_commen WHERE movie_id in (SELECT movie_id FROM movie m WHERE m.movie_name like CONCAT('%',#{movie_name},'%')) "+
+            "AND user_id in (SELECT user_id FROM user u WHERE u.user_name like CONCAT('%',#{user_name},'%'))"
+           )
+    @Results({
+            @Result(id=true,property = "movie_id",column = "movie_id"),
+            @Result(id=true,property = "user_id",column = "user_id"),
+            @Result(property = "content",column = "content"),
+            @Result(property = "comment_time",column = "comment_time"),
+            @Result(property = "user",column = "user_id",one=@One(select="com.movieprj.mapper.UserMapper.findUserById",fetchType = FetchType.EAGER)),
+            @Result(property = "movies",column = "movie_id",one=@One(select="com.movieprj.mapper.MoviesMapper.selectMoviesById",fetchType = FetchType.EAGER)),
+    })
+    public List<Comment> searchComment(String movie_name,String user_name);
 }

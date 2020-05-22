@@ -23,7 +23,7 @@ public class TicketOrderServiceImp implements TicketOrderService {
     @Override
     public int addTicketOrder(TicketOrder ticketOrder) {
         ticketOrderMapper.addTicketOrder(ticketOrder);
-        return 1;
+        return ticketOrder.getOrder_id();
     }
 
     @Override

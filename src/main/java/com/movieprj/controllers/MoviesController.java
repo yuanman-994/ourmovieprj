@@ -203,8 +203,17 @@ public class MoviesController {
     }
     @RequestMapping("/onshowMovies")
     @ResponseBody
-    public Map<String,Object> ShowOnshowMoives(Integer onshow){
-        List<Movies> moviesList = moviesService.selectMoviesByOnshow(onshow);
+    public Map<String,Object> ShowOnshowMoives(){
+        List<Movies> moviesList = moviesService.selectMoviesByOnshow(1);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("moviesList",moviesList);
+        return map;
+    }
+
+    @RequestMapping("/soonMovies")
+    @ResponseBody
+    public Map<String,Object> ShowSoonMoives(){
+        List<Movies> moviesList = moviesService.selectMoviesByOnshow(0);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("moviesList",moviesList);
         return map;
@@ -215,13 +224,25 @@ public class MoviesController {
     @PostMapping("/addMComment")
     public String AddMComment(HttpServletRequest request, Model model) {
         Comment comment= new Comment();
+        Integer movie_id=1,user_id,score=0;
         comment.setContent(request.getParameter("content"));
         if(request.getParameter("movie_id")!=null){
-        Integer movie_id = Integer.valueOf(request.getParameter("movie_id"));
+        movie_id = Integer.valueOf(request.getParameter("movie_id"));
         comment.setMovie_id(movie_id);}
         if(request.getParameter("user_id")!=null){
-        Integer user_id = Integer.valueOf(request.getParameter("user_id"));
+        user_id = Integer.valueOf(request.getParameter("user_id"));
         comment.setUser_id(user_id);}
+        Movies movies = moviesService.selectMoviesById(movie_id);
+        if(request.getParameter("score")!=null){
+            score = Integer.valueOf(request.getParameter("score"));
+            }
+        Integer old_score = movies.getRank();
+        List<Comment> commentList = commentService.findCommentWithUserByMovieId(movie_id);
+        Integer comment_num = commentList.size();
+        movies.setRank((score+old_score)/(comment_num+1));
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("moviesMap",movies);
+        moviesService.updateMovies(map);
         Date date=new Date();
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         comment.setComment_time(simpleDate.format(date));
@@ -263,13 +284,13 @@ public class MoviesController {
         Integer movie_schedule_id = Integer.parseInt(params.get("movie_schedule_id").toString());
         Integer hall_id = Integer.parseInt(params.get("hall_id").toString());
         String seats = params.get("seats").toString();
+        Integer order_id = Integer.parseInt(params.get("order_id").toString());
         String[] s = seats.replaceAll(" ","").replaceAll("\\[","").replaceAll("\\]","").split(",");
         String[] a;
         Ticket ticket = new Ticket();
         Date date=new Date();
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyyMMdd");
-        Integer order_id ;
-        order_id = Integer.parseInt(simpleDate.format(date))*100+movie_schedule_id+8;
+        //order_id = Integer.parseInt(simpleDate.format(date))*100+movie_schedule_id+8;
         ticket.setMovie_schedule_id(movie_schedule_id);
         ticket.setOrder_id(order_id);
         int[] seat_id={0,0,0,0,0};
@@ -282,7 +303,7 @@ public class MoviesController {
           ticketService.addTicket(ticket);
         }}
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("seats",seat_id);
+        map.put("ticket",ticket);
         return map;
     }
 
@@ -296,15 +317,14 @@ public class MoviesController {
         Date date=new Date();
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat simpleDate1 = new SimpleDateFormat("yyyyMMdd");
-        Integer order_id = Integer.parseInt(simpleDate1.format(date))*100+movie_schedule_id+8;
+        //Integer order_id = Integer.parseInt(simpleDate1.format(date))*100+movie_schedule_id+8;
         ticketOrder.setMovie_schedule_id(movie_schedule_id);
         ticketOrder.setUser_id(user_id);
         ticketOrder.setPrice(total);
-        //ticketOrder.setPay_way("alipay");
         ticketOrder.setPay_way(null);
         ticketOrder.setTime(simpleDate.format(date));
+        Integer order_id = ticketOrderService.addTicketOrder(ticketOrder);
         ticketOrder.setOrder_id(order_id);
-        ticketOrderService.addTicketOrder(ticketOrder);
         //定时检测支付状态，超时则删除订单
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -716,6 +736,19 @@ public class MoviesController {
         commentService.insertComment(comment);
         return "redirect:/admin_moviecomment";
     }
+
+    @RequestMapping("/searchMovieComment")
+    @ResponseBody
+    public Map<String,Object> searchComment(@RequestBody Map<String,Object> params) {
+        String movie_name = params.get("search_movie").toString();
+        String user_name = params.get("search_user").toString();
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<Comment> commentList = commentService.searchComment(movie_name,user_name);
+        map.put("commentList",commentList);
+        return map;
+    }
+
+
 
     @RequestMapping("/admin_movieschedule")
     public  String admin_schedule(){

@@ -104,5 +104,4 @@ public interface ArticleMapper {
 
     @Update("UPDATE article_hot SET article_id=#{article_id} WHERE id=#{id}")
     public void setHot(int id, int article_id);//保存article_url
-
 }

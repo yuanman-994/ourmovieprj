@@ -187,10 +187,10 @@ public class ArticleController {
     public String submitComment( @RequestParam("comment") String comment,@RequestParam("article_id") int article_id) {//上传评论
 //        System.out.println(comment);
         Subject currentSubject = SecurityUtils.getSubject();
-        if (!currentSubject.isAuthenticated())
+        if (!currentSubject.isAuthenticated())//检测是否登录
             return "未登录！！";
         String author_name = (String) currentSubject.getPrincipal();
-        int user_id = loginServiceImp.getUserByName(author_name).getUser_id();
+        int user_id = loginServiceImp.getUserByName(author_name).getUser_id();//获取用户id
         articleServiceImp.submitComment(article_id,user_id,comment);
 //        System.out.println(author_name);
         return "提交成功";

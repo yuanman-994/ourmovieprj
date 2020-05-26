@@ -503,6 +503,10 @@ public class ArticleServiceImp implements ArticleService {
             json.put("headline", a.getHeadline());
             json.put("click_num", a.getClick_num());
             json.put("release_time", a.getRelease_time());
+            String cover = a.getArticle_cover_image();
+            if (cover == null)
+                cover = "images\\articleCoverImages\\default.jpeg";
+            json.put("cover", cover);
             String type;
             if (a.getType() == 1)
                 type = "新闻";

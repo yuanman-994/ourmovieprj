@@ -39,7 +39,7 @@ String.format = function (src) {
 
 };
 
-function loadArticles(data, id, lineclass) {//data:数据，对象数组 id:字符串，上层容器id lineclass:行容器类型
+function loadArticles(data, id) {//data:数据，对象数组 id:字符串，上层容器id
     var i;
     var len = data.length;
     $("#" + id).empty();//移除之前的内容

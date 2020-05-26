@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MyWebAppConfigurer implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
         String path = System.getProperty("user.dir");
         String image_dir_path = path + "\\src\\main\\resources\\static\\images\\articleImages\\";
         String image_cover_path = path +"\\src\\main\\resources\\static\\images\\articleCoverImages\\";

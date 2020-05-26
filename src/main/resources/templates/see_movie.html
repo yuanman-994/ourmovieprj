@@ -96,7 +96,6 @@
                     //拼接html语句
                     var m='';
                     var n;
-
                         for (var p = 0; p < 4&&p<(modeNum-4*(page-1)); p++) {
                             m += '<div class="browse-inner">';
                             for ( n = perpage*(page - 1) + p * 6; n < (perpage*(page - 1) + 6 * (p + 1))&&n<moviesTotalNum; n++) {
@@ -163,7 +162,6 @@
                         $('#o-stars'+x).raty('readOnly', 1);}
 
                 }});
-
         }
     function  SoonInitial(page) {
         var id;

@@ -491,14 +491,16 @@ public class MoviesController {
         if (!uploadfile.isEmpty() && uploadfile.size()>0) {
             //循环输出上传的文件  MultipartFile 支持传输多个文件
             for (MultipartFile file : uploadfile) {
+                String path = System.getProperty("user.dir");
+                String realPath = path + "\\src\\main\\resources\\static\\images\\movieCoverImages";
 
-                String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+                //String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
                 // 获取上传文件的原始名称
                 String originalFilename = file.getOriginalFilename();
                 // 设置上传文件的保存地址目录
-                String urlPath =
-                        "images/";
-                String savePath = staticPath + "/" + urlPath;
+                String urlPath = "images/movieCoverImages/";
+
+                String savePath = realPath+"/";
                 String visitPath = urlPath;
                 File filePath = new File(savePath);
                 // 如果保存文件的地址不存在，就先创建目录
@@ -560,13 +562,15 @@ public class MoviesController {
             //循环输出上传的文件  MultipartFile 支持传输多个文件
             for (MultipartFile file : uploadfile) {
 
-                String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+                String path = System.getProperty("user.dir");
+                String realPath = path + "\\src\\main\\resources\\static\\images\\movieCoverImages";
+
+               // String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
                 // 获取上传文件的原始名称
                 String originalFilename = file.getOriginalFilename();
                 // 设置上传文件的保存地址目录
-                String urlPath =
-                        "images/";
-                String savePath = staticPath + "/" + urlPath;
+                String urlPath = "images/movieCoverImages/";
+                String savePath = realPath + "/";
                 String visitPath = urlPath;
                 File filePath = new File(savePath);
                 // 如果保存文件的地址不存在，就先创建目录

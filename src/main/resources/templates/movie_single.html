@@ -349,7 +349,7 @@
                         m='';
                         m+=
                             '<div class="w3l-movie-gride-agile w3l-movie-gride-agile1">' +
-                            '<a href="/movie_single?movie_id='+moviesList[i].movie_id+'" class="hvr-shutter-out-horizontal"><img src="'+moviesList[i].cover+'" title="album-name" class="img-responsive" alt=" " />' +
+                            '<a href="/movie_single?movie_id='+moviesList[i].movie_id+'" class="hvr-shutter-out-horizontal"><img src="'+moviesList[i].cover+'" height="268" width="182" title="album-name" class="img-responsive" alt=" " />' +
                             '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
                             '</a>' +
                             '<div class="mid-1 agileits_w3layouts_mid_1_home">' +
@@ -408,7 +408,7 @@
                 for(var i=0; i<moviesList.length;i++){
                     m+='<div class="single-right-grids">' +
                         '<div class="col-md-4 single-right-grid-left">\n' +
-                        '<a href="/movie_single?movie_id=' + moviesList[i].movie_id + '"><img src="'+moviesList[i].cover+'" alt="" /></a>' +
+                        '<a href="/movie_single?movie_id=' + moviesList[i].movie_id + '"><img src="'+moviesList[i].cover+'" height="268" width="182" alt="" /></a>' +
                         '</div>' +
                         '<div class="col-md-8 single-right-grid-right">' +
                         '<a href="/movie_single?movie_id=' + moviesList[i].movie_id + '" class="title">'+moviesList[i].movie_name+'</a>' +
@@ -431,9 +431,16 @@
         var score1= score*2;
         document.getElementById("score").value = score1;
         console.log(score);
-        $("#addComment").submit();
-        alert("评论成功！");
-        window.location.reload();
+        var name = document.getElementById("login-button").innerHTML;
+        console.log(name);
+        if(name == "Login"){
+            alert("请先登录！");
+        }else{
+            $("#addComment").submit();
+            alert("评论成功！");
+            window.location.reload();
+        }
+
     }
 </script>
 <script>
@@ -474,7 +481,7 @@
                     <div class="art-header">
                         <div class="col-1-3">
                             <div class="wrap-col">
-                                <img id="movie-cover" src="" />
+                                <img id="movie-cover" src="" height="356" width="240" />
                             </div>
                         </div>
                         <div class="col-2-3">

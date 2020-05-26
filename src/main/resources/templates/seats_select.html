@@ -323,11 +323,13 @@
 							dataType: "json",
 							//成功响应的结果
 							success: function (data) {
-								if(data!=null){
+								if(data.status!="failed"){
 									var ticket = data.ticket;
 									var id = ticket.order_id;
 									alert("下单成功！");
 									window.location.href="/pay?order_id="+id;
+								}else{
+									alert("下单失败！请先登录！")
 								}
 
 							}});
@@ -357,9 +359,14 @@
 							dataType: "json",
 							//成功响应的结果
 							success: function (data) {
-								if(data!=null)
+								if(data.status!="failed"){
 									var order = data.order;
-								   order_id = order.order_id;
+									order_id = order.order_id;
+								}else{
+									order_id=null;
+									alert("下单失败！");
+								}
+
 							}});
 						return order_id;
 

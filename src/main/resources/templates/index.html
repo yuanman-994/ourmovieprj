@@ -229,7 +229,7 @@
                         m='';
                         m+=
                             '<div class="w3l-movie-gride-agile w3l-movie-gride-agile1">' +
-                            '<a href="/movie_single?movie_id='+moviesList[i].movie_id+'" class="hvr-shutter-out-horizontal"><img src="'+moviesList[i].cover+'" title="album-name" class="img-responsive" alt=" " />' +
+                            '<a href="/movie_single?movie_id='+moviesList[i].movie_id+'" class="hvr-shutter-out-horizontal"><img src="'+moviesList[i].cover+'" height="268" width="182" title="album-name" class="img-responsive" alt=" " />' +
                             '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
                             '</a>' +
                             '<div class="mid-1 agileits_w3layouts_mid_1_home">' +
@@ -253,7 +253,7 @@
                             path:"images"
                         });
                         $('#stars'+i).raty('score', moviesList[i].rank/2);
-                        $('#o-stars'+i).raty('readOnly', 1);
+                        $('#stars'+i).raty('readOnly', 1);
                     }
                     $("#owl-demo").owlCarousel({
 

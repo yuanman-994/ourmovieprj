@@ -102,7 +102,7 @@
                             for ( n = perpage*(page - 1) + p * 6; n < (perpage*(page - 1) + 6 * (p + 1))&&n<moviesTotalNum; n++) {
                                 console.log(n);
                                 m += '<div class="col-md-2 w3l-movie-gride-agile">' +
-                                    '<a href="/movie_single?movie_id=' + moviesList[n].movie_id + '" class="hvr-shutter-out-horizontal"><img src="' + moviesList[n].cover + '"' +
+                                    '<a href="/movie_single?movie_id=' + moviesList[n].movie_id + '" class="hvr-shutter-out-horizontal"><img src="' + moviesList[n].cover + '" height="268" width="182" ' +
                                     'title="album-name" alt=" ">' +
                                     '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
                                     '</a>' +
@@ -194,7 +194,7 @@
                     for ( n = perpage*(page - 1) + p * 6; n < (perpage*(page - 1) + 6 * (p + 1))&&n<moviesTotalNum; n++) {
                         console.log(n);
                         m += '<div class="col-md-2 w3l-movie-gride-agile">' +
-                            '<a href="/movie_single?movie_id=' + moviesList[n].movie_id + '" class="hvr-shutter-out-horizontal"><img src="' + moviesList[n].cover + '" ' +
+                            '<a href="/movie_single?movie_id=' + moviesList[n].movie_id + '" class="hvr-shutter-out-horizontal"><img src="' + moviesList[n].cover + '" height="268" width="182" ' +
                             'title="album-name" alt=" ">' +
                             '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
                             '</a>' +

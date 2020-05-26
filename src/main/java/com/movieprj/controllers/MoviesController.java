@@ -4,6 +4,8 @@ import com.movieprj.beans.*;
 import com.movieprj.mapper.ScheduleMapper;
 import com.movieprj.services.*;
 import com.movieprj.services.dfa.SensitiveWordUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +27,9 @@ import java.util.*;
 public class MoviesController {
 
     private Logger logger = LogManager.getLogger(this.getClass());
+
+    @Autowired
+    private LoginServiceImpl loginService;
 
     @Autowired
     private MoviesServiceImp moviesService;
@@ -225,28 +230,38 @@ public class MoviesController {
     public String AddMComment(HttpServletRequest request, Model model) {
         Comment comment= new Comment();
         Integer movie_id=1,user_id,score=0;
-        comment.setContent(request.getParameter("content"));
-        if(request.getParameter("movie_id")!=null){
-        movie_id = Integer.valueOf(request.getParameter("movie_id"));
-        comment.setMovie_id(movie_id);}
-        if(request.getParameter("user_id")!=null){
-        user_id = Integer.valueOf(request.getParameter("user_id"));
-        comment.setUser_id(user_id);}
-        Movies movies = moviesService.selectMoviesById(movie_id);
-        if(request.getParameter("score")!=null){
-            score = Integer.valueOf(request.getParameter("score"));
+        Subject currentSubject = SecurityUtils.getSubject();
+
+        if (!currentSubject.isAuthenticated()) {
+            return "未登录！！";
+        }
+            comment.setContent(request.getParameter("content"));
+            if (request.getParameter("movie_id") != null) {
+                movie_id = Integer.valueOf(request.getParameter("movie_id"));
+                comment.setMovie_id(movie_id);
             }
-        Integer old_score = movies.getRank();
-        List<Comment> commentList = commentService.findCommentWithUserByMovieId(movie_id);
-        Integer comment_num = commentList.size();
-        movies.setRank((score+old_score)/(comment_num+1));
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("moviesMap",movies);
-        moviesService.updateMovies(map);
-        Date date=new Date();
-        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        comment.setComment_time(simpleDate.format(date));
-        commentService.insertComment(comment);
+            /*if (request.getParameter("user_id") != null) {
+                user_id = Integer.valueOf(request.getParameter("user_id"));
+                comment.setUser_id(user_id);
+            }*/
+            String user_name = (String)currentSubject.getPrincipal();
+            user_id = loginService.getUserByName(user_name).getUser_id();
+            comment.setUser_id(user_id);
+            Movies movies = moviesService.selectMoviesById(movie_id);
+            if (request.getParameter("score") != null) {
+                score = Integer.valueOf(request.getParameter("score"));
+            }
+            Integer old_score = movies.getRank();
+            List<Comment> commentList = commentService.findCommentWithUserByMovieId(movie_id);
+            Integer comment_num = commentList.size();
+            movies.setRank((score + old_score) / (comment_num + 1));
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("moviesMap", movies);
+            moviesService.updateMovies(map);
+            Date date = new Date();
+            SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            comment.setComment_time(simpleDate.format(date));
+            commentService.insertComment(comment);
         return "redirect:/movie_single1?movie_id="+comment.getMovie_id();
     }
 
@@ -281,6 +296,15 @@ public class MoviesController {
     @RequestMapping("/addTicket")
     @ResponseBody
     public Map<String,Object>addTicket(@RequestBody Map<String,Object> params){
+        Subject currentSubject = SecurityUtils.getSubject();
+
+        if (!currentSubject.isAuthenticated()) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            String status = "failed";
+            map.put("status",status);
+            return map;
+        }
+
         Integer movie_schedule_id = Integer.parseInt(params.get("movie_schedule_id").toString());
         Integer hall_id = Integer.parseInt(params.get("hall_id").toString());
         String seats = params.get("seats").toString();
@@ -310,14 +334,25 @@ public class MoviesController {
     @RequestMapping("/addTicketOrder")
     @ResponseBody
     public Map<String,Object> addTicketOrder(@RequestBody Map<String,Object> params){
+        Subject currentSubject = SecurityUtils.getSubject();
+
+        if (!currentSubject.isAuthenticated()) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            String status = "failed";
+            map.put("status",status);
+            return map;
+        }
         Integer movie_schedule_id = Integer.parseInt(params.get("movie_schedule_id").toString());
-        Integer user_id = Integer.parseInt(params.get("user_id").toString());
+        //Integer user_id = Integer.parseInt(params.get("user_id").toString());
+
         Float total = Float.parseFloat(params.get("total").toString());
         TicketOrder ticketOrder = new TicketOrder();
         Date date=new Date();
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat simpleDate1 = new SimpleDateFormat("yyyyMMdd");
         //Integer order_id = Integer.parseInt(simpleDate1.format(date))*100+movie_schedule_id+8;
+        String user_name = (String)currentSubject.getPrincipal();
+        Integer user_id = loginService.getUserByName(user_name).getUser_id();
         ticketOrder.setMovie_schedule_id(movie_schedule_id);
         ticketOrder.setUser_id(user_id);
         ticketOrder.setPrice(total);

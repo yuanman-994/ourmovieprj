@@ -13,25 +13,46 @@
     function hideURLbar() {
         window.scrollTo(0, 1);
     } </script>
-    <!-- //for-mobile-apps -->
     <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all"/>
     <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all"/>
     <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css'/>
-    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all"/>
-    <!-- news-css -->
-    <link rel="stylesheet" th:href="@{/css/news-css/news.css}" type="text/css" media="all"/>
-    <!-- //news-css -->
-    <!-- list-css -->
-    <link rel="stylesheet" th:href="@{/css/list-css/list.css}" type="text/css" media="all"/>
-    <!-- //list-css -->
+    <link th:href="@{/css/medile.css}" rel='stylesheet' type='text/css'/>
+    <!-- banner-slider -->
+    <link th:href="@{/css/jquery.slidey.min.css}" rel="stylesheet">
+    <!-- //banner-slider -->
+    <!-- pop-up -->
+    <link th:href="@{/css/popuo-box.css}" rel="stylesheet" type="text/css" media="all"/>
+    <!-- //pop-up -->
     <!-- font-awesome icons -->
     <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
     <!-- //font-awesome icons -->
     <!-- js -->
     <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
-
     <!-- //js -->
+    <!-- banner-bottom-plugin -->
+    <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
+    <script th:src="@{js/owl.carousel.js}"></script>
+    <script th:src="@{js/getParam.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
+    <script th:src="@{js/amazeui.min.js}"></script>
+    <script th:src="@{js/jquery.raty.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#owl-demo").owlCarousel({
+
+                autoPlay: 3000, //Set AutoPlay to 3 seconds
+
+                items: 5,
+                itemsDesktop: [640, 4],
+                itemsDesktopSmall: [414, 3]
+
+            });
+
+        });
+    </script>
+    <!-- //banner-bottom-plugin -->
     <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
     <!-- start-smoth-scrolling -->
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
@@ -59,36 +80,109 @@
         function main() {
             $(" input[ name='Search' ] ").val(search_text);
             var max = 5;
-            getAndLoadArticles(1,max);
-            // getAndLoadMovies(1,max);
+            getAndLoadArticles(1, max);
+            getAndLoadMovies(1, max);
         }
 
-        function getAndLoadMovies(aimPage,max) {
-            var pageSize = 20;
-            $.get("/search/searchMovie?pageSize=" + pageSize + "&aimpage=" + aimPage + "&searchText=" + search_text, function (res) {
-                var data = JSON.parse(res);
-                var totalPage = data.totalPage;
-                var movies = data.movies;
-                creat(totalPage, aimPage, max,"movies-page","getAndLoadMovies");
+        function getAndLoadMovies(aimPage, max) {
+            var pageSize = 24;
+            $.get("/search/searchMovie?searchText=" + search_text, function (data) {
+                var moviesList = data.moviesList;
+                var moviesTotalNum = data.moviesList.length; //评论记录的总条数
+                var pageNum = Math.ceil(moviesTotalNum / pageSize); //分页的总页数
+                var modeNum = Math.ceil(moviesTotalNum / 6); //模块数
+                console.log(moviesList);
+                console.log(modeNum);
+                if (moviesTotalNum == 0) {
+                    $("#movies").append('<h1 id="h1.-bootstrap-heading">没有搜索到任何结果<a class="anchorjs-link" href="#h1.-bootstrap-heading"><span class="anchorjs-icon"></span></a></h1>')
+                } else {
+                    //拼接html语句
+                    var m = '';
+                    var n;
+                    for (var p = 0; p < 4 && p < (modeNum - 4 * (aimPage - 1)); p++) {
+                        m += '<div class="browse-inner">';
+                        for (n = pageSize * (aimPage - 1) + p * 6; n < (pageSize * (aimPage - 1) + 6 * (p + 1)) && n < moviesTotalNum; n++) {
+                            m += '<div class="col-md-2 w3l-movie-gride-agile">' +
+                                '<a href="/movie_single?movie_id=' + moviesList[n].movie_id + '" class="hvr-shutter-out-horizontal"><img src="' + moviesList[n].cover + '" height="268" width="182" ' +
+                                'title="album-name" alt=" ">' +
+                                '<div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>' +
+                                '</a>' +
+                                '<div class="mid-1">' +
+                                '<div class="w3l-movie-text"' +
+                                '<h6><a href="/movie_single?movie_id=' + moviesList[n].movie_id + '">' + moviesList[n].movie_name + '</a></h6>' +
+                                '</div>' +
+                                '<div class="mid-2">' +
+                                '<p style="float:none">' + moviesList[n].release_date + '</p>' +
+                                '<div class="block-stars" style="float:none" id="o-stars' + n + '">' +
+                                '</div>' +
+                                '<div class="clearfix"></div>' +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="ribben two">' +
+                                '<p>NEW</p>' +
+                                '</div>' +
+                                '</div>';
+                        }
+                        m += '<div class="clearfix"></div>' +
+                            '</div>';
+                    }
+                    m += '<div class="am-u-lg-12 am-cf">';
+                    m += '<div class="am-cf">' +
+                        '共' + moviesTotalNum + '条记录 /' + pageNum + '页' +
+                        '<div class="am-fr">' +
+                        '<ul class="am-pagination" id="page">';
+
+                    //判断前面是否还有页面
+                    if (aimPage == 1) {
+                        m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >«</a></li>';
+                    } else {
+                        m += '<li><a href="javascript:OnshowInitial(' + (aimPage - 1) + ')" rel="external nofollow" >«</a></li>';
+                    }
+                    for (var i = 1; i <= pageNum; i++) {
+                        if (i == aimPage) {
+                            m += '<li class="am-active"><a href="javascript:OnshowInitial(' + i + ')" rel="external nofollow" rel="external nofollow" >' + i + '</a></li>';
+                        } else {
+                            m += '<li><a href="javascript:OnshowInitial(' + i + ')" rel="external nofollow" rel="external nofollow" >' + i + '</a></li>';
+                        }
+                    }
+                    //判断后面是否还有页面
+                    if (aimPage == pageNum) {
+                        m += '<li class="am-disabled"><a href="#" rel="external nofollow" rel="external nofollow" rel="external nofollow" >»</a></li>';
+                    } else {
+                        m += '<li><a href="javascript:OnshowInitial(' + (aimPage + 1) + ')" rel="external nofollow" >»</a></li>';
+                    }
+                    m += '</ul>' +
+                        '</div>' +
+                        '</div><hr>'
+                    ;
+
+
+                    document.getElementById("movies").innerHTML = m;
+                    for (var x = (aimPage - 1) * pageSize; x < moviesList.length && x < aimPage * pageSize; x++) {
+                        $('#o-stars' + x).raty({
+                            path: "images"
+                        });
+                        $('#o-stars' + x).raty('score', moviesList[x].rank / 2);
+                        $('#o-stars' + x).raty('readOnly', 1);
+                    }
+                }
             })
         }
-        function loadMovies(movies) {
 
-        }
-        function getAndLoadArticles(aimPage,max) {
+        function getAndLoadArticles(aimPage, max) {
             var pageSize = 10;
             $.get("/search/searchArticle?pageSize=" + pageSize + "&aimPage=" + aimPage + "&searchText=" + search_text, function (res) {
                 var data = JSON.parse(res);
                 var total = data.total;//总数
-                var totalPage = Math.ceil(total/pageSize);
+                var totalPage = Math.ceil(total / pageSize);
                 // console.log(totalPage);
                 var articles = data.rows;
                 console.log(articles)
-                if (total==0) {
+                if (total == 0) {
                     $("#articles").append('<h1 id="h1.-bootstrap-heading">没有搜索到任何结果<a class="anchorjs-link" href="#h1.-bootstrap-heading"><span class="anchorjs-icon"></span></a></h1>')
                 } else {
-                    creat(totalPage, aimPage, max,"articles-page","getAndLoadArticles");
-                    loadArticles(articles,"articles");
+                    creat(totalPage, aimPage, max, "articles-page", "getAndLoadArticles");
+                    loadArticles(articles, "articles");
                 }
             })
         }

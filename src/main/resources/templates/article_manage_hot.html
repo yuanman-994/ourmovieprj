@@ -137,6 +137,8 @@
                                     $.post("/article/set_hot_article?id=" + row.id + "&&" + "article_id=" + row.article_id, null, function (data) {
                                         if (data == -1)
                                             alert("文章不存在！！");
+                                        else if (data == -2)
+                                            alert("文章未通过审核，不能设置！！");
                                         $("#hot-article").bootstrapTable("refresh", {//静态刷新表格
                                             silent: true
                                         });

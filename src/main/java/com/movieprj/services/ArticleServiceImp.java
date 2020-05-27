@@ -257,8 +257,18 @@ public class ArticleServiceImp implements ArticleService {
             }
             FileWriter fwriter = new FileWriter(abs_article_url, false);
             fwriter.write(content);
+
             articleMapper.updateCheckById(article_id, 0);//修改审核状态为未审核
+
             articleMapper.updateTimeById(article_id);
+
+            //文章内容修改后检测是否已被设为热门文章，如果是则从热门撤下
+            List<Integer> Hot = articleMapper.getHot();
+            for (int i=1;i<=6;i++)//热门文章固定有6个位置
+                if (Hot.get(i-1)==article_id){
+                    articleMapper.setHot(i,0);//
+                }
+
             fwriter.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -270,8 +280,14 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public int delArticle(String[] ids) {//删除文章
         for (String id : ids) {
-            if (!this.delArticleById(Integer.valueOf(id)))
-                return -1;
+            //删除前先检测是否已被设为热门文章，如果是则先从热门撤下
+            int article_id = Integer.valueOf(id);
+            List<Integer> Hot = articleMapper.getHot();
+            for (int i=1;i<=6;i++)//热门文章固定有6个位置
+                if (Hot.get(i-1)==article_id){
+                    articleMapper.setHot(i,0);//
+                }
+            this.delArticleById(article_id);
         }
         return 0;
     }
@@ -286,6 +302,11 @@ public class ArticleServiceImp implements ArticleService {
             String article_to_del = article_dir_path + "\\" + article_url;
             String image_dir_to_del = image_dir_path + "\\" + author_id + "\\" + article_id;
             String cover_to_del = path + "\\src\\main\\resources\\static\\images\\articleCoverImages\\" + article_id + ".jpeg";
+
+
+            System.out.println(article_to_del);
+            System.out.println(image_dir_to_del);
+            System.out.println(cover_to_del);
 
             File article_file = new File(article_to_del);
             if (article_file.exists())
@@ -302,8 +323,10 @@ public class ArticleServiceImp implements ArticleService {
             if (article_cover.exists())
                 if (article_cover.isFile())
                     article_cover.delete();
+
             articleCommentMapper.deleteCommentByArticle(article_id);
             articleMapper.deleteById(article_id);
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -540,16 +563,36 @@ public class ArticleServiceImp implements ArticleService {
         JSONArray jsonArray = new JSONArray();
         int t = 1;
         for (int i : idl) {
-            Article a = articleMapper.getSingle(i);
-            int id = a.getAuthor_id();
-            String name = userPasswordMapper.findNameById(id);
-            JSONObject json = new JSONObject();
-            json.put("article_id", a.getArticle_id());
-            json.put("author_name", name);
-            json.put("headline", a.getHeadline());
-            json.put("release_time", a.getRelease_time());
-            json.put("id", t++);
-            jsonArray.add(json);
+            if (i==0){//id为-1表示未设置热门文章
+                JSONObject json = new JSONObject();
+                json.put("article_id", 0);
+                json.put("author_name", "未设置");
+                json.put("headline", "未设置");
+                json.put("release_time", "未设置");
+                json.put("id", t++);
+                jsonArray.add(json);
+            }else {
+                Article a = articleMapper.getSingle(i);
+                int id = a.getAuthor_id();
+                String name = userPasswordMapper.findNameById(id);
+                JSONObject json = new JSONObject();
+                if (a.getCheck_status()!=1){
+                    //发现被设为热门的文章未过审时，视为未设置热门
+                    json.put("article_id", 0);
+                    json.put("author_name", "未设置");
+                    json.put("headline", "未设置");
+                    json.put("release_time", "未设置");
+                    json.put("id", t++);
+                    jsonArray.add(json);
+                } else {
+                    json.put("article_id", a.getArticle_id());
+                    json.put("author_name", name);
+                    json.put("headline", a.getHeadline());
+                    json.put("release_time", a.getRelease_time());
+                    json.put("id", t++);
+                    jsonArray.add(json);
+                }
+            }
         }
         return jsonArray.toString();
     }
@@ -557,9 +600,11 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public int setHot(int id, int article_id) {
         Article article = articleMapper.getSingle(article_id);
-        if (article==null)
+        if (article==null&&article_id!=0)
            return -1;
-        else
+        else if (article.getCheck_status()!=1){
+            return -2;
+        } else
             articleMapper.setHot(id,article_id);
         return 0;
     }

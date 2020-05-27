@@ -229,7 +229,7 @@ public class ArticleController {
 
     @PostMapping("/article/delete_article_comment")
     @ResponseBody
-    public String deleteComment(@RequestParam("comment_id") int comment_id) {//上传评论
+    public String deleteComment(@RequestParam("comment_id") int comment_id) {
         articleCommentServiceImp.deleteComment(comment_id);
         return "删除成功";
     }

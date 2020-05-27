@@ -44,9 +44,9 @@ function loadArticles(data, id) {//data:数据，对象数组 id:字符串，上
     var len = data.length;
     $("#" + id).empty();//移除之前的内容
     for (i = 0; i < len; i += 2) {
-        if (i+1 < len) {//还剩超过两个
+        if (i + 1 < len) {//还剩超过两个
             var article_left = data[i];
-            var article_right = data[i+1];
+            var article_right = data[i + 1];
             var left = getString(article_left);
             var right = getString(article_right);
             var temp = String.format(line, left, right, end);
@@ -54,30 +54,30 @@ function loadArticles(data, id) {//data:数据，对象数组 id:字符串，上
         } else {//只有一个了
             var article = data[i];
             var s = getString(article);
-            var temp = String.format(line, s, "",end);
+            var temp = String.format(line, s, "", end);
             $("#" + id).append(temp);
         }
     }
 }
 
-function loadUpdated(data,id) {//需加载的数据，容器id
+function loadUpdated(data, id) {//需加载的数据，容器id
     var i;
     var len = data.length;
     $("#" + id).empty();//移除之前的内容
 
-    for (i = 0; i < len; i ++) {
+    for (i = 0; i < len; i++) {
         var article = data[i];
-        var str = String.format(updated_news,article.article_id,article.release_time,article.headline)
+        var str = String.format(updated_news, article.article_id, article.release_time, article.headline)
         $("#" + id).append(str);
     }
 }
 
 function addClick(article_id) {
-    $.post("/article/addClick?article_id="+article_id);
+    $.post("/article/addClick?article_id=" + article_id);
 }
 
 function getString(article) {
-    return String.format(leftOrRight, article.cover,article.headline,article.author_name,article.release_time,article.click_num,article.article_id);
+    return String.format(leftOrRight, article.cover, article.headline, article.author_name, article.release_time, article.click_num, article.article_id);
 }
 
 var hotArticle = '<div class="top-news-grid">\n' +
@@ -93,14 +93,16 @@ var hotArticle = '<div class="top-news-grid">\n' +
     '                            </div>'
 
 function loadHotArticle(id) {
-    $.get("/article/get_hot_articles",function (data) {
+    $.get("/article/get_hot_articles", function (data) {
         var i;
         var articles = JSON.parse(data);
         var len = articles.length;
         $("#" + id).empty();//移除之前的内容
-        for (i = 0; i < len; i ++) {
+        for (i = 0; i < len; i++) {
             var article = articles[i];
-            var str = String.format(hotArticle,article.article_id,article.headline,article.release_time,article.author_name);
+            if (article.article_id == 0)//未设置热门
+                continue;
+            var str = String.format(hotArticle, article.article_id, article.headline, article.release_time, article.author_name);
             $("#" + id).append(str);
         }
     })

@@ -75,7 +75,7 @@
                 },
                 ],
                 onClickCell: function (field, value, row, $element) {
-                    var chang_abled = new Array("start_sell", "end_sell", "max_sales");
+                    var chang_abled = new Array("max_sales");
                     var o_value = value;//单元格原值
 
                     if ($.inArray(field, chang_abled) >= 0) {
@@ -130,6 +130,12 @@
         }
 
         function check(row) {//合法性检查
+            if (!/^[0-9]*$/.test(row.max_sales)) {
+                alert("只能输入数字！！")
+                return false;
+            }
+
+
             return true
         }
         $(function () {
@@ -428,7 +434,7 @@
     <div class="tpl-content-wrapper">
         <div class="widget am-cf">
             <div class="widget-head am-cf">
-                <div class="widget-title am-fl">团购信息维护 仅支持修改开，结售时间 立即停售 修改最大销量（不能低于已售量）</div>
+                <div class="widget-title am-fl">团购信息维护 支持 立即停售 修改最大销量（不能低于已售量）</div>
                 <div class="widget-function am-fr">
                     <a href="javascript:;" class="am-icon-cog"></a>
                 </div>

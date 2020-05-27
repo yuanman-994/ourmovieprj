@@ -380,11 +380,15 @@
                         '<hr>\n' +
                         '</div>'
 
-                    function submitCommen() {//提交评论
-                        var commen = $("#mycommen").val()
-                        if (commen.length == 0)
+                    function submitComment() {//提交评论
+                        var comment = $("#mycommen").val()
+                        if (comment.length == 0)
                             return;
-                        $.post("/article/submit_comment?comment=" + commen + "&article_id=" + article_id, function (result) {
+                        if (comment.length>120){
+                            alert("字数超限"+comment.length+"/120");
+                            return;
+                        }
+                        $.post("/article/submit_comment?comment=" + comment + "&article_id=" + article_id, function (result) {
                             console.log(result);
                             loadComments(1);
                         })
@@ -469,7 +473,7 @@
                                 <textarea id="mycommen" name="mycommen" placeholder="评论内容"
                                           required="required"></textarea>
                             </form>
-                            <button onclick="submitCommen()">发表评论</button>
+                            <button onclick="submitComment()">发表评论</button>
                         </div>
                         <hr>
                         <div class="media-grids" id="listTag">

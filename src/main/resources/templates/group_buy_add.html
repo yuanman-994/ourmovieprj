@@ -306,20 +306,42 @@
                                             dataType: "json",
                                             //成功响应的结果
                                             success: function (data) {
-                                                $(data).each(function(index,element){
+                                                $(data).each(function (index, element) {
                                                     var cinema_id = element.cinema_id;
                                                     var cinema_name = element.cinema_name;
-                                                    $("#cinema").append("<option value="+cinema_id+">"+cinema_name+"</option>\n")
+                                                    $("#cinema").append("<option value=" + cinema_id + ">" + cinema_name + "</option>\n")
                                                 })
                                             }
                                         });
                                     }
+
                                     load_cinema()
                                 </script>
                                 <div class="am-form-group">
+                                    <label for="start_sell_date" class="am-u-sm-3 am-form-label">团购开售日期</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="text" class="am-form-field tpl-form-no-bg" data-am-datepicker
+                                               readonly id="start_sell_date">
+                                    </div>
+                                    <label for="start_sell_time" class="am-u-sm-3 am-form-label">团购开售时间</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="time" id="start_sell_time">
+                                    </div>
+                                    <label for="end_sell_date" class="am-u-sm-3 am-form-label">团购结售日期</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="text" class="am-form-field tpl-form-no-bg" data-am-datepicker
+                                               readonly id="end_sell_date">
+                                    </div>
+                                    <label for="end_sell_time" class="am-u-sm-3 am-form-label">团购结售时间</label>
+                                    <div class="am-u-sm-9">
+                                        <input type="time" id="end_sell_time">
+                                    </div>
+                                </div>
+                                <div class="am-form-group">
                                     <label for="start_time_date" class="am-u-sm-3 am-form-label">票开始日期</label>
                                     <div class="am-u-sm-9">
-                                        <input type="text" class="am-form-field tpl-form-no-bg" data-am-datepicker readonly id="start_time_date">
+                                        <input type="text" class="am-form-field tpl-form-no-bg" data-am-datepicker
+                                               readonly id="start_time_date">
                                     </div>
                                     <label for="start_time_time" class="am-u-sm-3 am-form-label">票开始时间</label>
                                     <div class="am-u-sm-9">
@@ -328,29 +350,12 @@
 
                                     <label for="end_time_date" class="am-u-sm-3 am-form-label">票结束日期</label>
                                     <div class="am-u-sm-9">
-                                        <input type="text" class="am-form-field tpl-form-no-bg" data-am-datepicker readonly id="end_time_date">
+                                        <input type="text" class="am-form-field tpl-form-no-bg" data-am-datepicker
+                                               readonly id="end_time_date">
                                     </div>
                                     <label for="end_time_time" class="am-u-sm-3 am-form-label">票结束时间</label>
                                     <div class="am-u-sm-9">
                                         <input type="time" id="end_time_time">
-                                    </div>
-                                </div>
-                                <div class="am-form-group">
-                                    <label for="start_sell_date" class="am-u-sm-3 am-form-label">团购开售日期</label>
-                                    <div class="am-u-sm-9">
-                                        <input type="text" class="am-form-field tpl-form-no-bg" data-am-datepicker readonly id="start_sell_date">
-                                    </div>
-                                    <label for="start_sell_time" class="am-u-sm-3 am-form-label">团购开售时间</label>
-                                    <div class="am-u-sm-9">
-                                        <input type="time" id="start_sell_time">
-                                    </div>
-                                    <label for="end_sell_date" class="am-u-sm-3 am-form-label">团购结售日期</label>
-                                    <div class="am-u-sm-9">
-                                        <input type="text" class="am-form-field tpl-form-no-bg" data-am-datepicker readonly id="end_sell_date">
-                                    </div>
-                                    <label for="end_sell_time" class="am-u-sm-3 am-form-label">团购结售时间</label>
-                                    <div class="am-u-sm-9">
-                                        <input type="time" id="end_sell_time">
                                     </div>
                                 </div>
                                 <div class="am-form-group">
@@ -367,21 +372,22 @@
                                 </div>
                                 <div class="am-form-group">
                                     <div class="am-u-sm-9 am-u-sm-push-3">
-                                        <button type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success " onclick="submit_data()">
+                                        <button type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success "
+                                                onclick="submit_data()">
                                             提交
                                         </button>
                                     </div>
                                 </div>
                                 <script>
                                     function submit_data() {
-                                        var start_time_time=$("#start_time_time").val()
-                                        var end_time_time=$("#end_time_time").val()
-                                        var start_time_date=$("#start_time_date").val()
-                                        var end_time_date =$("#end_time_date").val()
-                                        var start_sell_time=$("#start_sell_time").val()
-                                        var end_sell_time=$("#end_sell_time").val()
-                                        var start_sell_date=$("#start_sell_date").val()
-                                        var end_sell_date=$("#end_sell_date").val()
+                                        var start_time_time = $("#start_time_time").val()
+                                        var end_time_time = $("#end_time_time").val()
+                                        var start_time_date = $("#start_time_date").val()
+                                        var end_time_date = $("#end_time_date").val()
+                                        var start_sell_time = $("#start_sell_time").val()
+                                        var end_sell_time = $("#end_sell_time").val()
+                                        var start_sell_date = $("#start_sell_date").val()
+                                        var end_sell_date = $("#end_sell_date").val()
 
                                         var start_time = start_time_date + " " + start_time_time
                                         var end_time = end_time_date + " " + end_time_time
@@ -392,10 +398,50 @@
                                         var price = $("#price").val()
                                         var cinema_id = $("#cinema").val()
 
-                                        //输入合法性检查未完成
+                                        //转化为整数时间戳，方便后续比较大小
+                                        var D_start_time = new Date(start_time.replace(/-/g, '/')).getTime();
+                                        var D_end_time = new Date(end_time.replace(/-/g, '/')).getTime();
+                                        var D_start_sell = new Date(start_sell.replace(/-/g, '/')).getTime();
+                                        var D_end_sell = new Date(end_sell.replace(/-/g, '/')).getTime();
+                                        var D = new Date();//当前时间
 
-                                        data = {"start_time":start_time,"end_time":end_time,"start_sell":start_sell,"end_sell":end_sell,
-                                            "now_sales":now_sales,"max_sales":max_sales,"price":price,"cinema_id":cinema_id};
+                                        console.log(D_start_time);
+
+                                        if (!/^[0-9]*$/.test(price) || !/^[0-9]*$/.test(max_sales)) {
+                                            alert("存在非法输入")
+                                            return;
+                                        }
+                                        if (start_time_time.length * start_time_date.length *
+                                            end_time_time.length * end_sell_date.length *
+                                            start_sell_time.length * start_time_date.length *
+                                            end_sell_time.length * end_sell_date.length *
+                                            price.length * max_sales.length == 0) {
+                                            alert("缺少输入项");
+                                            return;
+                                        }
+                                        if (D_end_time < D || D_end_sell < D
+                                            || D_start_time < D || D_end_time < D) {
+                                            alert("所有日期不能早于当前时间");
+                                            return;
+                                        }
+                                        if (D_start_time >= D_end_time || D_start_sell >= D_end_sell) {
+                                            alert("开始时间不能晚于结束时间")
+                                            return;
+                                        }
+                                        if (D_end_sell >= D_start_time) {
+                                            alert("结售时间不能晚于票开始时间")
+                                            return;
+                                        }
+                                        data = {
+                                            "start_time": start_time,
+                                            "end_time": end_time,
+                                            "start_sell": start_sell,
+                                            "end_sell": end_sell,
+                                            "now_sales": now_sales,
+                                            "max_sales": max_sales,
+                                            "price": price,
+                                            "cinema_id": cinema_id
+                                        };
 
                                         $.ajax({
                                             url: "/group_buy/add_group_buy",

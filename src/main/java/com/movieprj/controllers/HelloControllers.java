@@ -64,4 +64,10 @@ public class HelloControllers {
     public String hello(){
         return "Hello World !!!";
     }
+
+
+    @RequestMapping("/admin_login_page")
+    public String adminLogin(){
+        return "admin_login_page";
+    }
 }

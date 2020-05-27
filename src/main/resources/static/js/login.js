@@ -8,10 +8,16 @@ function try_login() {
         url: url,
         type: "GET",
         success: function (result) {
-            $("a[name=tips]").empty()
-            $("a[name=tips]").append(result)
-            $("#login-button").empty()
-            $("#login-button").append(name)
+            var data = JSON.parse(result);
+            if (data.status == 0){
+                $("#login-button").empty()
+                $("#login-button").append(name)
+                $("a[name=tips]").empty()
+                $("a[name=tips]").append(data.msg)
+            } else {
+                $("a[name=tips]").empty()
+                $("a[name=tips]").append(data.msg)
+            }
         }
     })
 }
@@ -30,6 +36,26 @@ function get_user_inf() {//请求获取用户详细信息，目前只能获取�
             else{
                 $("#login-button").empty()
                 $("#login-button").append(result)
+            }
+        }
+    })
+}
+
+function loginForAdminPage() {
+    var name = $("#user-name").val()
+    var password = $("#user-password").val()
+    var url = "/admin_login?" + "user_name=" + name + "&" + "password=" + password
+    if (name.length == 0 || password.length == 0)
+        return;
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (result) {
+            var data = JSON.parse(result);
+            if (data.status == 0){
+                location.replace("/admin_index");
+            } else {
+               alert(data.msg);
             }
         }
     })

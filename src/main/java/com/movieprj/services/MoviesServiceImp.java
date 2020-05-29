@@ -90,5 +90,15 @@ public class MoviesServiceImp implements MoviesService {
         return map;
     }
 
+    @Override
+    public List<Movies> selectMoviesByRank() {
+        return moviesMapper.selectMoviesByRank();
+    }
+
+    @Override
+    public List<Movies> orderMoviesByRank() {
+        return moviesMapper.orderMoviesByRank();
+    }
+
 
 }

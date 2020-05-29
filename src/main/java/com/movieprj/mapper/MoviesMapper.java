@@ -54,6 +54,22 @@ public interface MoviesMapper {
     })
     public List<Movies> findAllWithTypes();
 
+    @Select("SELECT * FROM movie ORDER BY rank DESC ")
+    @Results({
+            @Result(id=true,property = "movie_id",column = "movie_id"),
+            @Result(property = "cover",column = "cover"),
+            @Result(property = "movie_name",column = "movie_name"),
+            @Result(property = "director",column = "director"),
+            @Result(property = "main_actor",column = "main_actor"),
+            @Result(property = "intro",column = "intro"),
+            @Result(property = "rank",column = "rank"),
+            @Result(property = "release_date",column = "release_date"),
+            @Result(property = "onshow",column = "onshow"),
+            @Result(property = "comment_permission",column = "comment_permission"),
+            @Result(property = "moviesTypesList",column = "movie_id",many=@Many(select="com.movieprj.mapper.MoviesTypesMapper.findTypesByMovieId",fetchType = FetchType.EAGER)),
+    })
+    public List<Movies> orderMoviesByRank();
+
     //@Select("SELECT * FROM movie m WHERE m.movie_name like CONCAT('%',#{movie_name},'%')")
     @SelectProvider(type = selectProvider.class, method = "search")
     @Results({
@@ -74,10 +90,14 @@ public interface MoviesMapper {
     @Select("SELECT * FROM movie WHERE onshow =#{onshow}")
     public  List<Movies> selectMoviesByOnshow(Integer onshow);
 
+    @Select("SELECT * FROM movie WHERE rank > 7")
+    public  List<Movies> selectMoviesByRank();
+
 
     @Insert("INSERT INTO movie (movie_id,cover,movie_name,director,main_actor,intro,rank,release_date,onshow,comment_permission) " +
             "VALUES (#{movie_id},#{cover},#{movie_name},#{director},#{main_actor},#{intro},#{rank},#{release_date},#{onshow},#{comment_permission})")
     public int addMovies(Movies movies);
+
 
     @Delete("DELETE FROM movie WHERE movie_id = #{movie_id}")
     public int deleteMovies(Integer movie_id);

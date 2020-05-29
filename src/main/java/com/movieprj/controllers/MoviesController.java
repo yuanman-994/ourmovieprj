@@ -224,7 +224,23 @@ public class MoviesController {
         return map;
     }
 
+    @RequestMapping("/topRankMovies")
+    @ResponseBody
+    public Map<String,Object> ShowTopMoives(){
+        List<Movies> moviesList = moviesService.selectMoviesByRank();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("moviesList",moviesList);
+        return map;
+    }
 
+    @RequestMapping("/orderMoviesByRank")
+    @ResponseBody
+    public Map<String,Object> orderMoviesByRank(){
+        List<Movies> moviesList = moviesService.orderMoviesByRank();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("moviesList",moviesList);
+        return map;
+    }
 
     @PostMapping("/addMComment")
     public String AddMComment(HttpServletRequest request, Model model) {

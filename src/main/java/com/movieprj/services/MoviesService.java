@@ -25,4 +25,8 @@ public interface MoviesService {
 
     public Map<String,Object> searchMovies(String search_content,String select_date,String select_status);
 
+    public  List<Movies> selectMoviesByRank();
+
+    public List<Movies> orderMoviesByRank();
+
 }

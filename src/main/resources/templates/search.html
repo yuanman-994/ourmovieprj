@@ -34,6 +34,7 @@
     <!-- banner-bottom-plugin -->
     <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
     <script th:src="@{js/owl.carousel.js}"></script>
+    <script th:src="@{js/login.js}"></script>
     <script th:src="@{js/getParam.js}"></script>
     <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
     <script th:src="@{js/amazeui.min.js}"></script>
@@ -78,6 +79,7 @@
         var search_text = paras.search_text;
 
         function main() {
+            get_user_inf();
             $(" input[ name='Search' ] ").val(search_text);
             var max = 5;
             getAndLoadArticles(1, max);
@@ -214,8 +216,9 @@
         </script>
         <div class="w3l_sign_in_register">
             <ul>
-                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) 123 345 653</li>
-                <li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
+                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) R 345 653</li>
+                <li><a href="#" data-toggle="modal" data-target="#myModal" id = "login-button">Login</a></li>
+                <li><a href="/logout" onclick="logout()">Logout</a></li>
             </ul>
         </div>
         <div class="clearfix"></div>
@@ -223,47 +226,7 @@
 </div>
 <!-- //header -->
 <!-- bootstrap-pop-up -->
-<div class="modal video-modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                Sign In & Sign Up
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <section>
-                <div class="modal-body">
-                    <div class="w3_login_module">
-                        <div class="module form-module">
-                            <div class="toggle"><i class="fa fa-times fa-pencil"></i>
-                                <div class="tooltip">Click Me</div>
-                            </div>
-                            <div class="form">
-                                <h3>Login to your account</h3>
-                                <form action="#" method="post">
-                                    <input type="text" name="Username" placeholder="Username" required="">
-                                    <input type="password" name="Password" placeholder="Password" required="">
-                                    <input type="submit" value="Login">
-                                </form>
-                            </div>
-                            <div class="form">
-                                <h3>Create an account</h3>
-                                <form action="#" method="post">
-                                    <input type="text" name="Username" placeholder="Username" required="">
-                                    <input type="password" name="Password" placeholder="Password" required="">
-                                    <input type="email" name="Email" placeholder="Email Address" required="">
-                                    <input type="text" name="Phone" placeholder="Phone Number" required="">
-                                    <input type="submit" value="Register">
-                                </form>
-                            </div>
-                            <div class="cta"><a href="#">Forgot your password?</a></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</div>
+
 <script>
     $('.toggle').click(function () {
         // Switches the Icon

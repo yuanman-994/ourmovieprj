@@ -40,6 +40,7 @@
     <!-- banner-bottom-plugin -->
     <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
     <script th:src="@{js/owl.carousel.js}"></script>
+    <script th:src="@{js/login.js}"></script>
     <script>
         $(document).ready(function () {
             $("#owl-demo").owlCarousel({
@@ -78,7 +79,7 @@
     <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
 </head>
 
-<body>
+<body onload = "get_user_inf()">
 <header>
     <div class="movies_nav">
         <div class="container">
@@ -104,8 +105,9 @@
         </div>
         <div class="w3l_sign_in_register">
             <ul>
-                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) 123 345 653</li>
-                <li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
+                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) R 345 653</li>
+                <li><a href="#" data-toggle="modal" data-target="#myModal" id = "login-button">Login</a></li>
+                <li><a href="/logout" onclick="logout()">Logout</a></li>
             </ul>
         </div>
         <div class="clearfix"></div>
@@ -128,23 +130,26 @@
                             </div>
                             <div class="form">
                                 <h3>Login to your account</h3>
-                                <form action="#" method="post">
-                                    <input type="text" name="Username" placeholder="Username" required="">
-                                    <input type="password" name="Password" placeholder="Password" required="">
-                                    <input type="submit" value="Login">
+                                <form>
+                                    <input type="text" name="user_name" placeholder="user_name" required="" >
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <ul>
+                                        <input type="button" value="Login" onclick="try_login()">
+                                        <a name="tips"></a>
+                                    </ul>
                                 </form>
                             </div>
                             <div class="form">
                                 <h3>Create an account</h3>
-                                <form action="#" method="post">
-                                    <input type="text" name="Username" placeholder="Username" required="">
-                                    <input type="password" name="Password" placeholder="Password" required="">
-                                    <input type="email" name="Email" placeholder="Email Address" required="">
-                                    <input type="text" name="Phone" placeholder="Phone Number" required="">
+                                <form th:action="@{/user/register}" method="post">
+                                    <input type="text" name="user_name" placeholder="user_name" required="">
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <input type="email" name="user_email" placeholder="Email Address" required="">
+                                    <input type="text" name="phone_number" placeholder="phone_number" required="">
                                     <input type="submit" value="Register">
                                 </form>
                             </div>
-                            <div class="cta"><a href="#">Forgot your password?</a></div>
+                            <div class="cta"><a th:href="@{/lost_password}">Forgot your password?</a></div>
                         </div>
                     </div>
                 </div>

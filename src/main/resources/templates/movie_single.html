@@ -70,7 +70,7 @@
 
 </head>
 
-<body onload="get_user_inf()">
+<body>
 <!-- header -->
 <div class="header">
     <div class="container">
@@ -445,6 +445,7 @@
 </script>
 <script>
     $(function () {
+        get_user_inf();
         showPage(1);
         Movies.getInfo();
         OnshowMovies.getInfo();

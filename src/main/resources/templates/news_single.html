@@ -36,6 +36,7 @@
     <!-- start-smoth-scrolling -->
     <script type="text/javascript" th:src="@{js/move-top.js}"></script>
     <script type="text/javascript" th:src="@{js/easing.js}"></script>
+    <script th:src="@{js/login.js}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $(".scroll").click(function (event) {
@@ -110,6 +111,7 @@
 
 
         function load() {
+            get_user_inf();
             load_inf();
             load_article();
             load_updated_news();
@@ -148,8 +150,9 @@
         </div>
         <div class="w3l_sign_in_register">
             <ul>
-                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) 123 345 653</li>
-                <li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
+                <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) R 345 653</li>
+                <li><a href="#" data-toggle="modal" data-target="#myModal" id="login-button">Login</a></li>
+                <li><a href="/logout" onclick="logout()">Logout</a></li>
             </ul>
         </div>
         <div class="clearfix"></div>
@@ -162,8 +165,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 Sign In & Sign Up
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <section>
                 <div class="modal-body">
@@ -174,23 +176,26 @@
                             </div>
                             <div class="form">
                                 <h3>Login to your account</h3>
-                                <form action="#" method="post">
-                                    <input type="text" name="Username" placeholder="Username" required="">
-                                    <input type="password" name="Password" placeholder="Password" required="">
-                                    <input type="submit" value="Login">
+                                <form>
+                                    <input type="text" name="user_name" placeholder="user_name" required="" >
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <ul>
+                                        <input type="button" value="Login" onclick="try_login()">
+                                        <a name="tips"></a>
+                                    </ul>
                                 </form>
                             </div>
                             <div class="form">
                                 <h3>Create an account</h3>
-                                <form action="#" method="post">
-                                    <input type="text" name="Username" placeholder="Username" required="">
-                                    <input type="password" name="Password" placeholder="Password" required="">
-                                    <input type="email" name="Email" placeholder="Email Address" required="">
-                                    <input type="text" name="Phone" placeholder="Phone Number" required="">
+                                <form th:action="@{/user/register}" method="post">
+                                    <input type="text" name="user_name" placeholder="user_name" required="">
+                                    <input type="password" name="password" placeholder="password" required="">
+                                    <input type="email" name="user_email" placeholder="Email Address" required="">
+                                    <input type="text" name="phone_number" placeholder="phone_number" required="">
                                     <input type="submit" value="Register">
                                 </form>
                             </div>
-                            <div class="cta"><a href="#">Forgot your password?</a></div>
+                            <div class="cta"><a th:href="@{/lost_password}">Forgot your password?</a></div>
                         </div>
                     </div>
                 </div>
@@ -198,6 +203,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $('.toggle').click(function () {
         // Switches the Icon
@@ -327,45 +333,45 @@
                         </div>
                     </div>
                 </div>
-<!--                &lt;!&ndash;			相关新闻&ndash;&gt;-->
-<!--                <div class="wthree-related-news-left">-->
-<!--                    <h4>Related News</h4>-->
-<!--                    <div class="wthree-news-top-left">-->
-<!--                        <div class="col-md-6 w3-agileits-news-left">-->
-<!--                            <div class="col-sm-5 wthree-news-img">-->
-<!--                                <a href="news_single.html"><img src="images/m1.jpg" alt=""/></a>-->
-<!--                            </div>-->
-<!--                            <div class="col-sm-7 wthree-news-info">-->
-<!--                                <h5><a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing-->
-<!--                                    elit.</a></h5>-->
-<!--                                <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis-->
-<!--                                    eget.</p>-->
-<!--                                <ul>-->
-<!--                                    <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>-->
-<!--                                    <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-<!--                            <div class="clearfix"></div>-->
-<!--                        </div>-->
-<!--                        <div class="col-md-6 w3-agileits-news-left">-->
-<!--                            <div class="col-sm-5 wthree-news-img">-->
-<!--                                <a href="news_single.html"><img src="images/m2.jpg" alt=""/></a>-->
-<!--                            </div>-->
-<!--                            <div class="col-sm-7 wthree-news-info">-->
-<!--                                <h5><a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing-->
-<!--                                    elit.</a></h5>-->
-<!--                                <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis-->
-<!--                                    eget.</p>-->
-<!--                                <ul>-->
-<!--                                    <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>-->
-<!--                                    <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-<!--                            <div class="clearfix"></div>-->
-<!--                        </div>-->
-<!--                        <div class="clearfix"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                &lt;!&ndash;			相关新闻&ndash;&gt;-->
+                <!--                <div class="wthree-related-news-left">-->
+                <!--                    <h4>Related News</h4>-->
+                <!--                    <div class="wthree-news-top-left">-->
+                <!--                        <div class="col-md-6 w3-agileits-news-left">-->
+                <!--                            <div class="col-sm-5 wthree-news-img">-->
+                <!--                                <a href="news_single.html"><img src="images/m1.jpg" alt=""/></a>-->
+                <!--                            </div>-->
+                <!--                            <div class="col-sm-7 wthree-news-info">-->
+                <!--                                <h5><a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing-->
+                <!--                                    elit.</a></h5>-->
+                <!--                                <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis-->
+                <!--                                    eget.</p>-->
+                <!--                                <ul>-->
+                <!--                                    <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>-->
+                <!--                                    <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>-->
+                <!--                                </ul>-->
+                <!--                            </div>-->
+                <!--                            <div class="clearfix"></div>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-md-6 w3-agileits-news-left">-->
+                <!--                            <div class="col-sm-5 wthree-news-img">-->
+                <!--                                <a href="news_single.html"><img src="images/m2.jpg" alt=""/></a>-->
+                <!--                            </div>-->
+                <!--                            <div class="col-sm-7 wthree-news-info">-->
+                <!--                                <h5><a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing-->
+                <!--                                    elit.</a></h5>-->
+                <!--                                <p>Sed tristique mattis fermentum. Etiam semper aliquet massa, id tempus massa mattis-->
+                <!--                                    eget.</p>-->
+                <!--                                <ul>-->
+                <!--                                    <li><i class="fa fa-clock-o" aria-hidden="true"></i> 24/09/2016</li>-->
+                <!--                                    <li><i class="fa fa-eye" aria-hidden="true"></i> 2642</li>-->
+                <!--                                </ul>-->
+                <!--                            </div>-->
+                <!--                            <div class="clearfix"></div>-->
+                <!--                        </div>-->
+                <!--                        <div class="clearfix"></div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 <!--			评论-->
                 <script>
                     var commentStr = '<div>\n' +
@@ -384,8 +390,8 @@
                         var comment = $("#mycommen").val()
                         if (comment.length == 0)
                             return;
-                        if (comment.length>120){
-                            alert("字数超限"+comment.length+"/120");
+                        if (comment.length > 120) {
+                            alert("字数超限" + comment.length + "/120");
                             return;
                         }
                         $.post("/article/submit_comment?comment=" + comment + "&article_id=" + article_id, function (result) {
@@ -401,66 +407,66 @@
                     var pagesize = 5;//每页记录数
                     var commmenDivId = "comments";
 
-                    function creat(total,now,max,id,funcname) {//创建分页对象,total:总页数,now:当前在第几页，max:显示多少页，id:对象id funcname:渲染页面的函数名（string）,可自行实现，需包括now,max参数
-                        $("#"+id).empty();
-                        var start,end;//显示的起始，终止页
+                    function creat(total, now, max, id, funcname) {//创建分页对象,total:总页数,now:当前在第几页，max:显示多少页，id:对象id funcname:渲染页面的函数名（string）,可自行实现，需包括now,max参数
+                        $("#" + id).empty();
+                        var start, end;//显示的起始，终止页
                         //计算显示的起始页
-                        if (total<=max){
+                        if (total <= max) {
                             start = 1;
                             end = total;
                         } else {
-                            if (now <= parseInt(max/2)){
+                            if (now <= parseInt(max / 2)) {
                                 start = 1;
                                 end = max;
-                            }
-                            else if (now>=total-parseInt(max/2)){
+                            } else if (now >= total - parseInt(max / 2)) {
                                 start = total - max + 1;
                                 end = total;
                             } else {
-                                start = now - parseInt(max/2) +1;
-                                end = start + max -1;
+                                start = now - parseInt(max / 2) + 1;
+                                end = start + max - 1;
                             }
                         }
                         //填充html
-                        if(start==1)//创建前一页箭头内容
-                            $("#"+id).append('<li class="disabled"><a href="#"><i class="fa fa-angle-left">«</i></a></li>');
+                        if (start == 1)//创建前一页箭头内容
+                            $("#" + id).append('<li class="disabled"><a href="#"><i class="fa fa-angle-left">«</i></a></li>');
                         else
-                            $("#"+id).append('<li><a href="#"'+get_string(funcname,now-1)+'><i class="fa fa-angle-left">«</i></a></li>');
+                            $("#" + id).append('<li><a href="#"' + get_string(funcname, now - 1) + '><i class="fa fa-angle-left">«</i></a></li>');
 
                         //创建各分页
                         var i;
-                        for (i=0;start+i<=end;i++){
-                            if (start+i==now)
-                                $("#"+id).append('<li class="active"><a href="#"'+get_string(funcname,start+i)+'>'+(start+i)+'</a></li>');
+                        for (i = 0; start + i <= end; i++) {
+                            if (start + i == now)
+                                $("#" + id).append('<li class="active"><a href="#"' + get_string(funcname, start + i) + '>' + (start + i) + '</a></li>');
                             else
-                                $("#"+id).append('<li><a href="#"'+get_string(funcname,start+i)+'>'+(start+i)+'</a></li>');
+                                $("#" + id).append('<li><a href="#"' + get_string(funcname, start + i) + '>' + (start + i) + '</a></li>');
                         }
-                        if(now==total)//创建后一页箭头内容
-                            $("#"+id).append('<li class="disabled"><a href="#"><i class="fa fa-angle-right">«</i></a></li>');
+                        if (now == total)//创建后一页箭头内容
+                            $("#" + id).append('<li class="disabled"><a href="#"><i class="fa fa-angle-right">«</i></a></li>');
                         else
-                            $("#"+id).append('<li><a href="#"'+get_string(funcname,now+1)+'><i class="fa fa-angle-right">«</i></a></li>');
+                            $("#" + id).append('<li><a href="#"' + get_string(funcname, now + 1) + '><i class="fa fa-angle-right">«</i></a></li>');
                     }
-                    function get_string(funcname,aim) {
-                        return 'onclick="'+funcname+'('+aim+')"'
+
+                    function get_string(funcname, aim) {
+                        return 'onclick="' + funcname + '(' + aim + ')"'
                     }
 
                     function loadCommentAndPageDi() {//加载评论区
-                        $.get("/article/get_comment_page_num?article_id=" + article_id +"&pagesize="+ pagesize , function (result) {
+                        $.get("/article/get_comment_page_num?article_id=" + article_id + "&pagesize=" + pagesize, function (result) {
                             totalPage = result;
                             loadComments(1);
                         })
                     }
 
                     function loadComments(aimPage) {
-                        $.get("/article/get_comments?article_id=" + article_id +"&aimPage="+ aimPage +"&pagesize=" + pagesize, function (data) {
-                            creat(totalPage,aimPage,pageShow,commontPgaeDiId,loadFuncName);
-                            $("#"+commmenDivId).empty();
+                        $.get("/article/get_comments?article_id=" + article_id + "&aimPage=" + aimPage + "&pagesize=" + pagesize, function (data) {
+                            creat(totalPage, aimPage, pageShow, commontPgaeDiId, loadFuncName);
+                            $("#" + commmenDivId).empty();
                             var i;
                             var comments = JSON.parse(data);
-                            for (i=0;i<comments.length;i++){
+                            for (i = 0; i < comments.length; i++) {
                                 var a_comment = comments[i];
-                                var str = String.format(commentStr,a_comment.name,a_comment.time,a_comment.content);
-                                $("#"+commmenDivId).append(str);
+                                var str = String.format(commentStr, a_comment.name, a_comment.time, a_comment.content);
+                                $("#" + commmenDivId).append(str);
                             }
                         })
                     }
@@ -531,7 +537,7 @@
                         <h3>Top News</h3>
                     </div>
                     <div class="news-right-bottom-bg">
-                        <div class="news-grids-bottom" id = "hotArticles">
+                        <div class="news-grids-bottom" id="hotArticles">
                             <div class="top-news-grid">
                                 <div class="top-news-grid-heading">
                                     <a href="news_single.html">Lorem ipsum dolor sit amet, consectetur adipiscing elit.

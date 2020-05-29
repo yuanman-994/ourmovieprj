@@ -48,7 +48,7 @@ public class ShiroConfig {
         //登出
         map.put("/logout", "logout");
         //对所有用户认证
-        map.put("/group_buy", "authc");
+//        map.put("/group_buy", "authc");
         /*map.put("/addMComment","authc");
         map.put("/addTicket","authc");
         map.put("/addTicketOrder","authc");*/

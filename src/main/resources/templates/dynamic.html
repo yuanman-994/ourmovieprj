@@ -120,11 +120,20 @@
             <a href="index.html"><h1>One<span>Movies</span></h1></a>
         </div>
         <div class="w3_search">
-            <form action="#" method="post">
+            <form action="#">
                 <input type="text" name="Search" placeholder="Search" required="">
-                <input type="submit" value="Go">
+                <input type="submit" value="Go" onclick="search();return false;">
             </form>
         </div>
+        <script>
+            function search(){
+                var search_text = $(" input[ name='Search' ] ").val();
+                if (search_text.length==0)
+                    return;
+                else
+                    location.assign("/search?search_text="+search_text);
+            }
+        </script>
         <div class="w3l_sign_in_register">
             <ul>
                 <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) R 345 653</li>

@@ -47,6 +47,7 @@ public class ShiroConfig {
         Map<String, String> map = new HashMap<>();
         //登出
         map.put("/logout", "logout");
+        map.put("/user/**","authc");
         //对所有用户认证
 //        map.put("/group_buy", "authc");
         /*map.put("/addMComment","authc");
@@ -56,7 +57,7 @@ public class ShiroConfig {
         map.put("/article_manage","roles[admin]");
         map.put("/self_article_manage","roles[admin]");
         map.put("/article_manage/**","roles[admin]");
-//        map.put("/**","roles[admin]");
+        map.put("/user/**","roles[common]");
         //登录
         shiroFilterFactoryBean.setLoginUrl("/please_login_first");
         //首页

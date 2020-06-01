@@ -5,6 +5,8 @@ import com.movieprj.beans.Role;
 import com.movieprj.beans.UserPassword;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
 import java.util.List;
 
 @Mapper
@@ -21,4 +23,10 @@ public interface UserPasswordMapper {
     public Role findRoleById (Integer rid);//role permisssion两表联合查询
     public List<Permission> findRolePermissionById(Integer rid);//从role_permission,permission中查找role_id为rid的role的permission
     public List<Role> findUserRoleById(Integer uid);//从user_role,role中查找user_id为uid的user的role
+
+    @Update("UPDATE user_password SET user_name=#{user_name} WHERE user_id=#{user_id}")
+    public void updateNameById(String user_name,int user_id);
+
+    @Update("UPDATE user_password SET password=#{password} WHERE user_id=#{user_id}")
+    public void updatePasswordById(String password,int user_id);
 }

@@ -14,6 +14,7 @@ function try_login() {
                 $("#login-button").append(name)
                 $("a[name=tips]").empty()
                 $("a[name=tips]").append(data.msg)
+                get_user_inf();
             } else {
                 $("a[name=tips]").empty()
                 $("a[name=tips]").append(data.msg)
@@ -26,7 +27,7 @@ function logout() {
     $("#login-button").empty()
     $("#login-button").append("Login")
 }
-function get_user_inf() {//请求获取用户详细信息，目前只能获取用户名
+function get_user_inf() {//请求获取用户名,并修改部分前端逻辑
     $.ajax({
         url: "/get_user_inf",
         type: "GET",

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>用户中心</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+    <!-- //for-mobile-apps -->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" th:href="@{/css/contactstyle.css}" type="text/css" media="all"/>
+    <link rel="stylesheet" th:href="@{/css/faqstyle.css}" type="text/css" media="all"/>
+    <link th:href="@{/css/single.css}" rel='stylesheet' type='text/css'/>
+    <link th:href="@{/css/medile.css}" rel='stylesheet' type='text/css'/>
+    <!-- banner-slider -->
+    <link th:href="@{/css/jquery.slidey.min.css}" rel="stylesheet">
+    <!-- //banner-slider -->
+    <!-- pop-up -->
+    <link th:href="@{/css/popuo-box.css}" rel="stylesheet" type="text/css" media="all"/>
+    <!-- //pop-up -->
+    <!-- font-awesome icons -->
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+    <!-- //font-awesome icons -->
+    <!-- js -->
+    <script type="text/javascript" th:src="@{js/jquery-2.1.4.min.js}"></script>
+    <!-- //js -->
+    <!-- banner-bottom-plugin -->
+    <link th:href="@{/css/owl.carousel.css}" rel="stylesheet" type="text/css" media="all">
+    <script th:src="@{js/owl.carousel.js}"></script>
+    <script th:src="@{js/login.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#owl-demo").owlCarousel({
+
+                autoPlay: 3000, //Set AutoPlay to 3 seconds
+
+                items: 5,
+                itemsDesktop: [640, 4],
+                itemsDesktopSmall: [414, 3]
+
+            });
+
+        });
+    </script>
+    <!-- //banner-bottom-plugin -->
+    <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
+    <!-- start-smoth-scrolling -->
+    <script type="text/javascript" th:src="@{js/move-top.js}"></script>
+    <script type="text/javascript" th:src="@{js/easing.js}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+            });
+        });
+    </script>
+    <!-- start-smoth-scrolling -->
+
+    <!--引用百度地图API-->
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .iw_poi_title {
+            color: #CC5522;
+            font-size: 14px;
+            font-weight: bold;
+            overflow: hidden;
+            padding-right: 13px;
+            white-space: nowrap
+        }
+
+        .iw_poi_content {
+            font: 12px arial, sans-serif;
+            overflow: visible;
+            padding-top: 4px;
+            white-space: -moz-pre-wrap;
+            word-wrap: break-word
+        }
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+    <script>
+        function change_name() {
+            var new_name = $('#myname').val();
+            //输入检查
+            //上传
+            $.post("/user/change_name?new_name=" + new_name, function (res) {
+                if (res == 0) {
+                    alert("新用户名 " + new_name + " 修改成功!!!，需重新登录");
+                    location.replace("/index");
+                } else if (res == -1) {
+                    alert("与其它用户的用户名重复");
+                } else if (res == -2) {
+                    alert("新旧用户名相同");
+                }
+            })
+        }
+        function change_password() {
+            var password = $('#password').val();
+            var t_password = $('#t-password').val();
+            var new_password = $('#new-password').val();
+            //输入检查
+
+            if (t_password!=new_password){
+                alert("新密码不一致！");
+                return;
+            }
+
+            $.ajax({
+                url: "/user/change_password",
+                data: JSON.stringify({password: password,newPassword:new_password}),
+                type: "post",
+                async: false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (res) {
+                    if (res==0){
+                        alert("密码修改成功!!!，需重新登录");
+                        location.replace("/index");
+                    } else if (res==-1) {
+                        alert("旧密码错误！");
+                    }
+                }
+            })
+        }
+
+        function init() {
+            load();
+        }
+
+        function load() {
+            $.ajax({
+                url: "/get_user_inf",
+                type: "GET",
+                success: function (result) {
+                    $("#myname").val(result);
+                }
+            })
+        }
+
+        $(document).ready(init());
+    </script>
+</head>
+
+<body onload="get_user_inf()">
+<header>
+    <div class="movies_nav">
+        <div class="container">
+            <nav class="navbar navbar-default">
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-2">
+
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="header">
+        <div class="container">
+            <div class="w3layouts_logo">
+                <a href="index.html"><h1>One<span>Movies</span></h1></a>
+            </div>
+            <div class="w3_search">
+                <form action="#">
+                    <input type="text" name="Search" placeholder="Search" required="">
+                    <input type="submit" value="Go" onclick="search();return false;">
+                </form>
+            </div>
+            <script>
+                function search() {
+                    var search_text = $(" input[ name='Search' ] ").val();
+                    if (search_text.length == 0)
+                        return;
+                    else
+                        location.assign("/search?search_text=" + search_text);
+                }
+            </script>
+            <div class="w3l_sign_in_register">
+                <ul>
+                    <li><i class="fa fa-phone" aria-hidden="true"></i> (+000) R 345 653</li>
+                    <li><a href="#" data-toggle="modal" data-target="#myModal" id="login-button">Login</a></li>
+                    <li><a href="/logout" onclick="logout()">Logout</a></li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!-- bootstrap-pop-up -->
+    <div class="modal video-modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Sign In & Sign Up
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <section>
+                    <div class="modal-body">
+                        <div class="w3_login_module">
+                            <div class="module form-module">
+                                <div class="toggle"><i class="fa fa-times fa-pencil"></i>
+                                    <div class="tooltip">Click Me</div>
+                                </div>
+                                <div class="form">
+                                    <h3>Login to your account</h3>
+                                    <form>
+                                        <input type="text" name="user_name" placeholder="user_name" required="">
+                                        <input type="password" name="password" placeholder="password" required="">
+                                        <ul>
+                                            <input type="button" value="Login" onclick="try_login()">
+                                            <a name="tips"></a>
+                                        </ul>
+                                    </form>
+                                </div>
+                                <div class="form">
+                                    <h3>Create an account</h3>
+                                    <form th:action="@{/user/register}" method="post">
+                                        <input type="text" name="user_name" placeholder="user_name" required="">
+                                        <input type="password" name="password" placeholder="password" required="">
+                                        <input type="email" name="user_email" placeholder="Email Address" required="">
+                                        <input type="text" name="phone_number" placeholder="phone_number" required="">
+                                        <input type="submit" value="Register">
+                                    </form>
+                                </div>
+                                <div class="cta"><a th:href="@{/lost_password}">Forgot your password?</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.toggle').click(function () {
+            // Switches the Icon
+            $(this).children('i').toggleClass('fa-pencil');
+            // Switches the forms
+            $('.form').animate({
+                height: "toggle",
+                'padding-top': 'toggle',
+                'padding-bottom': 'toggle',
+                opacity: "toggle"
+            }, "slow");
+        });
+    </script>
+    <!-- //bootstrap-pop-up -->
+</header>
+<!-- nav -->
+<div class="movies_nav">
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header navbar-left">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+                <nav>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a th:href="@{/index}">首页</a></li>
+                        <li><a th:href="@{/dynamic}">影城动态</a></li>
+                        <li><a th:href="@{/see_movie}">看电影</a></li>
+                        <li><a th:href="@{/group_buy}">团购</a></li>
+                        <li><a href="#">商城 </a></li>
+                        <li><a th:href="@{/cooperation}">商务合作信息</a></li>
+                        <li><a th:href="@{/about_us}">关于企业信息</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </nav>
+    </div>
+</div>
+<div class="general-agileits-w3l">
+    <div class="w3l-medile-movies-grids">
+        <div class="tittle-head">
+            <div class="container">
+                <div class="agileits-single-top">
+                    <ol class="breadcrumb">
+                        <li><a th:href="@{/index}">首页</a></li>
+                        <li class="active">用户中心</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h4 class="latest-text w3_latest_text">个人信息维护</h4>
+    <div class="container">
+        <div class="input-group">
+            <span class="input-group-addon">用户名</span>
+            <input type="text" class="form-control" id="myname" placeholder="用户名">
+            <span class="input-group-btn">
+							<button class="btn btn-default" onclick="change_name()" type="button">提交修改</button>
+			</span>
+        </div>
+    </div>
+    <h4 class="latest-text w3_latest_text">修改密码</h4>
+    <div class="container">
+        <div class="input-group">
+            <span class="input-group-addon">旧密码</span>
+            <input type="password" class="form-control" id="password" placeholder="请输入旧密码">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">新密码</span>
+            <input type="password" class="form-control" id="t-password" placeholder="请输入新密码">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">新密码</span>
+            <input type="password" class="form-control" id="new-password" placeholder="请再次输入新密码">
+            <span class="input-group-btn">
+							<button class="btn btn-default" onclick="change_password()" type="button">提交修改</button>
+			</span>
+        </div>
+    </div>
+
+</div>
+</div>
+<div class="footer">
+    <div class="container">
+        <div class="w3ls_footer_grid">
+            <div class="col-md-6 w3ls_footer_grid_left">
+                <div class="w3ls_footer_grid_left1">
+                    <h2>Subscribe to us</h2>
+                    <div class="w3ls_footer_grid_left1_pos">
+                        <form action="#" method="post">
+                            <input type="email" name="email" placeholder="Your email..." required="">
+                            <input type="submit" value="Send">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 w3ls_footer_grid_right">
+                <a href="index.html"><h2>One<span>Movies</span></h2></a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-md-5 w3ls_footer_grid1_left">
+            <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/"
+                                                                                        target="_blank" title="模板之家">模板之家</a>
+                - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+        </div>
+        <div class="col-md-7 w3ls_footer_grid1_right">
+            <ul>
+                <li>
+                    <a href="genres.html">Movies</a>
+                </li>
+                <li>
+                    <a href="faq.html">FAQ</a>
+                </li>
+                <li>
+                    <a href="horror.html">Action</a>
+                </li>
+                <li>
+                    <a href="genres.html">Adventure</a>
+                </li>
+                <li>
+                    <a href="comedy.html">Comedy</a>
+                </li>
+                <li>
+                    <a href="icons.html">Icons</a>
+                </li>
+                <li>
+                    <a href="contact.html">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script th:src="@{js/bootstrap.min.js}"></script>
+</body>
+</html>

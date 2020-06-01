@@ -28,6 +28,12 @@ public class HelloControllers {
         return "see_movie";
     }
 
+
+    @RequestMapping("/user")
+    public String user() {
+        return "user";
+    }
+
     @RequestMapping("/about_us")
     public String about_us(){ return "about_us";}
 

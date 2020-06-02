@@ -97,6 +97,12 @@
         function change_name() {
             var new_name = $('#myname').val();
             //输入检查
+
+            if (!/^[a-zA-Z0-9\u0391-\uFFE5]{1,10}$/.test(new_name)) {
+                alert("用户名只能是字母，数字或中文字符且长度1~10！");
+                return;
+            }
+
             //上传
             $.post("/user/change_name?new_name=" + new_name, function (res) {
                 if (res == 0) {
@@ -109,20 +115,25 @@
                 }
             })
         }
+
         function change_password() {
             var password = $('#password').val();
             var t_password = $('#t-password').val();
             var new_password = $('#new-password').val();
             //输入检查
 
-            if (t_password!=new_password){
+            if (t_password != new_password) {
                 alert("新密码不一致！");
+                return;
+            }
+            if (!/^[a-zA-Z0-9_!@#$%^&*`~()-+=]{6,20}$/.test(new_password)){
+                alert("密码只能输入a-z,A-Z,0-9,_!@#$%^&*`~()-+=且长度必须是6~20个字符");
                 return;
             }
 
             $.ajax({
                 url: "/user/change_password",
-                data: JSON.stringify({password: password,newPassword:new_password}),
+                data: JSON.stringify({password: password, newPassword: new_password}),
                 type: "post",
                 async: false,
                 // 定义发送请求的数据格式为JSON字符串
@@ -131,16 +142,46 @@
                 dataType: "json",
                 //成功响应的结果
                 success: function (res) {
-                    if (res==0){
+                    if (res == 0) {
                         alert("密码修改成功!!!，需重新登录");
                         location.replace("/index");
-                    } else if (res==-1) {
+                    } else if (res == -1) {
                         alert("旧密码错误！");
                     }
                 }
             })
         }
 
+        function change_inf() {
+            var phone = $('#myphone').val();
+            var mail = $('#mye-mail').val();
+
+            //输入检查
+            if (!/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(mail)){
+                alert("邮箱格式有误");
+                return;
+            }
+            if (!/^1[34578]\d{9}$/.test(phone)){
+                alert("电话格式有误");
+                return;
+            }
+            //上传
+            $.ajax({
+                url: "/user/change_inf?user_email="+mail+"&phone_number="+phone,
+                type: "post",
+                async: false,
+                //成功响应的结果
+                success: function (res) {
+                    if (res == 0) {
+                        alert("信息修改成功!");
+                        location.replace("/user");
+                    } else  {
+                        alert("发生未知错误，信息修改失败！");
+                    }
+                }
+            })
+        }
+        
         function init() {
             load();
         }
@@ -153,8 +194,16 @@
                     $("#myname").val(result);
                 }
             })
+            $.ajax({
+                url: "/user/get_user_inf_detail",
+                type: "GET",
+                success: function (result) {
+                    var data = JSON.parse(result);
+                    $('#myphone').val(data.phone_number);
+                    $('#mye-mail').val(data.user_email);
+                }
+            })
         }
-
         $(document).ready(init());
     </script>
 </head>
@@ -231,7 +280,7 @@
                                 </div>
                                 <div class="form">
                                     <h3>Create an account</h3>
-                                    <form th:action="@{/user/register}" method="post">
+                                    <form th:action="@{/register}" method="post">
                                         <input type="text" name="user_name" placeholder="user_name" required="">
                                         <input type="password" name="password" placeholder="password" required="">
                                         <input type="email" name="user_email" placeholder="Email Address" required="">
@@ -311,7 +360,19 @@
             <span class="input-group-addon">用户名</span>
             <input type="text" class="form-control" id="myname" placeholder="用户名">
             <span class="input-group-btn">
-							<button class="btn btn-default" onclick="change_name()" type="button">提交修改</button>
+							<button class="btn btn-default" onclick="change_name()" type="button">提交用户名修改</button>
+			</span>
+        </div>
+        <hr/>
+        <div class="input-group">
+            <span class="input-group-addon">联系电话</span>
+            <input type="text" class="form-control" id="myphone" placeholder="联系电话">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">邮箱</span>
+            <input type="text" class="form-control" id="mye-mail" placeholder="邮箱">
+            <span class="input-group-btn">
+							<button class="btn btn-default" onclick="change_inf()" type="button">提交修改</button>
 			</span>
         </div>
     </div>

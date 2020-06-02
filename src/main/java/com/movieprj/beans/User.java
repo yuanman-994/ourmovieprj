@@ -4,18 +4,13 @@ package com.movieprj.beans;
 public class User {
     private Integer user_id;
     private String user_name;
-    private String vip_type;
     private String image_url;
     private String gender;
     private String phone_number;
     private String balance;
     private String score;
-    private String password;
+    private String password;//实际上password在数据库中只保存在user_password表中
     private String user_email;
-
-
-
-
 
     public String getUser_email() {
         return user_email;
@@ -41,14 +36,6 @@ public class User {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
-    }
-
-    public String getVip_type() {
-        return vip_type;
-    }
-
-    public void setVip_type(String vip_type) {
-        this.vip_type = vip_type;
     }
 
     public String getImage_url() {
@@ -103,7 +90,6 @@ public class User {
         return "User{" +
                 "user_id=" + user_id +
                 ", user_name='" + user_name + '\'' +
-                ", vip_type='" + vip_type + '\'' +
                 ", image_url='" + image_url + '\'' +
                 ", gender='" + gender + '\'' +
                 ", phone_number='" + phone_number + '\'' +

@@ -2,7 +2,9 @@ package com.movieprj.mapper;
 
 import com.movieprj.beans.Permission;
 import com.movieprj.beans.Role;
+import com.movieprj.beans.User;
 import com.movieprj.beans.UserPassword;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -29,4 +31,8 @@ public interface UserPasswordMapper {
 
     @Update("UPDATE user_password SET password=#{password} WHERE user_id=#{user_id}")
     public void updatePasswordById(String password,int user_id);
+
+    @Insert( "INSERT INTO user_password (user_name,password) " +
+            "values (#{user_name},#{password})" )
+    public void register(String user_name,String password);
 }

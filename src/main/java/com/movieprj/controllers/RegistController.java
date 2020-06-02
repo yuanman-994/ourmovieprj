@@ -9,7 +9,6 @@ import  com.movieprj.beans.User;
 import  javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("user")
 public class RegistController {
 
     @Autowired
@@ -21,9 +20,9 @@ public class RegistController {
         return pageUrl;
     }
 
-    @RequestMapping(value = "/register")
+    @PostMapping(value = "/register")
+    @ResponseBody
     public String register(User user){
-        userService.regist(user);
-        return "/faq";
+        return userService.regist(user);
     }
 }

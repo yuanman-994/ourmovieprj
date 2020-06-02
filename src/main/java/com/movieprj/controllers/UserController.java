@@ -1,15 +1,13 @@
 package com.movieprj.controllers;
 
+import com.movieprj.beans.User;
 import com.movieprj.services.UserService;
 import com.movieprj.services.UserServiceImpl;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -48,6 +46,27 @@ public class UserController {
         if (res==0)
             currentSubject.logout();
         return res;
+    }
+
+    @GetMapping("/user/get_user_inf_detail")
+    @ResponseBody
+    public String getUserInf(){
+        Subject currentSubject = SecurityUtils.getSubject();
+        if (!currentSubject.isAuthenticated())//检测是否登录
+            return "未登录";
+        String name = (String) currentSubject.getPrincipal();
+        return userService.getUserInf(name);
+    }
+
+    @PostMapping("/user/change_inf")
+    @ResponseBody
+    public int changeInf(User user){
+        Subject currentSubject = SecurityUtils.getSubject();
+        if (!currentSubject.isAuthenticated())//检测是否登录
+            return -1;
+        String name = (String) currentSubject.getPrincipal();
+
+        return userService.setUserInf(name,user);
     }
 
 }

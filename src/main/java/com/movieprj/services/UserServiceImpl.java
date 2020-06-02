@@ -25,7 +25,12 @@ public class UserServiceImpl implements UserService {
             userPasswordMapper.findIdByName(user.getUser_name());
         } catch (org.apache.ibatis.binding.BindingException e){//如果报这个错表示名字未重复
             //信息插入user_password 表
-            userPasswordMapper.register(user.getUser_name(),user.getPassword());
+            UserPassword userPassword = new UserPassword();
+            userPassword.setUser_name(user.getUser_name());
+            userPassword.setPassword(user.getPassword());
+            userPasswordMapper.register(userPassword);
+            //配置角色
+            userPasswordMapper.setRole(userPassword.getUser_id(),1);
             //信息插入user 表
             userMapper.register(user);
             return "注册成功！";
@@ -46,7 +51,6 @@ public class UserServiceImpl implements UserService {
             userPasswordMapper.findIdByName(newName);
         } catch (org.apache.ibatis.binding.BindingException e){//如果报这个错表示名字未重复
             userPasswordMapper.updateNameById(newName,uid);//修改user_password表中用户名
-
             int tid = userMapper.findIdByName(name);
             userMapper.updateNameById(newName,tid);//同步修改user表中用户名
 

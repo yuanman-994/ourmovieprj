@@ -4,10 +4,7 @@ import com.movieprj.beans.Permission;
 import com.movieprj.beans.Role;
 import com.movieprj.beans.User;
 import com.movieprj.beans.UserPassword;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -34,5 +31,9 @@ public interface UserPasswordMapper {
 
     @Insert( "INSERT INTO user_password (user_name,password) " +
             "values (#{user_name},#{password})" )
-    public void register(String user_name,String password);
+    @Options(useGeneratedKeys = true, keyProperty = "user_id", keyColumn = "user_id")
+    public void register(UserPassword userPassword);
+
+    @Insert("INSERT INTO user_role (user_id,role_id) values (#{user_id},#{role_id}) ")
+    public void setRole(int user_id,int role_id);//设置用户角色 role_id = 1 => role_name :common 普通用户
 }
